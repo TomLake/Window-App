@@ -495,16 +495,18 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-            {/* Left pane opening indication - only show if left or both casements open */}
+            {/* Horizontal line for all casements */}
+            <line 
+              x1={svgWidth * 0.05} 
+              y1={svgHeight * 0.5} 
+              x2={svgWidth * 0.25} 
+              y2={svgHeight * 0.5} 
+              className="window-hinge" 
+            />
+            
+            {/* Left pane diagonal hinge indicators - only show if left or both casements open */}
             {(openableCasements === "left" || openableCasements === "both") && (
               <>
-                <line 
-                  x1={svgWidth * 0.05} 
-                  y1={svgHeight * 0.5} 
-                  x2={svgWidth * 0.25} 
-                  y2={svgHeight * 0.5} 
-                  className="window-hinge" 
-                />
                 <line 
                   x1={svgWidth * 0.05} 
                   y1={svgHeight * 0.5} 
