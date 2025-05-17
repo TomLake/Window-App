@@ -312,6 +312,14 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               strokeWidth="1" 
             />
             
+            {/* Georgian bars for first pane */}
+            {renderGeorgianBars(
+              frameInset,
+              frameInset,
+              (svgWidth / 3) - frameInset - (frameThickness / 2),
+              svgHeight - (frameInset * 2)
+            )}
+            
             {/* Second pane glass */}
             <rect 
               x={(svgWidth / 3) + (frameThickness / 2)} 
@@ -323,6 +331,14 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               strokeWidth="1" 
             />
             
+            {/* Georgian bars for second pane */}
+            {renderGeorgianBars(
+              (svgWidth / 3) + (frameThickness / 2),
+              frameInset,
+              (svgWidth / 3) - frameThickness,
+              svgHeight - (frameInset * 2)
+            )}
+            
             {/* Third pane glass */}
             <rect 
               x={((svgWidth / 3) * 2) + (frameThickness / 2)} 
@@ -333,6 +349,14 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               stroke="#94a3b8" 
               strokeWidth="1" 
             />
+            
+            {/* Georgian bars for third pane */}
+            {renderGeorgianBars(
+              ((svgWidth / 3) * 2) + (frameThickness / 2),
+              frameInset,
+              (svgWidth / 3) - frameInset - (frameThickness / 2),
+              svgHeight - (frameInset * 2)
+            )}
             
             {/* Casements for each section */}
             <rect 
@@ -460,6 +484,14 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               strokeWidth="1" 
             />
             
+            {/* Georgian bars for left pane */}
+            {renderGeorgianBars(
+              frameInset,
+              frameInset,
+              (svgWidth / 2) - frameInset - (frameThickness / 2),
+              svgHeight - (frameInset * 2)
+            )}
+            
             <rect 
               x={(svgWidth / 2) + (frameThickness / 2)} 
               y={frameInset} 
@@ -469,6 +501,14 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               stroke="#94a3b8" 
               strokeWidth="1" 
             />
+            
+            {/* Georgian bars for right pane */}
+            {renderGeorgianBars(
+              (svgWidth / 2) + (frameThickness / 2),
+              frameInset,
+              (svgWidth / 2) - frameInset - (frameThickness / 2),
+              svgHeight - (frameInset * 2)
+            )}
             
             {/* Casements */}
             <rect 
