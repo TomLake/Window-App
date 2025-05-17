@@ -37,7 +37,8 @@ const windowFormSchema = z.object({
   hasGeorgianBars: z.boolean().default(false),
   georgianBarsHorizontal: z.coerce.number().min(0).max(4).default(1),
   georgianBarsVertical: z.coerce.number().min(0).max(4).default(1),
-  // Transom fields removed - now using dedicated window types
+  // Optional transom height parameter for transom window types
+  transomHeight: z.coerce.number().min(200, "Transom height must be at least 200mm").max(1000, "Transom height must be at most 1000mm").default(400).optional(),
   positionX: z.number().default(0),
   positionY: z.number().default(0),
 });
@@ -296,9 +297,33 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
           </div>
         )}
         
-{/* Transom fields removed - now using dedicated window types with transoms */}
+{/* Transom height parameter - only visible for transom window types */}
+        {(form.watch("type") === "single-transom" || 
+          form.watch("type") === "double-transom" || 
+          form.watch("type") === "triple-transom") && (
+          <FormField
+            control={form.control}
+            name="transomHeight"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Transom Height (mm)</FormLabel>
+                <FormControl>
+                  <Input 
+                    type="number" 
+                    min="200"
+                    max="1000"
+                    {...field} 
+                  />
+                </FormControl>
+                <FormDescription>
+                  Height of transom section from top of window (default: 400mm)
+                </FormDescription>
+              </FormItem>
+            )}
+          />
+        )}
         
-{/* Transom height field removed - now using dedicated window types with transoms */}
+
 
         <div className="flex justify-between">
           <Button type="button" variant="outline" onClick={handleReset}>

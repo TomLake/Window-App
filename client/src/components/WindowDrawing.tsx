@@ -16,7 +16,8 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     openableCasements = "left", // Default left casement opens
     hasGeorgianBars = false,
     georgianBarsHorizontal = 1,
-    georgianBarsVertical = 1
+    georgianBarsVertical = 1,
+    transomHeight = 400 // Default transom height 400mm
   } = window;
   
   // Calculate SVG dimensions while maintaining a minimum size and aspect ratio
