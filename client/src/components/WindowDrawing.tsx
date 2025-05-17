@@ -263,59 +263,32 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             {/* Main frame */}
             <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
             
-            {/* Middle divider (mullion) */}
-            <line 
-              x1={svgWidth / 2} 
-              y1="0" 
-              x2={svgWidth / 2} 
-              y2={svgHeight} 
-              className="window-frame" 
-              strokeWidth={mullionThickness}
-            />
+
             
-            {/* Left pane glass */}
+            {/* Single glass pane */}
             <rect 
               x={frameInset} 
               y={frameInset} 
-              width={(svgWidth / 2) - frameInset - (frameThickness / 2)} 
+              width={svgWidth - (frameInset * 2)} 
               height={svgHeight - (frameInset * 2)} 
               fill={glassColor} 
               stroke="#94a3b8" 
               strokeWidth="1" 
             />
             
-            {/* Georgian bars for left pane */}
+            {/* Georgian bars for entire window */}
             {renderGeorgianBars(
               frameInset,
               frameInset,
-              (svgWidth / 2) - frameInset - (frameThickness / 2),
+              svgWidth - (frameInset * 2),
               svgHeight - (frameInset * 2)
             )}
             
-            {/* Right pane glass */}
-            <rect 
-              x={(svgWidth / 2) + (frameThickness / 2)} 
-              y={frameInset} 
-              width={(svgWidth / 2) - frameInset - (frameThickness / 2)} 
-              height={svgHeight - (frameInset * 2)} 
-              fill={glassColor} 
-              stroke="#94a3b8" 
-              strokeWidth="1" 
-            />
-            
-            {/* Georgian bars for right pane */}
-            {renderGeorgianBars(
-              (svgWidth / 2) + (frameThickness / 2),
-              frameInset,
-              (svgWidth / 2) - frameInset - (frameThickness / 2),
-              svgHeight - (frameInset * 2)
-            )}
-            
-            {/* Transom for right pane */}
+            {/* Transom for entire window */}
             {renderTransom(
-              (svgWidth / 2) + (frameThickness / 2),
               frameInset,
-              (svgWidth / 2) - frameInset - (frameThickness / 2)
+              frameInset,
+              svgWidth - (frameInset * 2)
             )}
             
             {/* Left casement */}
@@ -391,100 +364,32 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             {/* Frame */}
             <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
             
-            {/* Vertical dividers (mullions) */}
-            <line 
-              x1={svgWidth / 3} 
-              y1="0" 
-              x2={svgWidth / 3} 
-              y2={svgHeight} 
-              className="window-frame" 
-              strokeWidth={mullionThickness}
-            />
-            <line 
-              x1={(svgWidth / 3) * 2} 
-              y1="0" 
-              x2={(svgWidth / 3) * 2} 
-              y2={svgHeight} 
-              className="window-frame" 
-              strokeWidth={mullionThickness}
-            />
+
             
-            {/* First pane glass */}
+            {/* Single glass pane */}
             <rect 
               x={frameInset} 
               y={frameInset} 
-              width={(svgWidth / 3) - frameInset - (frameThickness / 2)} 
+              width={svgWidth - (frameInset * 2)} 
               height={svgHeight - (frameInset * 2)} 
               fill={glassColor} 
               stroke="#94a3b8" 
               strokeWidth="1" 
             />
             
-            {/* Georgian bars for first pane */}
+            {/* Georgian bars for entire window */}
             {renderGeorgianBars(
               frameInset,
               frameInset,
-              (svgWidth / 3) - frameInset - (frameThickness / 2),
+              svgWidth - (frameInset * 2),
               svgHeight - (frameInset * 2)
             )}
             
-            {/* Transom for first pane */}
+            {/* Transom for entire window */}
             {renderTransom(
               frameInset,
               frameInset,
-              (svgWidth / 3) - frameInset - (frameThickness / 2)
-            )}
-            
-            {/* Second pane glass */}
-            <rect 
-              x={(svgWidth / 3) + (frameThickness / 2)} 
-              y={frameInset} 
-              width={(svgWidth / 3) - frameThickness} 
-              height={svgHeight - (frameInset * 2)} 
-              fill={glassColor} 
-              stroke="#94a3b8" 
-              strokeWidth="1" 
-            />
-            
-            {/* Georgian bars for second pane */}
-            {renderGeorgianBars(
-              (svgWidth / 3) + (frameThickness / 2),
-              frameInset,
-              (svgWidth / 3) - frameThickness,
-              svgHeight - (frameInset * 2)
-            )}
-            
-            {/* Transom for second pane */}
-            {renderTransom(
-              (svgWidth / 3) + (frameThickness / 2),
-              frameInset,
-              (svgWidth / 3) - frameThickness
-            )}
-            
-            {/* Third pane glass */}
-            <rect 
-              x={((svgWidth / 3) * 2) + (frameThickness / 2)} 
-              y={frameInset} 
-              width={(svgWidth / 3) - frameInset - (frameThickness / 2)} 
-              height={svgHeight - (frameInset * 2)} 
-              fill={glassColor} 
-              stroke="#94a3b8" 
-              strokeWidth="1" 
-            />
-            
-            {/* Georgian bars for third pane */}
-            {renderGeorgianBars(
-              ((svgWidth / 3) * 2) + (frameThickness / 2),
-              frameInset,
-              (svgWidth / 3) - frameInset - (frameThickness / 2),
-              svgHeight - (frameInset * 2)
-            )}
-            
-            {/* Transom for third pane */}
-            {renderTransom(
-              ((svgWidth / 3) * 2) + (frameThickness / 2),
-              frameInset,
-              (svgWidth / 3) - frameInset - (frameThickness / 2)
+              svgWidth - (frameInset * 2)
             )}
             
             {/* Casements for each section */}
@@ -583,31 +488,13 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             {/* Frame */}
             <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
             
-            {/* Center divider (mullion) */}
-            <line 
-              x1={svgWidth / 2} 
-              y1="0" 
-              x2={svgWidth / 2} 
-              y2={svgHeight} 
-              className="window-frame" 
-              strokeWidth={mullionThickness}
-            />
+
             
-            {/* Glass panes */}
+            {/* Single glass pane */}
             <rect 
               x={frameInset} 
               y={frameInset} 
-              width={(svgWidth / 2) - frameInset - (frameThickness / 2)} 
-              height={svgHeight - (frameInset * 2)} 
-              fill={glassColor} 
-              stroke="#94a3b8" 
-              strokeWidth="1" 
-            />
-            
-            <rect 
-              x={(svgWidth / 2) + (frameThickness / 2)} 
-              y={frameInset} 
-              width={(svgWidth / 2) - frameInset - (frameThickness / 2)} 
+              width={svgWidth - (frameInset * 2)} 
               height={svgHeight - (frameInset * 2)} 
               fill={glassColor} 
               stroke="#94a3b8" 
