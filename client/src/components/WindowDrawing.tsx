@@ -300,31 +300,35 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             {/* Hinge indicators for the top casement - with hinges at the top */}
             {(topCasementsOpenable === "left" || topCasementsOpenable === "both") && (
               <>
-                <line 
-                  x1={frameInset + 20} 
-                  y1={frameInset + 20} 
-                  x2={svgWidth / 2 - 20} 
-                  y2={frameInset + 20} 
+                {/* Left top casement - hinged at top */}
+                <path 
+                  d={`M ${frameInset + 20} ${frameInset + scaledTransomHeight - 20} 
+                      L ${frameInset + (svgWidth/4)} ${frameInset + 20} 
+                      L ${svgWidth/2 - 20} ${frameInset + scaledTransomHeight - 20}`}
                   stroke="black" 
                   strokeDasharray="5,5" 
                   strokeWidth="1"
+                  fill="none"
                 />
-                <circle cx={frameInset + (svgWidth/4)} cy={frameInset + 5} r={2} fill="black" />
+                <circle cx={frameInset + (svgWidth/6)} cy={frameInset + 5} r={2} fill="black" />
+                <circle cx={frameInset + (svgWidth/3)} cy={frameInset + 5} r={2} fill="black" />
               </>
             )}
             
             {(topCasementsOpenable === "right" || topCasementsOpenable === "both") && (
               <>
-                <line 
-                  x1={svgWidth / 2 + 20} 
-                  y1={frameInset + 20} 
-                  x2={svgWidth - frameInset - 20} 
-                  y2={frameInset + 20} 
+                {/* Right top casement - hinged at top */}
+                <path 
+                  d={`M ${svgWidth/2 + 20} ${frameInset + scaledTransomHeight - 20} 
+                      L ${frameInset + (svgWidth*3/4)} ${frameInset + 20} 
+                      L ${svgWidth - frameInset - 20} ${frameInset + scaledTransomHeight - 20}`}
                   stroke="black" 
                   strokeDasharray="5,5" 
                   strokeWidth="1"
+                  fill="none"
                 />
-                <circle cx={frameInset + (svgWidth*3/4)} cy={frameInset + 5} r={2} fill="black" />
+                <circle cx={frameInset + (svgWidth*2/3)} cy={frameInset + 5} r={2} fill="black" />
+                <circle cx={frameInset + (svgWidth*5/6)} cy={frameInset + 5} r={2} fill="black" />
               </>
             )}
             
