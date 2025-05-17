@@ -850,7 +850,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             {height} mm
           </text>
           
-          {/* Location label */}
+          {/* Window Name label */}
           <text 
             x={svgWidth / 2} 
             y={svgHeight + 50} 
@@ -859,7 +859,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             fontWeight="500" 
             fill="#334155"
           >
-            {location}
+            {name}
           </text>
           
           {/* Glass type indication if obscure */}
