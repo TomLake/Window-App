@@ -681,7 +681,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                   <rect 
                     x={frameInset - 1} 
                     y={frameInset - 1} 
-                    width={sectionWidth} 
+                    width={sectionWidth - (mullionThickness/2) + 1} 
                     height={svgHeight - (frameInset * 2) + 2} 
                     fill="none" 
                     className="window-casement" 
@@ -691,16 +691,16 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                   <rect 
                     x={frameInset + innerBorderWidth} 
                     y={frameInset + innerBorderWidth} 
-                    width={sectionWidth - (innerBorderWidth * 2)} 
+                    width={sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1} 
                     height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
                     className="window-casement-interior"
                   />
                   
                   {/* Middle casement */}
                   <rect 
-                    x={frameInset + sectionWidth - 1} 
+                    x={frameInset + sectionWidth + (mullionThickness/2)} 
                     y={frameInset - 1} 
-                    width={sectionWidth + 2} 
+                    width={sectionWidth - mullionThickness + 2} 
                     height={svgHeight - (frameInset * 2) + 2} 
                     fill="none" 
                     className="window-casement" 
@@ -708,18 +708,18 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                   
                   {/* Middle casement inner border 50mm wide with light blue fill */}
                   <rect 
-                    x={frameInset + sectionWidth + innerBorderWidth} 
+                    x={frameInset + sectionWidth + (mullionThickness/2) + innerBorderWidth} 
                     y={frameInset + innerBorderWidth} 
-                    width={sectionWidth - (innerBorderWidth * 2)} 
+                    width={sectionWidth - mullionThickness - (innerBorderWidth * 2) + 2} 
                     height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
                     className="window-casement-interior"
                   />
                   
                   {/* Right casement */}
                   <rect 
-                    x={frameInset + (sectionWidth * 2) - 1} 
+                    x={frameInset + (sectionWidth * 2) + (mullionThickness/2)} 
                     y={frameInset - 1} 
-                    width={sectionWidth + 2} 
+                    width={sectionWidth - (mullionThickness/2) + 1} 
                     height={svgHeight - (frameInset * 2) + 2} 
                     fill="none" 
                     className="window-casement" 
@@ -727,9 +727,9 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                   
                   {/* Right casement inner border 50mm wide with light blue fill */}
                   <rect 
-                    x={frameInset + (sectionWidth * 2) + innerBorderWidth} 
+                    x={frameInset + (sectionWidth * 2) + (mullionThickness/2) + innerBorderWidth} 
                     y={frameInset + innerBorderWidth} 
-                    width={sectionWidth - (innerBorderWidth * 2)} 
+                    width={sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1} 
                     height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
                     className="window-casement-interior"
                   />
@@ -893,7 +893,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                   <rect 
                     x={frameInset - 1} 
                     y={frameInset - 1} 
-                    width={sectionWidth + 2} 
+                    width={sectionWidth - (mullionThickness/2) + 1} 
                     height={(svgHeight / 3) + 1} 
                     fill="none" 
                     className="window-casement" 
@@ -903,16 +903,16 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                   <rect 
                     x={frameInset + innerBorderWidth} 
                     y={frameInset + innerBorderWidth} 
-                    width={sectionWidth - (innerBorderWidth * 2)} 
+                    width={sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1} 
                     height={(svgHeight / 3) - (innerBorderWidth * 2)} 
                     className="window-casement-interior"
                   />
                   
                   {/* Upper middle fixed casement */}
                   <rect 
-                    x={frameInset + sectionWidth - 1} 
+                    x={frameInset + sectionWidth + (mullionThickness/2)} 
                     y={frameInset - 1} 
-                    width={sectionWidth + 2} 
+                    width={sectionWidth - mullionThickness + 2} 
                     height={(svgHeight / 3) + 1} 
                     fill="none" 
                     className="window-casement" 
@@ -920,18 +920,18 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                   
                   {/* Upper middle casement inner border with light blue fill */}
                   <rect 
-                    x={frameInset + sectionWidth + innerBorderWidth} 
+                    x={frameInset + sectionWidth + (mullionThickness/2) + innerBorderWidth} 
                     y={frameInset + innerBorderWidth} 
-                    width={sectionWidth - (innerBorderWidth * 2)} 
+                    width={sectionWidth - mullionThickness - (innerBorderWidth * 2) + 2} 
                     height={(svgHeight / 3) - (innerBorderWidth * 2)} 
                     className="window-casement-interior"
                   />
                   
                   {/* Upper right fixed casement */}
                   <rect 
-                    x={frameInset + (sectionWidth * 2) - 1} 
+                    x={frameInset + (sectionWidth * 2) + (mullionThickness/2)} 
                     y={frameInset - 1} 
-                    width={sectionWidth + 2} 
+                    width={sectionWidth - (mullionThickness/2) + 1} 
                     height={(svgHeight / 3) + 1} 
                     fill="none" 
                     className="window-casement" 
@@ -939,9 +939,9 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                   
                   {/* Upper right casement inner border with light blue fill */}
                   <rect 
-                    x={frameInset + (sectionWidth * 2) + innerBorderWidth} 
+                    x={frameInset + (sectionWidth * 2) + (mullionThickness/2) + innerBorderWidth} 
                     y={frameInset + innerBorderWidth} 
-                    width={sectionWidth - (innerBorderWidth * 2)} 
+                    width={sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1} 
                     height={(svgHeight / 3) - (innerBorderWidth * 2)} 
                     className="window-casement-interior"
                   />
@@ -963,7 +963,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                   <rect 
                     x={frameInset - 1} 
                     y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
-                    width={sectionWidth + 2} 
+                    width={sectionWidth - (mullionThickness/2) + 1} 
                     height={lowerHeight} 
                     fill="none" 
                     className="window-casement" 
@@ -973,16 +973,16 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                   <rect 
                     x={frameInset + innerBorderWidth} 
                     y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
-                    width={sectionWidth - (innerBorderWidth * 2)} 
+                    width={sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1} 
                     height={lowerHeight - (innerBorderWidth * 2)} 
                     className="window-casement-interior"
                   />
                   
                   {/* Lower middle casement */}
                   <rect 
-                    x={frameInset + sectionWidth - 1} 
+                    x={frameInset + sectionWidth + (mullionThickness/2)} 
                     y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
-                    width={sectionWidth + 2} 
+                    width={sectionWidth - mullionThickness + 2} 
                     height={lowerHeight} 
                     fill="none" 
                     className="window-casement" 
@@ -990,18 +990,18 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                   
                   {/* Lower middle casement inner border with light blue fill */}
                   <rect 
-                    x={frameInset + sectionWidth + innerBorderWidth} 
+                    x={frameInset + sectionWidth + (mullionThickness/2) + innerBorderWidth} 
                     y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
-                    width={sectionWidth - (innerBorderWidth * 2)} 
+                    width={sectionWidth - mullionThickness - (innerBorderWidth * 2) + 2} 
                     height={lowerHeight - (innerBorderWidth * 2)} 
                     className="window-casement-interior"
                   />
                   
                   {/* Lower right opening casement */}
                   <rect 
-                    x={frameInset + (sectionWidth * 2) - 1} 
+                    x={frameInset + (sectionWidth * 2) + (mullionThickness/2)} 
                     y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
-                    width={sectionWidth + 2} 
+                    width={sectionWidth - (mullionThickness/2) + 1} 
                     height={lowerHeight} 
                     fill="none" 
                     className="window-casement" 
@@ -1009,9 +1009,9 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                   
                   {/* Lower right casement inner border with light blue fill */}
                   <rect 
-                    x={frameInset + (sectionWidth * 2) + innerBorderWidth} 
+                    x={frameInset + (sectionWidth * 2) + (mullionThickness/2) + innerBorderWidth} 
                     y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
-                    width={sectionWidth - (innerBorderWidth * 2)} 
+                    width={sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1} 
                     height={lowerHeight - (innerBorderWidth * 2)} 
                     className="window-casement-interior"
                   />
