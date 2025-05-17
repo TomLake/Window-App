@@ -84,6 +84,12 @@
   fill: #e6ffe6; /* Light green color for casements */
 }
 
+.window-frame-outer {
+  stroke: black;
+  stroke-width: 1;
+  fill: white;
+}
+
 .window-section {
   stroke: black;
   stroke-width: 1;
