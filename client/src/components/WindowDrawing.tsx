@@ -11,7 +11,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     type, 
     width, 
     height, 
-    name,
+    name = "Window", // Provide default name to prevent rendering issues
     glassType, 
     hasGeorgianBars = false,
     georgianBarsHorizontal = 1,
