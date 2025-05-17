@@ -81,6 +81,7 @@
   stroke: black;
   stroke-width: 1;
   stroke-dasharray: none;
+  fill: #e6ffe6; /* Light green color for casements */
 }
 
 .window-section {
