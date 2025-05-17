@@ -55,8 +55,8 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     
     // Use the user-defined number of horizontal and vertical bars
     // If value is 0, no bars will be rendered
-    const numHorizontalBars = georgianBarsHorizontal;
-    const numVerticalBars = georgianBarsVertical;
+    const numHorizontalBars = typeof georgianBarsHorizontal === 'number' ? georgianBarsHorizontal : 1;
+    const numVerticalBars = typeof georgianBarsVertical === 'number' ? georgianBarsVertical : 1;
     
     const barColor = "#475569";
     const barWidth = 1.5;
@@ -66,6 +66,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     
     // Horizontal bars
     if (numHorizontalBars > 0) {
+      // Create horizontal bars based on specified count
       const horizontalSpacing = height / (numHorizontalBars + 1);
       for (let i = 1; i <= numHorizontalBars; i++) {
         const yPos = y + horizontalSpacing * i;
@@ -85,6 +86,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     
     // Vertical bars
     if (numVerticalBars > 0) {
+      // Create vertical bars based on specified count
       const verticalSpacing = width / (numVerticalBars + 1);
       for (let i = 1; i <= numVerticalBars; i++) {
         const xPos = x + verticalSpacing * i;

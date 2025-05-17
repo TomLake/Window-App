@@ -76,6 +76,8 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
       const windowData = {
         ...selectedWindow,
         hasGeorgianBars: selectedWindow.hasGeorgianBars === true,
+        georgianBarsHorizontal: selectedWindow.georgianBarsHorizontal ?? 1,
+        georgianBarsVertical: selectedWindow.georgianBarsVertical ?? 1,
         positionX: selectedWindow.positionX || 0,
         positionY: selectedWindow.positionY || 0
       };
@@ -231,8 +233,12 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
                       type="number"
                       min="0"
                       max="4"
-                      {...field}
-                      onChange={e => field.onChange(e.target.valueAsNumber || 0)}
+                      value={field.value}
+                      onChange={(e) => {
+                        const value = !isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0;
+                        field.onChange(value);
+                      }}
+                      onBlur={field.onBlur}
                     />
                   </FormControl>
                   <FormDescription>Number of horizontal bars</FormDescription>
@@ -251,8 +257,12 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
                       type="number"
                       min="0"
                       max="4"
-                      {...field}
-                      onChange={e => field.onChange(e.target.valueAsNumber || 0)}
+                      value={field.value}
+                      onChange={(e) => {
+                        const value = !isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0;
+                        field.onChange(value);
+                      }}
+                      onBlur={field.onBlur}
                     />
                   </FormControl>
                   <FormDescription>Number of vertical bars</FormDescription>
