@@ -36,6 +36,8 @@ const windowFormSchema = z.object({
   hasGeorgianBars: z.boolean().default(false),
   georgianBarsHorizontal: z.coerce.number().min(0).max(4).default(1),
   georgianBarsVertical: z.coerce.number().min(0).max(4).default(1),
+  hasTransom: z.boolean().default(false),
+  transomHeight: z.coerce.number().min(100).max(1000).default(400),
   positionX: z.number().default(0),
   positionY: z.number().default(0),
 });
@@ -59,6 +61,8 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
     hasGeorgianBars: false,
     georgianBarsHorizontal: 1,
     georgianBarsVertical: 1,
+    hasTransom: false,
+    transomHeight: 400,
     positionX: 0,
     positionY: 0,
   };
@@ -77,6 +81,8 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
         hasGeorgianBars: selectedWindow.hasGeorgianBars === true,
         georgianBarsHorizontal: selectedWindow.georgianBarsHorizontal ?? 1,
         georgianBarsVertical: selectedWindow.georgianBarsVertical ?? 1,
+        hasTransom: selectedWindow.hasTransom === true,
+        transomHeight: selectedWindow.transomHeight ?? 400,
         positionX: selectedWindow.positionX || 0,
         positionY: selectedWindow.positionY || 0
       };
@@ -258,6 +264,53 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
               )}
             />
           </div>
+        )}
+        
+        <FormField
+          control={form.control}
+          name="hasTransom"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>Transom</FormLabel>
+                <FormDescription>
+                  Add a transom bar to the window
+                </FormDescription>
+              </div>
+            </FormItem>
+          )}
+        />
+        
+        {form.watch("hasTransom") && (
+          <FormField
+            control={form.control}
+            name="transomHeight"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Transom Height</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    min="100"
+                    max="1000"
+                    value={field.value}
+                    onChange={(e) => {
+                      const value = !isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 400;
+                      field.onChange(value);
+                    }}
+                    onBlur={field.onBlur}
+                  />
+                </FormControl>
+                <FormDescription>Height from top of window in mm</FormDescription>
+              </FormItem>
+            )}
+          />
         )}
 
         <div className="flex justify-between">

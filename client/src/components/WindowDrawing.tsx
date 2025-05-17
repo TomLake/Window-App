@@ -15,7 +15,9 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     glassType, 
     hasGeorgianBars = false,
     georgianBarsHorizontal = 1,
-    georgianBarsVertical = 1
+    georgianBarsVertical = 1,
+    hasTransom = false,
+    transomHeight = 400
   } = window;
   
   // Calculate SVG dimensions while maintaining a minimum size and aspect ratio
@@ -108,6 +110,29 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     return bars;
   };
   
+  // Function to render transom bar for a window
+  const renderTransom = (x: number, y: number, paneWidth: number) => {
+    if (!hasTransom) return null;
+    
+    // Calculate the scaled transom height from the top
+    // Use a default value of 400 if transomHeight is null
+    const safeTransomHeight = typeof transomHeight === 'number' ? transomHeight : 400;
+    const scaledTransomHeight = Math.min(safeTransomHeight, height) * scaleFactor;
+    const transomY = y + scaledTransomHeight;
+    const transomThickness = 2.5; // Slightly thicker than other bars
+    const transomColor = "#334155";
+    
+    return (
+      <rect
+        x={x}
+        y={transomY - (transomThickness / 2)}
+        width={paneWidth}
+        height={transomThickness}
+        fill={transomColor}
+      />
+    );
+  };
+  
   // Render the appropriate window based on type
   const renderWindow = () => {
     switch (windowConfig.id) {
@@ -134,6 +159,13 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               frameInset,
               svgWidth - (frameInset * 2),
               svgHeight - (frameInset * 2)
+            )}
+            
+            {/* Transom if enabled */}
+            {renderTransom(
+              frameInset,
+              frameInset,
+              svgWidth - (frameInset * 2)
             )}
             
             {/* Casement indicators */}

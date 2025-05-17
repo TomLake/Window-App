@@ -30,6 +30,8 @@ export const windows = pgTable("windows", {
   hasGeorgianBars: boolean("has_georgian_bars").default(false), // whether to display Georgian bars
   georgianBarsHorizontal: integer("georgian_bars_horizontal").default(1), // number of horizontal bars
   georgianBarsVertical: integer("georgian_bars_vertical").default(1), // number of vertical bars
+  hasTransom: boolean("has_transom").default(false), // whether to display a transom
+  transomHeight: integer("transom_height").default(400), // height of the transom from the top in mm
   positionX: integer("position_x").default(0), // position in canvas
   positionY: integer("position_y").default(0), // position in canvas
 });
