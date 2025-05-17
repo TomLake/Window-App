@@ -6,10 +6,12 @@ import {
   FormControl, 
   FormField, 
   FormItem, 
-  FormLabel 
+  FormLabel,
+  FormDescription
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { 
   Select, 
   SelectContent, 
@@ -31,6 +33,7 @@ const windowFormSchema = z.object({
   height: z.coerce.number().min(300, "Height must be at least 300mm").max(3000, "Height must be at most 3000mm"),
   location: z.string().min(1, "Location is required"),
   glassType: z.string().min(1, "Glass type is required"),
+  hasGeorgianBars: z.boolean().default(false),
   positionX: z.number().default(0),
   positionY: z.number().default(0),
 });
@@ -52,6 +55,7 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
     height: 1100,
     location: "Living Room",
     glassType: "Clear",
+    hasGeorgianBars: false,
     positionX: 0,
     positionY: 0,
   };
@@ -64,7 +68,12 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
   // Update form when selected window changes
   useEffect(() => {
     if (selectedWindow) {
-      form.reset(selectedWindow);
+      // Ensure hasGeorgianBars is a boolean value (not null)
+      const windowData = {
+        ...selectedWindow,
+        hasGeorgianBars: selectedWindow.hasGeorgianBars === true
+      };
+      form.reset(windowData);
     }
   }, [selectedWindow, form]);
 
@@ -178,6 +187,27 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
                   <SelectItem value="Low-E">Low-E</SelectItem>
                 </SelectContent>
               </Select>
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="hasGeorgianBars"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>Georgian Bars</FormLabel>
+                <FormDescription>
+                  Add decorative Georgian bars to the window
+                </FormDescription>
+              </div>
             </FormItem>
           )}
         />

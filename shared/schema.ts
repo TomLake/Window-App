@@ -27,6 +27,7 @@ export const windows = pgTable("windows", {
   height: integer("height").notNull(), // in mm
   location: text("location").notNull(), // room name
   glassType: text("glass_type").notNull(), // clear, obscure, etc.
+  hasGeorgianBars: boolean("has_georgian_bars").default(false), // whether to display Georgian bars
   positionX: integer("position_x").default(0), // position in canvas
   positionY: integer("position_y").default(0), // position in canvas
 });

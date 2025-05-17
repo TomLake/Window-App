@@ -7,7 +7,7 @@ interface WindowDrawingProps {
 }
 
 export default function WindowDrawing({ window }: WindowDrawingProps) {
-  const { type, width, height, location, glassType } = window;
+  const { type, width, height, location, glassType, hasGeorgianBars = false } = window;
   
   // Calculate SVG dimensions while maintaining a minimum size and aspect ratio
   const maxSvgWidth = 300;
