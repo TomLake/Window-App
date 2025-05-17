@@ -223,8 +223,8 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
         );
       
       case "single-transom":
-        // Calculate the scaled transom height
-        const scaledTransomHeight = transomHeight * scaleFactor;
+        // Calculate the scaled transom height, default to 400mm if not specified
+        const scaledTransomHeight = (transomHeight ?? 400) * scaleFactor;
         
         return (
           <>
@@ -250,12 +250,12 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-mullion" 
             />
             
-            {/* Upper fixed casement */}
+            {/* Upper fixed casement - height based on transom height parameter */}
             <rect 
               x={frameInset - 1} 
               y={frameInset - 1} 
               width={svgWidth - (frameInset * 2) + 2} 
-              height={(svgHeight / 3) + 1} 
+              height={scaledTransomHeight + 1} 
               fill="none" 
               className="window-casement" 
             />
@@ -265,16 +265,16 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               x={frameInset + innerBorderWidth} 
               y={frameInset + innerBorderWidth} 
               width={svgWidth - ((frameInset + innerBorderWidth) * 2)} 
-              height={(svgHeight / 3) - (innerBorderWidth * 2)} 
+              height={scaledTransomHeight - (innerBorderWidth * 2)} 
               className="window-casement-interior"
             />
             
-            {/* Lower opening casement */}
+            {/* Lower opening casement - position based on transom height parameter */}
             <rect 
               x={frameInset - 1} 
-              y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
+              y={frameInset + scaledTransomHeight + mullionThickness - 1} 
               width={svgWidth - (frameInset * 2) + 2} 
-              height={svgHeight - frameInset - (svgHeight / 3) - mullionThickness} 
+              height={svgHeight - frameInset - scaledTransomHeight - mullionThickness} 
               fill="none" 
               className="window-casement" 
             />
@@ -282,9 +282,9 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             {/* Lower casement inner border 50mm wide with light blue fill */}
             <rect 
               x={frameInset + innerBorderWidth} 
-              y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
+              y={frameInset + scaledTransomHeight + mullionThickness + innerBorderWidth} 
               width={svgWidth - ((frameInset + innerBorderWidth) * 2)} 
-              height={svgHeight - frameInset - (svgHeight / 3) - mullionThickness - innerBorderWidth * 2} 
+              height={svgHeight - frameInset - scaledTransomHeight - mullionThickness - innerBorderWidth * 2} 
               className="window-casement-interior"
             />
             

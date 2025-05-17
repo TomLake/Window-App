@@ -76,14 +76,22 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
   useEffect(() => {
     if (selectedWindow) {
       // Ensure all properties have proper types
-      const windowData = {
-        ...selectedWindow,
+      // Need to convert types to match form expectations
+      const windowData: WindowFormValues = {
+        id: selectedWindow.id,
+        projectId: selectedWindow.projectId,
+        name: selectedWindow.name,
+        type: selectedWindow.type,
+        width: selectedWindow.width,
+        height: selectedWindow.height,
+        glassType: selectedWindow.glassType,
         openableCasements: selectedWindow.openableCasements || "left",
         hasGeorgianBars: selectedWindow.hasGeorgianBars === true,
         georgianBarsHorizontal: selectedWindow.georgianBarsHorizontal ?? 1,
         georgianBarsVertical: selectedWindow.georgianBarsVertical ?? 1,
-        positionX: selectedWindow.positionX || 0,
-        positionY: selectedWindow.positionY || 0
+        transomHeight: selectedWindow.transomHeight ?? 400,
+        positionX: selectedWindow.positionX ?? 0,
+        positionY: selectedWindow.positionY ?? 0
       };
       form.reset(windowData);
     }
