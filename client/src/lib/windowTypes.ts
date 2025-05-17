@@ -1,5 +1,6 @@
 // Define all available window types with their properties
 export const windowTypes = [
+  // Standard window types
   {
     id: "single",
     name: "Single Casement",
@@ -27,6 +28,36 @@ export const windowTypes = [
     minHeight: 500,
     maxHeight: 2000,
   },
+  
+  // Transom window types
+  {
+    id: "single-transom",
+    name: "Single with Transom",
+    description: "A single casement window with a fixed rectangular transom at the top",
+    minWidth: 400,
+    maxWidth: 1000,
+    minHeight: 800,
+    maxHeight: 2000,
+  },
+  {
+    id: "double-transom",
+    name: "Double with Transom",
+    description: "A double casement window with a fixed rectangular transom at the top",
+    minWidth: 800,
+    maxWidth: 2000,
+    minHeight: 800,
+    maxHeight: 2000,
+  },
+  {
+    id: "triple-transom",
+    name: "Triple with Transom",
+    description: "A triple casement window with a fixed rectangular transom at the top",
+    minWidth: 1200,
+    maxWidth: 2500,
+    minHeight: 800,
+    maxHeight: 2000,
+  },
+  
   {
     id: "patio",
     name: "Patio Doors",

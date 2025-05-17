@@ -253,6 +253,100 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
           </>
         );
       
+      case "single-transom":
+        return (
+          <>
+            {/* Outer Frame */}
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
+            
+            {/* Glass */}
+            <rect 
+              x={frameInset} 
+              y={frameInset} 
+              width={svgWidth - (frameInset * 2)} 
+              height={svgHeight - (frameInset * 2)} 
+              fill="none" 
+              stroke="none" 
+            />
+            
+            {/* Horizontal transom bar - fixed at top 1/3 of the window */}
+            <rect 
+              x={frameInset} 
+              y={frameInset + (svgHeight / 3)} 
+              width={svgWidth - (frameInset * 2)} 
+              height={mullionThickness} 
+              className="window-mullion" 
+            />
+            
+            {/* Upper fixed casement */}
+            <rect 
+              x={frameInset - 1} 
+              y={frameInset - 1} 
+              width={svgWidth - (frameInset * 2) + 2} 
+              height={(svgHeight / 3) + 1} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Upper casement inner border 50mm wide with light blue fill */}
+            <rect 
+              x={frameInset + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={svgWidth - ((frameInset + innerBorderWidth) * 2)} 
+              height={(svgHeight / 3) - mullionThickness - innerBorderWidth} 
+              className="window-casement-interior"
+            />
+            
+            {/* Lower opening casement */}
+            <rect 
+              x={frameInset - 1} 
+              y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
+              width={svgWidth - (frameInset * 2) + 2} 
+              height={(svgHeight * 2/3) - frameInset - mullionThickness + 1} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Lower casement inner border 50mm wide with light blue fill */}
+            <rect 
+              x={frameInset + innerBorderWidth} 
+              y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
+              width={svgWidth - ((frameInset + innerBorderWidth) * 2)} 
+              height={(svgHeight * 2/3) - frameInset - mullionThickness - (innerBorderWidth * 2) + 1} 
+              className="window-casement-interior"
+            />
+            
+            {/* Georgian bars if enabled */}
+            {renderGeorgianBars(
+              frameInset,
+              frameInset,
+              svgWidth - (frameInset * 2),
+              svgHeight - (frameInset * 2)
+            )}
+            
+            {/* Hinge indicators for the lower casement */}
+            {(openableCasements === "left" || openableCasements === "both") && (
+              renderHingeIndicator(
+                frameInset, 
+                frameInset + (svgHeight / 3) + mullionThickness, 
+                svgWidth - (frameInset * 2), 
+                (svgHeight * 2/3) - frameInset - mullionThickness, 
+                'left'
+              )
+            )}
+            
+            {(openableCasements === "right" || openableCasements === "both") && (
+              renderHingeIndicator(
+                frameInset, 
+                frameInset + (svgHeight / 3) + mullionThickness, 
+                svgWidth - (frameInset * 2), 
+                (svgHeight * 2/3) - frameInset - mullionThickness, 
+                'right'
+              )
+            )}
+          </>
+        );
+      
       case "double":
         return (
           <>
@@ -341,6 +435,147 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                 frameInset, 
                 (svgWidth / 2) - frameInset - (frameThickness / 2), 
                 svgHeight - (frameInset * 2), 
+                'right'
+              )
+            )}
+          </>
+        );
+        
+      case "double-transom":
+        return (
+          <>
+            {/* Main frame */}
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
+            
+            {/* Glass */}
+            <rect 
+              x={frameInset} 
+              y={frameInset} 
+              width={svgWidth - (frameInset * 2)} 
+              height={svgHeight - (frameInset * 2)} 
+              fill="none" 
+              stroke="none" 
+            />
+            
+            {/* Vertical mullion in the middle */}
+            <rect 
+              x={(svgWidth / 2) - (mullionThickness / 2)} 
+              y={frameInset} 
+              width={mullionThickness} 
+              height={svgHeight - (frameInset * 2)} 
+              className="window-mullion" 
+            />
+            
+            {/* Horizontal transom bar - fixed at top 1/3 of the window */}
+            <rect 
+              x={frameInset} 
+              y={frameInset + (svgHeight / 3)} 
+              width={svgWidth - (frameInset * 2)} 
+              height={mullionThickness} 
+              className="window-mullion" 
+            />
+            
+            {/* Upper left fixed casement */}
+            <rect 
+              x={frameInset - 1} 
+              y={frameInset - 1} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) + 1} 
+              height={(svgHeight / 3) + 1} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Upper left casement inner border with light blue fill */}
+            <rect 
+              x={frameInset + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) - innerBorderWidth} 
+              height={(svgHeight / 3) - innerBorderWidth - (mullionThickness / 2)} 
+              className="window-casement-interior"
+            />
+            
+            {/* Upper right fixed casement */}
+            <rect 
+              x={(svgWidth / 2) + (mullionThickness / 2)} 
+              y={frameInset - 1} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) + 1} 
+              height={(svgHeight / 3) + 1} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Upper right casement inner border with light blue fill */}
+            <rect 
+              x={(svgWidth / 2) + (mullionThickness / 2) + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) - innerBorderWidth} 
+              height={(svgHeight / 3) - innerBorderWidth - (mullionThickness / 2)} 
+              className="window-casement-interior"
+            />
+            
+            {/* Lower left opening casement */}
+            <rect 
+              x={frameInset - 1} 
+              y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) + 1} 
+              height={(svgHeight * 2/3) - frameInset - mullionThickness + 1} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Lower left casement inner border with light blue fill */}
+            <rect 
+              x={frameInset + innerBorderWidth} 
+              y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) - innerBorderWidth} 
+              height={(svgHeight * 2/3) - frameInset - mullionThickness - (innerBorderWidth * 2) + 1} 
+              className="window-casement-interior"
+            />
+            
+            {/* Lower right opening casement */}
+            <rect 
+              x={(svgWidth / 2) + (mullionThickness / 2)} 
+              y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) + 1} 
+              height={(svgHeight * 2/3) - frameInset - mullionThickness + 1} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Lower right casement inner border with light blue fill */}
+            <rect 
+              x={(svgWidth / 2) + (mullionThickness / 2) + innerBorderWidth} 
+              y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) - innerBorderWidth} 
+              height={(svgHeight * 2/3) - frameInset - mullionThickness - (innerBorderWidth * 2) + 1} 
+              className="window-casement-interior"
+            />
+            
+            {/* Georgian bars if enabled */}
+            {renderGeorgianBars(
+              frameInset,
+              frameInset,
+              svgWidth - (frameInset * 2),
+              svgHeight - (frameInset * 2)
+            )}
+            
+            {/* Hinge indicators for the lower casements */}
+            {(openableCasements === "left" || openableCasements === "both") && (
+              renderHingeIndicator(
+                frameInset, 
+                frameInset + (svgHeight / 3) + mullionThickness, 
+                (svgWidth / 2) - frameInset - (mullionThickness / 2), 
+                (svgHeight * 2/3) - frameInset - mullionThickness, 
+                'left'
+              )
+            )}
+            
+            {(openableCasements === "right" || openableCasements === "both") && (
+              renderHingeIndicator(
+                (svgWidth / 2) + (mullionThickness / 2), 
+                frameInset + (svgHeight / 3) + mullionThickness, 
+                (svgWidth / 2) - frameInset - (mullionThickness / 2), 
+                (svgHeight * 2/3) - frameInset - mullionThickness, 
                 'right'
               )
             )}
@@ -469,6 +704,193 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                 frameInset, 
                 (svgWidth / 3) - frameInset - (frameThickness / 2), 
                 svgHeight - (frameInset * 2), 
+                'right'
+              )
+            )}
+          </>
+        );
+        
+      case "triple-transom":
+        return (
+          <>
+            {/* Frame */}
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
+            
+            {/* Glass */}
+            <rect 
+              x={frameInset} 
+              y={frameInset} 
+              width={svgWidth - (frameInset * 2)} 
+              height={svgHeight - (frameInset * 2)} 
+              fill="none" 
+              stroke="none" 
+            />
+            
+            {/* Vertical mullions */}
+            <rect 
+              x={(svgWidth / 3) - (mullionThickness / 2)} 
+              y={frameInset} 
+              width={mullionThickness} 
+              height={svgHeight - (frameInset * 2)} 
+              className="window-mullion" 
+            />
+            
+            <rect 
+              x={((svgWidth / 3) * 2) - (mullionThickness / 2)} 
+              y={frameInset} 
+              width={mullionThickness} 
+              height={svgHeight - (frameInset * 2)} 
+              className="window-mullion" 
+            />
+            
+            {/* Horizontal transom bar - fixed at top 1/3 of the window */}
+            <rect 
+              x={frameInset} 
+              y={frameInset + (svgHeight / 3)} 
+              width={svgWidth - (frameInset * 2)} 
+              height={mullionThickness} 
+              className="window-mullion" 
+            />
+            
+            {/* Upper left fixed casement */}
+            <rect 
+              x={frameInset - 1} 
+              y={frameInset - 1} 
+              width={(svgWidth / 3) - frameInset - (frameThickness / 2) + 1} 
+              height={(svgHeight / 3) + 1} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Upper left casement inner border with light blue fill */}
+            <rect 
+              x={frameInset + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={(svgWidth / 3) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 1} 
+              height={(svgHeight / 3) - innerBorderWidth - (mullionThickness / 2)} 
+              className="window-casement-interior"
+            />
+            
+            {/* Upper middle fixed casement */}
+            <rect 
+              x={(svgWidth / 3) + (mullionThickness / 2)} 
+              y={frameInset - 1} 
+              width={(svgWidth / 3) - mullionThickness} 
+              height={(svgHeight / 3) + 1} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Upper middle casement inner border with light blue fill */}
+            <rect 
+              x={(svgWidth / 3) + (mullionThickness / 2) + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={(svgWidth / 3) - mullionThickness - (innerBorderWidth * 2)} 
+              height={(svgHeight / 3) - innerBorderWidth - (mullionThickness / 2)} 
+              className="window-casement-interior"
+            />
+            
+            {/* Upper right fixed casement */}
+            <rect 
+              x={((svgWidth / 3) * 2) + (mullionThickness / 2)} 
+              y={frameInset - 1} 
+              width={(svgWidth / 3) - frameInset - (mullionThickness / 2) + 1} 
+              height={(svgHeight / 3) + 1} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Upper right casement inner border with light blue fill */}
+            <rect 
+              x={((svgWidth / 3) * 2) + (mullionThickness / 2) + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={(svgWidth / 3) - frameInset - (mullionThickness / 2) - (innerBorderWidth * 2) + 1} 
+              height={(svgHeight / 3) - innerBorderWidth - (mullionThickness / 2)} 
+              className="window-casement-interior"
+            />
+            
+            {/* Lower left opening casement */}
+            <rect 
+              x={frameInset - 1} 
+              y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
+              width={(svgWidth / 3) - frameInset - (frameThickness / 2) + 1} 
+              height={(svgHeight * 2/3) - frameInset - mullionThickness + 1} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Lower left casement inner border with light blue fill */}
+            <rect 
+              x={frameInset + innerBorderWidth} 
+              y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
+              width={(svgWidth / 3) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 1} 
+              height={(svgHeight * 2/3) - frameInset - mullionThickness - (innerBorderWidth * 2) + 1} 
+              className="window-casement-interior"
+            />
+            
+            {/* Lower middle fixed casement */}
+            <rect 
+              x={(svgWidth / 3) + (mullionThickness / 2)} 
+              y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
+              width={(svgWidth / 3) - mullionThickness} 
+              height={(svgHeight * 2/3) - frameInset - mullionThickness + 1} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Lower middle casement inner border with light blue fill */}
+            <rect 
+              x={(svgWidth / 3) + (mullionThickness / 2) + innerBorderWidth} 
+              y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
+              width={(svgWidth / 3) - mullionThickness - (innerBorderWidth * 2)} 
+              height={(svgHeight * 2/3) - frameInset - mullionThickness - (innerBorderWidth * 2) + 1} 
+              className="window-casement-interior"
+            />
+            
+            {/* Lower right opening casement */}
+            <rect 
+              x={((svgWidth / 3) * 2) + (mullionThickness / 2)} 
+              y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
+              width={(svgWidth / 3) - frameInset - (mullionThickness / 2) + 1} 
+              height={(svgHeight * 2/3) - frameInset - mullionThickness + 1} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Lower right casement inner border with light blue fill */}
+            <rect 
+              x={((svgWidth / 3) * 2) + (mullionThickness / 2) + innerBorderWidth} 
+              y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
+              width={(svgWidth / 3) - frameInset - (mullionThickness / 2) - (innerBorderWidth * 2) + 1} 
+              height={(svgHeight * 2/3) - frameInset - mullionThickness - (innerBorderWidth * 2) + 1} 
+              className="window-casement-interior"
+            />
+            
+            {/* Georgian bars if enabled */}
+            {renderGeorgianBars(
+              frameInset,
+              frameInset,
+              svgWidth - (frameInset * 2),
+              svgHeight - (frameInset * 2)
+            )}
+            
+            {/* Hinge indicators for the lower left and right casements */}
+            {(openableCasements === "left" || openableCasements === "both") && (
+              renderHingeIndicator(
+                frameInset, 
+                frameInset + (svgHeight / 3) + mullionThickness, 
+                (svgWidth / 3) - frameInset - (frameThickness / 2), 
+                (svgHeight * 2/3) - frameInset - mullionThickness, 
+                'left'
+              )
+            )}
+            
+            {(openableCasements === "right" || openableCasements === "both") && (
+              renderHingeIndicator(
+                ((svgWidth / 3) * 2) + (mullionThickness / 2), 
+                frameInset + (svgHeight / 3) + mullionThickness, 
+                (svgWidth / 3) - frameInset - (frameThickness / 2), 
+                (svgHeight * 2/3) - frameInset - mullionThickness, 
                 'right'
               )
             )}
