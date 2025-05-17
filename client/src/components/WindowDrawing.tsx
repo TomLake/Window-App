@@ -11,7 +11,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     type, 
     width, 
     height, 
-    location, 
+    name,
     glassType, 
     hasGeorgianBars = false,
     georgianBarsHorizontal = 1,
@@ -33,9 +33,10 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   const svgWidth = Math.round(width * scaleFactor);
   const svgHeight = Math.round(height * scaleFactor);
   
-  // Add extra space for dimensions on the sides
+  // Add extra space for dimensions on the sides and label at the bottom
   const extraWidthForDimensions = 50; // Space for height dimension on the right
   const extraHeightForDimensions = 60; // Space for width dimension at the bottom
+  const extraHeightForLabel = 30; // Space for window name label at the bottom
   
   // Find window type configuration
   const windowConfig = windowTypes.find(w => w.id === type) || windowTypes[0];

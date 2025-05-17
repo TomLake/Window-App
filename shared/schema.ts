@@ -25,7 +25,7 @@ export const windows = pgTable("windows", {
   type: text("type").notNull(), // bedroom, kitchen, bathroom, etc.
   width: integer("width").notNull(), // in mm
   height: integer("height").notNull(), // in mm
-  location: text("location").notNull(), // room name
+  // location field removed as requested
   glassType: text("glass_type").notNull(), // clear, obscure, etc.
   hasGeorgianBars: boolean("has_georgian_bars").default(false), // whether to display Georgian bars
   georgianBarsHorizontal: integer("georgian_bars_horizontal").default(1), // number of horizontal bars

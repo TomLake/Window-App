@@ -31,7 +31,7 @@ const windowFormSchema = z.object({
   type: z.string().min(1, "Type is required"),
   width: z.coerce.number().min(300, "Width must be at least 300mm").max(3000, "Width must be at most 3000mm"),
   height: z.coerce.number().min(300, "Height must be at least 300mm").max(3000, "Height must be at most 3000mm"),
-  location: z.string().min(1, "Location is required"),
+  // location field removed
   glassType: z.string().min(1, "Glass type is required"),
   hasGeorgianBars: z.boolean().default(false),
   georgianBarsHorizontal: z.coerce.number().min(0).max(4).default(1),
@@ -55,7 +55,6 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
     type: "single",
     width: 1100,
     height: 1100,
-    location: "Living Room",
     glassType: "Clear",
     hasGeorgianBars: false,
     georgianBarsHorizontal: 1,
@@ -159,18 +158,7 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
           />
         </div>
 
-        <FormField
-          control={form.control}
-          name="location"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Room Location</FormLabel>
-              <FormControl>
-                <Input placeholder="Kitchen" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+        {/* Location field removed */}
 
         <FormField
           control={form.control}
