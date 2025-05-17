@@ -302,9 +302,9 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               <>
                 {/* Left top casement - hinged at top */}
                 <path 
-                  d={`M ${frameInset + 20} ${frameInset + scaledTransomHeight - 10} 
-                      L ${frameInset + (svgWidth/4)} ${frameInset + 10} 
-                      L ${svgWidth/2 - 20} ${frameInset + scaledTransomHeight - 10}`}
+                  d={`M ${frameInset} ${frameInset + scaledTransomHeight - 5} 
+                      L ${frameInset + (svgWidth/4)} ${frameInset} 
+                      L ${svgWidth/2 - frameInset/2} ${frameInset + scaledTransomHeight - 5}`}
                   stroke="black" 
                   strokeDasharray="5,5" 
                   strokeWidth="1"
@@ -317,9 +317,9 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               <>
                 {/* Right top casement - hinged at top */}
                 <path 
-                  d={`M ${svgWidth/2 + 20} ${frameInset + scaledTransomHeight - 10} 
-                      L ${frameInset + (svgWidth*3/4)} ${frameInset + 10} 
-                      L ${svgWidth - frameInset - 20} ${frameInset + scaledTransomHeight - 10}`}
+                  d={`M ${svgWidth/2 + frameInset/2} ${frameInset + scaledTransomHeight - 5} 
+                      L ${frameInset + (svgWidth*3/4)} ${frameInset} 
+                      L ${svgWidth - frameInset} ${frameInset + scaledTransomHeight - 5}`}
                   stroke="black" 
                   strokeDasharray="5,5" 
                   strokeWidth="1"
