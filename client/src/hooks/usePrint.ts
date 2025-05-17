@@ -1,75 +1,84 @@
 import { useRef } from 'react';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import type { Window } from '@shared/schema';
 
 export function usePrint() {
-  // Create a reference to the element we want to print
+  // Create a reference to the element containing the windows
   const printRef = useRef<HTMLDivElement>(null);
 
-  const handlePrint = () => {
+  const handlePrint = async () => {
     if (!printRef.current) return;
 
-    // Store the original styles to restore after print
-    const originalStyles = {
-      overflow: document.body.style.overflow,
-      backgroundColor: document.body.style.backgroundColor,
-    };
-
-    // Clone the content to print
-    const clonedElement = printRef.current.cloneNode(true) as HTMLElement;
-    
-    // Apply print-friendly styles to the clone
-    const styles = document.createElement('style');
-    styles.textContent = `
-      @page {
-        margin: 20mm;
-        size: A4;
-      }
-      body {
-        margin: 0;
-        padding: 0;
-        background-color: white;
-      }
-      @media print {
-        * {
-          box-sizing: border-box;
-        }
-        .material-icons {
-          display: none;
-        }
-        button {
-          display: none;
-        }
-      }
-    `;
-    
-    clonedElement.appendChild(styles);
-    
-    // Create a container for printing
-    const printContainer = document.createElement('div');
-    printContainer.id = 'print-container';
-    printContainer.style.position = 'fixed';
-    printContainer.style.top = '0';
-    printContainer.style.left = '0';
-    printContainer.style.width = '100%';
-    printContainer.style.height = '100%';
-    printContainer.style.backgroundColor = 'white';
-    printContainer.style.zIndex = '9999';
-    printContainer.style.overflow = 'auto';
-    printContainer.appendChild(clonedElement);
-    
-    // Hide original content and show print container
-    document.body.style.overflow = 'hidden';
-    document.body.style.backgroundColor = 'white';
-    document.body.appendChild(printContainer);
-    
-    // Print the document
-    setTimeout(() => {
-      window.print();
+    try {
+      // Create a new PDF document, A4 size in portrait
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 20; // 20mm margin
+      const contentWidth = pageWidth - (margin * 2);
       
-      // Clean up after printing
-      document.body.removeChild(printContainer);
-      document.body.style.overflow = originalStyles.overflow;
-      document.body.style.backgroundColor = originalStyles.backgroundColor;
-    }, 300);
+      // Add a title to the PDF
+      const projectName = document.querySelector('.text-lg.font-medium')?.textContent || 'Window Design';
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(16);
+      pdf.text(projectName, pageWidth / 2, margin, { align: 'center' });
+      
+      // Get all window drawing elements
+      const windowElements = printRef.current.querySelectorAll('.mb-16.inline-block');
+      
+      if (windowElements.length === 0) {
+        console.warn('No window elements found');
+        return;
+      }
+
+      let yPosition = margin + 10; // Start position after title
+      
+      // Process each window drawing and add it to the PDF
+      for (let i = 0; i < windowElements.length; i++) {
+        const element = windowElements[i] as HTMLElement;
+        
+        // Use html2canvas to capture the SVG
+        const canvas = await html2canvas(element, {
+          backgroundColor: '#FFFFFF',
+          scale: 2, // Higher scale for better quality
+          logging: false,
+          useCORS: true
+        });
+        
+        // Convert canvas to image
+        const imgData = canvas.toDataURL('image/png');
+        
+        // Calculate dimensions to fit within the page width
+        const imgWidth = contentWidth;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        // Check if this window will fit on the current page, otherwise add a new page
+        if (yPosition + imgHeight > pageHeight - margin) {
+          pdf.addPage();
+          yPosition = margin;
+        }
+        
+        // Add the image to the PDF
+        pdf.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
+        
+        // Update position for the next window with some spacing
+        yPosition += imgHeight + 15;
+      }
+      
+      // Add creation date at the bottom of the last page
+      const today = new Date();
+      const dateStr = today.toLocaleDateString();
+      pdf.setFont('helvetica', 'normal');
+      pdf.setFontSize(10);
+      pdf.text(`Generated on ${dateStr}`, margin, pageHeight - 10);
+      
+      // Save the PDF
+      pdf.save(`${projectName.replace(/\s+/g, '_')}.pdf`);
+      
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    }
   };
 
   return { printRef, handlePrint };
