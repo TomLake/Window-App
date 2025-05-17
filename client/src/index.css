@@ -89,6 +89,15 @@
   fill: none;
 }
 
+/* Override all SVG strokes to use the same dark color */
+.window-drawing-svg rect {
+  stroke: #475569;
+}
+
+.window-drawing-svg line {
+  stroke: #475569;
+}
+
 .dimension-text {
   font-size: 10px;
   fill: #475569;
