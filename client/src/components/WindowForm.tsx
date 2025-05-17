@@ -32,7 +32,7 @@ const windowFormSchema = z.object({
   width: z.coerce.number().min(300, "Width must be at least 300mm").max(3000, "Width must be at most 3000mm"),
   height: z.coerce.number().min(300, "Height must be at least 300mm").max(3000, "Height must be at most 3000mm"),
   // location field removed
-  glassType: z.string().min(1, "Glass type is required"),
+  // glassType removed
   openableCasements: z.string().default("left"),
   hasGeorgianBars: z.boolean().default(false),
   georgianBarsHorizontal: z.coerce.number().min(0).max(4).default(1),
@@ -58,7 +58,7 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
     type: "single",
     width: 1100,
     height: 1100,
-    glassType: "Clear",
+    // glassType removed
     openableCasements: "left",
     hasGeorgianBars: false,
     georgianBarsHorizontal: 1,
@@ -169,32 +169,7 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
 
         {/* Location field removed */}
 
-        <FormField
-          control={form.control}
-          name="glassType"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Glass Type</FormLabel>
-              <Select 
-                onValueChange={field.onChange} 
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select glass type" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="Clear">Clear</SelectItem>
-                  <SelectItem value="Obscure">Obscure</SelectItem>
-                  <SelectItem value="Tinted">Tinted</SelectItem>
-                  <SelectItem value="Low-E">Low-E</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormItem>
-          )}
-        />
+        {/* Glass Type field removed */}
         
         <FormField
           control={form.control}

@@ -12,7 +12,6 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     width, 
     height, 
     name = "Window", // Provide default name to prevent rendering issues
-    glassType, 
     openableCasements = "left", // Default left casement opens
     hasGeorgianBars = false,
     georgianBarsHorizontal = 1,
@@ -44,9 +43,8 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   // Find window type configuration
   const windowConfig = windowTypes.find(w => w.id === type) || windowTypes[0];
   
-  // Determine if using obscure glass
-  const isObscureGlass = glassType === "Obscure" || glassType === "Tinted";
-  const glassColor = isObscureGlass ? "#e6f0fa" : "#dbeafe"; // Slightly different blue for obscure glass
+  // Use a consistent glass color
+  const glassColor = "#dbeafe"; // Light blue for all glass
   
   // Frame thickness (45mm scaled to SVG size)
   const frameThickness = Math.max(3, Math.round(45 * scaleFactor)); // 45mm scaled to SVG size, minimum 3px
@@ -671,7 +669,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
           </text>
           
           {/* Glass type indication if obscure */}
-          {isObscureGlass && (
+          {false && (
             <text 
               x={svgWidth / 2} 
               y={svgHeight - 10} 
