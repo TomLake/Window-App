@@ -188,7 +188,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
         return (
           <>
             {/* Outer Frame */}
-            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" stroke={frameColor} />
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" style={{ stroke: frameColor }} />
             
             {/* Glass */}
             <rect 
@@ -265,7 +265,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
         return (
           <>
             {/* Main frame */}
-            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" stroke={frameColor} />
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" style={{ stroke: frameColor }} />
             
 
             

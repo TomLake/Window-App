@@ -201,6 +201,39 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
         
         <FormField
           control={form.control}
+          name="paintColor"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Frame Color</FormLabel>
+              <Select 
+                onValueChange={field.onChange} 
+                defaultValue={field.value}
+                value={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select frame color" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="white">White</SelectItem>
+                  <SelectItem value="#5A3825">Rosewood</SelectItem>
+                  <SelectItem value="#000000">Black</SelectItem>
+                  <SelectItem value="#4F7942">Sage Green</SelectItem>
+                  <SelectItem value="#535353">Anthracite Grey</SelectItem>
+                  <SelectItem value="#A0522D">Mahogany</SelectItem>
+                  <SelectItem value="#8B4513">Golden Oak</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormDescription>
+                Select the paint color for the window frame
+              </FormDescription>
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
           name="openableCasements"
           render={({ field }) => (
             <FormItem>
