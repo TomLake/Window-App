@@ -73,38 +73,40 @@
 /* Window Drawing Styles */
 .window-frame {
   stroke: black;
-  stroke-width: 2.5;
+  stroke-width: 1.5;
   fill: white;
 }
 
 .window-casement {
   stroke: black;
-  stroke-width: 2;
+  stroke-width: 1;
   stroke-dasharray: none;
 }
 
 .window-section {
   stroke: black;
-  stroke-width: 2;
+  stroke-width: 1;
   fill: none;
 }
 
 /* Override all SVG strokes to use black */
 .window-drawing-svg rect {
   stroke: black;
+  stroke-width: 0.75;
 }
 
 .window-drawing-svg line {
   stroke: black;
+  stroke-width: 0.75;
 }
 
 .dimension-text {
-  font-size: 10px;
+  font-size: 9px;
   fill: black;
 }
 
 .window-hinge {
   stroke: black;
-  stroke-width: 1.5;
+  stroke-width: 0.75;
   fill: none;
 }
