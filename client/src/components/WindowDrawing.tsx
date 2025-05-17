@@ -116,8 +116,6 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     return bars;
   };
   
-  // Removed transom function as we now have dedicated window types with transoms
-  
   // Function to render dashed lines to indicate the hinge side for opening casements
   const renderHingeIndicator = (x: number, y: number, width: number, height: number, hingeSide: 'left' | 'right') => {
     // Determine the points for the dashed line
@@ -179,13 +177,6 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               frameInset,
               svgWidth - (frameInset * 2),
               svgHeight - (frameInset * 2)
-            )}
-            
-            {/* Transom if enabled */}
-            {renderTransom(
-              frameInset,
-              frameInset,
-              svgWidth - (frameInset * 2)
             )}
             
             {/* Casement indicators */}
@@ -270,7 +261,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               x={frameInset + innerBorderWidth} 
               y={frameInset + innerBorderWidth} 
               width={svgWidth - ((frameInset + innerBorderWidth) * 2)} 
-              height={(svgHeight / 3) - innerBorderWidth - innerBorderWidth} 
+              height={(svgHeight / 3) - (innerBorderWidth * 2)} 
               className="window-casement-interior"
             />
             
@@ -348,13 +339,6 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               frameInset,
               svgWidth - (frameInset * 2),
               svgHeight - (frameInset * 2)
-            )}
-            
-            {/* Transom for entire window */}
-            {renderTransom(
-              frameInset,
-              frameInset,
-              svgWidth - (frameInset * 2)
             )}
             
             {/* Left casement */}
@@ -583,13 +567,6 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               frameInset,
               svgWidth - (frameInset * 2),
               svgHeight - (frameInset * 2)
-            )}
-            
-            {/* Transom for entire window */}
-            {renderTransom(
-              frameInset,
-              frameInset,
-              svgWidth - (frameInset * 2)
             )}
             
             {/* Casements for each section */}
@@ -896,13 +873,6 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               frameInset,
               svgWidth - (frameInset * 2),
               svgHeight - (frameInset * 2)
-            )}
-            
-            {/* Transom for entire window */}
-            {renderTransom(
-              frameInset,
-              frameInset,
-              svgWidth - (frameInset * 2)
             )}
             
             {/* Mullion in the middle */}

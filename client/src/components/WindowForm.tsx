@@ -84,8 +84,6 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
         hasGeorgianBars: selectedWindow.hasGeorgianBars === true,
         georgianBarsHorizontal: selectedWindow.georgianBarsHorizontal ?? 1,
         georgianBarsVertical: selectedWindow.georgianBarsVertical ?? 1,
-        hasTransom: selectedWindow.hasTransom === true,
-        transomHeight: selectedWindow.transomHeight ?? 400,
         positionX: selectedWindow.positionX || 0,
         positionY: selectedWindow.positionY || 0
       };
@@ -301,26 +299,7 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
           </div>
         )}
         
-        <FormField
-          control={form.control}
-          name="hasTransom"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>Transom</FormLabel>
-                <FormDescription>
-                  Add a transom bar to the window
-                </FormDescription>
-              </div>
-            </FormItem>
-          )}
-        />
+{/* Transom fields removed - now using dedicated window types with transoms */}
         
         {form.watch("hasTransom") && (
           <FormField
