@@ -317,7 +317,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-            {/* Left pane opening indication - arrow pointing to hinge side */}
+            {/* Horizontal line for left pane */}
             <line 
               x1={svgWidth * 0.1} 
               y1={svgHeight * 0.5} 
@@ -325,22 +325,28 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               y2={svgHeight * 0.5} 
               className="window-hinge" 
             />
-            <line 
-              x1={svgWidth * 0.1} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.2} 
-              y2={svgHeight * 0.3} 
-              className="window-hinge" 
-            />
-            <line 
-              x1={svgWidth * 0.1} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.2} 
-              y2={svgHeight * 0.7} 
-              className="window-hinge" 
-            />
             
-            {/* Right pane opening indication - arrow pointing to hinge side */}
+            {/* Left pane diagonal hinge indicators - only show if left or both casements open */}
+            {(openableCasements === "left" || openableCasements === "both") && (
+              <>
+                <line 
+                  x1={svgWidth * 0.1} 
+                  y1={svgHeight * 0.5} 
+                  x2={svgWidth * 0.2} 
+                  y2={svgHeight * 0.3} 
+                  className="window-hinge" 
+                />
+                <line 
+                  x1={svgWidth * 0.1} 
+                  y1={svgHeight * 0.5} 
+                  x2={svgWidth * 0.2} 
+                  y2={svgHeight * 0.7} 
+                  className="window-hinge" 
+                />
+              </>
+            )}
+            
+            {/* Horizontal line for right pane */}
             <line 
               x1={svgWidth * 0.9} 
               y1={svgHeight * 0.5} 
@@ -348,20 +354,26 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               y2={svgHeight * 0.5} 
               className="window-hinge" 
             />
-            <line 
-              x1={svgWidth * 0.9} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.8} 
-              y2={svgHeight * 0.3} 
-              className="window-hinge" 
-            />
-            <line 
-              x1={svgWidth * 0.9} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.8} 
-              y2={svgHeight * 0.7} 
-              className="window-hinge" 
-            />
+            
+            {/* Right pane diagonal hinge indicators - only show if right or both casements open */}
+            {(openableCasements === "right" || openableCasements === "both") && (
+              <>
+                <line 
+                  x1={svgWidth * 0.9} 
+                  y1={svgHeight * 0.5} 
+                  x2={svgWidth * 0.8} 
+                  y2={svgHeight * 0.3} 
+                  className="window-hinge" 
+                />
+                <line 
+                  x1={svgWidth * 0.9} 
+                  y1={svgHeight * 0.5} 
+                  x2={svgWidth * 0.8} 
+                  y2={svgHeight * 0.7} 
+                  className="window-hinge" 
+                />
+              </>
+            )}
           </>
         );
       
@@ -524,7 +536,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               </>
             )}
             
-            {/* Middle pane opening indication - always shown since middle pane typically opens */}
+            {/* Middle pane horizontal line */}
             <line 
               x1={svgWidth * 0.5} 
               y1={svgHeight * 0.5} 
@@ -532,6 +544,8 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               y2={svgHeight * 0.5} 
               className="window-hinge" 
             />
+            
+            {/* Middle pane diagonal hinge indicators - always shown since middle pane always opens */}
             <line 
               x1={svgWidth * 0.5} 
               y1={svgHeight * 0.5} 
@@ -547,16 +561,18 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-hinge" 
             />
             
-            {/* Right pane opening indication - only show if right or both casements open */}
+            {/* Right pane horizontal line */}
+            <line 
+              x1={svgWidth * 0.95} 
+              y1={svgHeight * 0.5} 
+              x2={svgWidth * 0.75} 
+              y2={svgHeight * 0.5} 
+              className="window-hinge" 
+            />
+            
+            {/* Right pane diagonal hinge indicators - only show if right or both casements open */}
             {(openableCasements === "right" || openableCasements === "both") && (
               <>
-                <line 
-                  x1={svgWidth * 0.95} 
-                  y1={svgHeight * 0.5} 
-                  x2={svgWidth * 0.75} 
-                  y2={svgHeight * 0.5} 
-                  className="window-hinge" 
-                />
                 <line 
                   x1={svgWidth * 0.95} 
                   y1={svgHeight * 0.5} 
