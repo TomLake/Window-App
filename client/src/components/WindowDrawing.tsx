@@ -704,6 +704,21 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
+            {/* Georgian bars */}
+            {renderGeorgianBars(
+              frameInset,
+              frameInset,
+              svgWidth - (frameInset * 2),
+              svgHeight - (frameInset * 2)
+            )}
+            
+            {/* Transom */}
+            {renderTransom(
+              frameInset,
+              frameInset,
+              svgWidth - (frameInset * 2)
+            )}
+            
             {/* Fixed indicators (X mark) with thicker lines */}
             <line 
               x1={frameInset + 5} 
