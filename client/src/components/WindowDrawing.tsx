@@ -744,6 +744,28 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                 'right'
               )
             )}
+            
+            {/* Center casement opening - hinged on the left */}
+            {openableCasements === "center-left" && (
+              renderHingeIndicator(
+                (svgWidth / 3) + (frameThickness / 2), 
+                frameInset, 
+                (svgWidth / 3) - frameThickness, 
+                svgHeight - (frameInset * 2), 
+                'left'
+              )
+            )}
+            
+            {/* Center casement opening - hinged on the right */}
+            {openableCasements === "center-right" && (
+              renderHingeIndicator(
+                (svgWidth / 3) + (frameThickness / 2), 
+                frameInset, 
+                (svgWidth / 3) - frameThickness, 
+                svgHeight - (frameInset * 2), 
+                'right'
+              )
+            )}
           </>
         );
         

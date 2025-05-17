@@ -225,7 +225,12 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
                 <SelectContent>
                   <SelectItem value="left">Left Only</SelectItem>
                   <SelectItem value="right">Right Only</SelectItem>
-                  <SelectItem value="center">Center</SelectItem>
+                  {(selectedWindow?.type === "triple" || selectedWindow?.type === "triple-transom") && (
+                    <>
+                      <SelectItem value="center-left">Center (Left Hinged)</SelectItem>
+                      <SelectItem value="center-right">Center (Right Hinged)</SelectItem>
+                    </>
+                  )}
                   <SelectItem value="both">Both Left and Right</SelectItem>
                   <SelectItem value="none">None (Fixed)</SelectItem>
                 </SelectContent>
@@ -355,7 +360,12 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
                     <SelectContent>
                       <SelectItem value="left">Left Only</SelectItem>
                       <SelectItem value="right">Right Only</SelectItem>
-                      <SelectItem value="center">Center</SelectItem>
+                      {selectedWindow?.type === "triple-transom" && (
+                        <>
+                          <SelectItem value="center-left">Center (Left Hinged)</SelectItem>
+                          <SelectItem value="center-right">Center (Right Hinged)</SelectItem>
+                        </>
+                      )}
                       <SelectItem value="both">Both Left and Right</SelectItem>
                       <SelectItem value="none">None (Fixed)</SelectItem>
                     </SelectContent>
