@@ -16,9 +16,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     openableCasements = "left", // Default left casement opens
     hasGeorgianBars = false,
     georgianBarsHorizontal = 1,
-    georgianBarsVertical = 1,
-    hasTransom = false,
-    transomHeight = 400
+    georgianBarsVertical = 1
   } = window;
   
   // Calculate SVG dimensions while maintaining a minimum size and aspect ratio
@@ -118,28 +116,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     return bars;
   };
   
-  // Function to render transom bar for a window
-  const renderTransom = (x: number, y: number, paneWidth: number) => {
-    if (!hasTransom) return null;
-    
-    // Calculate the scaled transom height from the top
-    // Use a default value of 400 if transomHeight is null
-    const safeTransomHeight = typeof transomHeight === 'number' ? transomHeight : 400;
-    const scaledTransomHeight = Math.min(safeTransomHeight, height) * scaleFactor;
-    const transomY = y + scaledTransomHeight;
-    const transomThickness = 2.5; // Slightly thicker than other bars
-    const transomColor = "#334155";
-    
-    return (
-      <rect
-        x={x}
-        y={transomY - (transomThickness / 2)}
-        width={paneWidth}
-        height={transomThickness}
-        fill={transomColor}
-      />
-    );
-  };
+  // Removed transom function as we now have dedicated window types with transoms
   
   // Function to render dashed lines to indicate the hinge side for opening casements
   const renderHingeIndicator = (x: number, y: number, width: number, height: number, hingeSide: 'left' | 'right') => {
