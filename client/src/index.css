@@ -78,7 +78,7 @@
 }
 
 .window-casement {
-  stroke: black;
+  stroke: transparent;
   stroke-width: 0;
   stroke-dasharray: none;
 }
