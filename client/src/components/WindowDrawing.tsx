@@ -912,7 +912,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                   <rect 
                     x={frameInset + sectionWidth + (mullionThickness/2)} 
                     y={frameInset - 1} 
-                    width={sectionWidth - mullionThickness + 2} 
+                    width={sectionWidth - mullionThickness} 
                     height={(svgHeight / 3) + 1} 
                     fill="none" 
                     className="window-casement" 
@@ -922,7 +922,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                   <rect 
                     x={frameInset + sectionWidth + (mullionThickness/2) + innerBorderWidth} 
                     y={frameInset + innerBorderWidth} 
-                    width={sectionWidth - mullionThickness - (innerBorderWidth * 2) + 2} 
+                    width={sectionWidth - mullionThickness - (innerBorderWidth * 2)} 
                     height={(svgHeight / 3) - (innerBorderWidth * 2)} 
                     className="window-casement-interior"
                   />
@@ -982,7 +982,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                   <rect 
                     x={frameInset + sectionWidth + (mullionThickness/2)} 
                     y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
-                    width={sectionWidth - mullionThickness + 2} 
+                    width={sectionWidth - mullionThickness} 
                     height={lowerHeight} 
                     fill="none" 
                     className="window-casement" 
@@ -992,7 +992,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                   <rect 
                     x={frameInset + sectionWidth + (mullionThickness/2) + innerBorderWidth} 
                     y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
-                    width={sectionWidth - mullionThickness - (innerBorderWidth * 2) + 2} 
+                    width={sectionWidth - mullionThickness - (innerBorderWidth * 2)} 
                     height={lowerHeight - (innerBorderWidth * 2)} 
                     className="window-casement-interior"
                   />
