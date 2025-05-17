@@ -92,7 +92,7 @@
 .window-mullion {
   fill: white;
   stroke: black;
-  stroke-width: 1;
+  stroke-width: 1px;
 }
 
 .window-section {
