@@ -37,8 +37,9 @@ const windowFormSchema = z.object({
   hasGeorgianBars: z.boolean().default(false),
   georgianBarsHorizontal: z.coerce.number().min(0).max(4).default(1),
   georgianBarsVertical: z.coerce.number().min(0).max(4).default(1),
-  // Optional transom height parameter for transom window types
+  // Optional transom parameters for transom window types
   transomHeight: z.coerce.number().min(200, "Transom height must be at least 200mm").max(1000, "Transom height must be at most 1000mm").default(400).optional(),
+  topCasementsOpenable: z.string().default("none"),
   positionX: z.number().default(0),
   positionY: z.number().default(0),
 });
@@ -63,6 +64,8 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
     hasGeorgianBars: false,
     georgianBarsHorizontal: 1,
     georgianBarsVertical: 1,
+    transomHeight: 400,
+    topCasementsOpenable: "none",
     positionX: 0,
     positionY: 0,
   };
@@ -90,6 +93,7 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
         georgianBarsHorizontal: selectedWindow.georgianBarsHorizontal ?? 1,
         georgianBarsVertical: selectedWindow.georgianBarsVertical ?? 1,
         transomHeight: selectedWindow.transomHeight ?? 400,
+        topCasementsOpenable: selectedWindow.topCasementsOpenable || "none",
         positionX: selectedWindow.positionX ?? 0,
         positionY: selectedWindow.positionY ?? 0
       };
@@ -305,30 +309,62 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
           </div>
         )}
         
-{/* Transom height parameter - only visible for transom window types */}
+{/* Transom parameters - only visible for transom window types */}
         {(form.watch("type") === "single-transom" || 
           form.watch("type") === "double-transom" || 
           form.watch("type") === "triple-transom") && (
-          <FormField
-            control={form.control}
-            name="transomHeight"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Transom Height (mm)</FormLabel>
-                <FormControl>
-                  <Input 
-                    type="number" 
-                    min="200"
-                    max="1000"
-                    {...field} 
-                  />
-                </FormControl>
-                <FormDescription>
-                  Height of transom section from top of window (default: 400mm)
-                </FormDescription>
-              </FormItem>
-            )}
-          />
+          <>
+            <FormField
+              control={form.control}
+              name="transomHeight"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Transom Height (mm)</FormLabel>
+                  <FormControl>
+                    <Input 
+                      type="number" 
+                      min="200"
+                      max="1000"
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Height of transom section from top of window (default: 400mm)
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="topCasementsOpenable"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Top Openable Casements</FormLabel>
+                  <Select 
+                    onValueChange={field.onChange} 
+                    defaultValue={field.value}
+                    value={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select which top casements open" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="left">Left Only</SelectItem>
+                      <SelectItem value="right">Right Only</SelectItem>
+                      <SelectItem value="both">Both Left and Right</SelectItem>
+                      <SelectItem value="none">None (Fixed)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    Specify which top casements of the window can open (hinged at top)
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
+          </>
         )}
         
 
