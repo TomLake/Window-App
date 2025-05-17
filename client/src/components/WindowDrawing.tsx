@@ -43,8 +43,8 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   // Find window type configuration
   const windowConfig = windowTypes.find(w => w.id === type) || windowTypes[0];
   
-  // Use a consistent glass color
-  const glassColor = "#dbeafe"; // Light blue for all glass
+  // Use a transparent color for glass
+  const glassColor = "none"; // Transparent glass
   
   // Frame thickness (45mm scaled to SVG size)
   const frameThickness = Math.max(3, Math.round(45 * scaleFactor)); // 45mm scaled to SVG size, minimum 3px
@@ -677,7 +677,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               fontSize="8" 
               fill="#334155"
             >
-              ({glassType})
+              Glass
             </text>
           )}
         </svg>
