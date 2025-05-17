@@ -192,7 +192,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               y={frameInset} 
               width={svgWidth - (frameInset * 2)} 
               height={svgHeight - (frameInset * 2)} 
-              fill={glassColor} 
+              fill="none" 
               stroke="black" 
               strokeWidth="1" 
             />
@@ -271,7 +271,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               y={frameInset} 
               width={svgWidth - (frameInset * 2)} 
               height={svgHeight - (frameInset * 2)} 
-              fill={glassColor} 
+              fill="none" 
               stroke="black" 
               strokeWidth="1" 
             />
@@ -372,7 +372,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               y={frameInset} 
               width={svgWidth - (frameInset * 2)} 
               height={svgHeight - (frameInset * 2)} 
-              fill={glassColor} 
+              fill="none" 
               stroke="black" 
               strokeWidth="1" 
             />
@@ -496,7 +496,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               y={frameInset} 
               width={svgWidth - (frameInset * 2)} 
               height={svgHeight - (frameInset * 2)} 
-              fill={glassColor} 
+              fill="none" 
               stroke="black" 
               strokeWidth="1" 
             />
@@ -582,7 +582,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               y={frameInset} 
               width={svgWidth - (frameInset * 2)} 
               height={svgHeight - (frameInset * 2)} 
-              fill={glassColor} 
+              fill="none" 
               stroke="black" 
               strokeWidth="1" 
             />
