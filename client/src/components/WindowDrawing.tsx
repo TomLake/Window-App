@@ -48,8 +48,8 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   const isObscureGlass = glassType === "Obscure" || glassType === "Tinted";
   const glassColor = isObscureGlass ? "#e6f0fa" : "#dbeafe"; // Slightly different blue for obscure glass
   
-  // Frame thickness
-  const frameThickness = 3; // Thicker frame
+  // Frame thickness (45mm scaled to SVG size)
+  const frameThickness = Math.max(3, Math.round(45 * scaleFactor)); // 45mm scaled to SVG size, minimum 3px
   const frameInset = frameThickness + 2; // Inset from frame to glass
   const casementWidth = 2; // Casement line width
   
