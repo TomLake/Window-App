@@ -33,6 +33,7 @@ const windowFormSchema = z.object({
   height: z.coerce.number().min(300, "Height must be at least 300mm").max(3000, "Height must be at most 3000mm"),
   // location field removed
   glassType: z.string().min(1, "Glass type is required"),
+  paintColor: z.string().default("white"),
   openableCasements: z.string().default("left"),
   hasGeorgianBars: z.boolean().default(false),
   georgianBarsHorizontal: z.coerce.number().min(0).max(4).default(1),

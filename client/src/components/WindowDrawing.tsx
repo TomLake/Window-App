@@ -18,7 +18,8 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     georgianBarsHorizontal = 1,
     georgianBarsVertical = 1,
     hasTransom = false,
-    transomHeight = 400
+    transomHeight = 400,
+    paintColor = "white" // Default paint color is white
   } = window;
   
   // Calculate SVG dimensions while maintaining a minimum size and aspect ratio
@@ -184,7 +185,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
         return (
           <>
             {/* Outer Frame */}
-            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" stroke={paintColor} />
             
             {/* Glass */}
             <rect 
@@ -261,7 +262,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
         return (
           <>
             {/* Main frame */}
-            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" stroke={paintColor} />
             
 
             
