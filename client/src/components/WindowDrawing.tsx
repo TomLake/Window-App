@@ -212,21 +212,13 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               svgWidth - (frameInset * 2)
             )}
             
-            {/* Outer frame (white border) */}
+            {/* Casement indicators */}
             <rect 
               x={frameInset - 1} 
               y={frameInset - 1} 
               width={svgWidth - (frameInset * 2) + 2} 
-              height={svgHeight - (frameInset * 2) + 2}
-              className="window-frame-outer" 
-            />
-            
-            {/* Casement indicators (green inner) */}
-            <rect 
-              x={frameInset + 5} 
-              y={frameInset + 5} 
-              width={svgWidth - (frameInset * 2) - 8} 
-              height={svgHeight - (frameInset * 2) - 8}
+              height={svgHeight - (frameInset * 2) + 2} 
+              fill="none" 
               className="window-casement" 
             />
             
