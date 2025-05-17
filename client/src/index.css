@@ -83,6 +83,12 @@
   stroke-dasharray: none;
 }
 
+.window-casement-interior {
+  fill: #d4e6f9;
+  stroke: black;
+  stroke-width: 1;
+}
+
 .window-section {
   stroke: black;
   stroke-width: 1;
