@@ -336,12 +336,27 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               </>
             )}
             
-            {topCasementsOpenable === "center" && (
+            {topCasementsOpenable === "center-left" && (
               <>
-                {/* Center top casement - hinged at top */}
+                {/* Center-left top casement - hinged at top */}
                 <path 
                   d={`M ${svgWidth/2 - svgWidth/6} ${frameInset + scaledTransomHeight - 5} 
-                      L ${svgWidth/2} ${frameInset} 
+                      L ${svgWidth/2 - svgWidth/12} ${frameInset} 
+                      L ${svgWidth/2} ${frameInset + scaledTransomHeight - 5}`}
+                  stroke="black" 
+                  strokeDasharray="5,5" 
+                  strokeWidth="1"
+                  fill="none"
+                />
+              </>
+            )}
+            
+            {topCasementsOpenable === "center-right" && (
+              <>
+                {/* Center-right top casement - hinged at top */}
+                <path 
+                  d={`M ${svgWidth/2} ${frameInset + scaledTransomHeight - 5} 
+                      L ${svgWidth/2 + svgWidth/12} ${frameInset} 
                       L ${svgWidth/2 + svgWidth/6} ${frameInset + scaledTransomHeight - 5}`}
                   stroke="black" 
                   strokeDasharray="5,5" 
@@ -949,6 +964,28 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                 ((svgWidth / 3) * 2) + (mullionThickness / 2), 
                 frameInset + (svgHeight / 3) + mullionThickness, 
                 (svgWidth / 3) - frameInset - (frameThickness / 2), 
+                (svgHeight * 2/3) - frameInset - mullionThickness, 
+                'right'
+              )
+            )}
+            
+            {/* Center casement opening - hinged on the left */}
+            {openableCasements === "center-left" && (
+              renderHingeIndicator(
+                (svgWidth / 3) + (mullionThickness / 2), 
+                frameInset + (svgHeight / 3) + mullionThickness, 
+                (svgWidth / 3) - mullionThickness, 
+                (svgHeight * 2/3) - frameInset - mullionThickness, 
+                'left'
+              )
+            )}
+            
+            {/* Center casement opening - hinged on the right */}
+            {openableCasements === "center-right" && (
+              renderHingeIndicator(
+                (svgWidth / 3) + (mullionThickness / 2), 
+                frameInset + (svgHeight / 3) + mullionThickness, 
+                (svgWidth / 3) - mullionThickness, 
                 (svgHeight * 2/3) - frameInset - mullionThickness, 
                 'right'
               )
