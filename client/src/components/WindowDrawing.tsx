@@ -456,9 +456,17 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-
+            {/* Hinges based on which casements can open */}
+            {(openableCasements === "left" || openableCasements === "both") && 
+              renderHinges(frameInset, frameInset, svgHeight - (frameInset * 2), 'left')
+            }
             
-
+            {/* Middle pane hinges */}
+            {renderHinges((svgWidth / 3) * 2, frameInset, svgHeight - (frameInset * 2), 'right')}
+            
+            {(openableCasements === "right" || openableCasements === "both") && 
+              renderHinges(svgWidth - frameInset, frameInset, svgHeight - (frameInset * 2), 'right')
+            }
           </>
         );
         
@@ -522,7 +530,14 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             <circle cx={svgWidth * 0.45} cy={svgHeight * 0.5} r={3} fill="#334155" />
             <circle cx={svgWidth * 0.55} cy={svgHeight * 0.5} r={3} fill="#334155" />
             
-
+            {/* Hinges based on which casements can open */}
+            {(openableCasements === "left" || openableCasements === "both") && 
+              renderHinges(frameInset, frameInset, svgHeight - (frameInset * 2), 'left')
+            }
+            
+            {(openableCasements === "right" || openableCasements === "both") && 
+              renderHinges(svgWidth - frameInset, frameInset, svgHeight - (frameInset * 2), 'right')
+            }
           </>
         );
       
