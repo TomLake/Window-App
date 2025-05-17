@@ -33,7 +33,6 @@ const windowFormSchema = z.object({
   height: z.coerce.number().min(300, "Height must be at least 300mm").max(3000, "Height must be at most 3000mm"),
   // location field removed
   glassType: z.string().min(1, "Glass type is required"),
-  paintColor: z.string().default("white"),
   openableCasements: z.string().default("left"),
   hasGeorgianBars: z.boolean().default(false),
   georgianBarsHorizontal: z.coerce.number().min(0).max(4).default(1),
@@ -60,7 +59,6 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
     width: 1100,
     height: 1100,
     glassType: "Clear",
-    paintColor: "white",
     openableCasements: "left",
     hasGeorgianBars: false,
     georgianBarsHorizontal: 1,
@@ -199,38 +197,7 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
           )}
         />
         
-        <FormField
-          control={form.control}
-          name="paintColor"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Frame Color</FormLabel>
-              <Select 
-                onValueChange={field.onChange} 
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select frame color" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="white">White</SelectItem>
-                  <SelectItem value="#5A3825">Rosewood</SelectItem>
-                  <SelectItem value="#000000">Black</SelectItem>
-                  <SelectItem value="#4F7942">Sage Green</SelectItem>
-                  <SelectItem value="#535353">Anthracite Grey</SelectItem>
-                  <SelectItem value="#A0522D">Mahogany</SelectItem>
-                  <SelectItem value="#8B4513">Golden Oak</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                Select the paint color for the window frame
-              </FormDescription>
-            </FormItem>
-          )}
-        />
+
         
         <FormField
           control={form.control}

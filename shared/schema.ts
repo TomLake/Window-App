@@ -33,7 +33,7 @@ export const windows = pgTable("windows", {
   hasTransom: boolean("has_transom").default(false), // whether to display a transom
   transomHeight: integer("transom_height").default(400), // height of the transom from the top in mm
   openableCasements: varchar("openable_casements", { length: 50 }).default("left"), // which casements can open: "left", "right", "both", "none"
-  paintColor: varchar("paint_color", { length: 50 }).default("white"), // color of the window frame
+
   positionX: integer("position_x").default(0), // position in canvas
   positionY: integer("position_y").default(0), // position in canvas
 });
