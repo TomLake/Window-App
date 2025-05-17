@@ -408,6 +408,9 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                 'right'
               )
             )}
+            
+            {/* Add window sill */}
+            {renderWindowSill()}
           </>
         );
       
@@ -621,6 +624,9 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                 'right'
               )
             )}
+            
+            {/* Add window sill */}
+            {renderWindowSill()}
           </>
         );
       
