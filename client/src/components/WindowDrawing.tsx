@@ -50,6 +50,10 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   
   // Frame thickness (45mm scaled to SVG size)
   const frameThickness = Math.max(3, Math.round(45 * scaleFactor)); // 45mm scaled to SVG size, minimum 3px
+  
+  // Mullion thickness (30mm scaled to SVG size) - the dividers between casements
+  const mullionThickness = Math.max(2, Math.round(30 * scaleFactor)); // 30mm scaled to SVG size, minimum 2px
+  
   const frameInset = frameThickness + 2; // Inset from frame to glass
   const casementWidth = 2; // Casement line width
   
@@ -259,14 +263,14 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             {/* Main frame */}
             <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
             
-            {/* Middle divider */}
+            {/* Middle divider (mullion) */}
             <line 
               x1={svgWidth / 2} 
               y1="0" 
               x2={svgWidth / 2} 
               y2={svgHeight} 
               className="window-frame" 
-              strokeWidth={frameThickness}
+              strokeWidth={mullionThickness}
             />
             
             {/* Left pane glass */}
@@ -387,14 +391,14 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             {/* Frame */}
             <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
             
-            {/* Vertical dividers */}
+            {/* Vertical dividers (mullions) */}
             <line 
               x1={svgWidth / 3} 
               y1="0" 
               x2={svgWidth / 3} 
               y2={svgHeight} 
               className="window-frame" 
-              strokeWidth={frameThickness}
+              strokeWidth={mullionThickness}
             />
             <line 
               x1={(svgWidth / 3) * 2} 
@@ -402,7 +406,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               x2={(svgWidth / 3) * 2} 
               y2={svgHeight} 
               className="window-frame" 
-              strokeWidth={frameThickness}
+              strokeWidth={mullionThickness}
             />
             
             {/* First pane glass */}
@@ -579,14 +583,14 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             {/* Frame */}
             <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
             
-            {/* Center divider */}
+            {/* Center divider (mullion) */}
             <line 
               x1={svgWidth / 2} 
               y1="0" 
               x2={svgWidth / 2} 
               y2={svgHeight} 
               className="window-frame" 
-              strokeWidth={frameThickness}
+              strokeWidth={mullionThickness}
             />
             
             {/* Glass panes */}
