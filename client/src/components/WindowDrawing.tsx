@@ -134,6 +134,40 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     );
   };
   
+  // Function to render dashed lines to indicate the hinge side for opening casements
+  const renderHingeIndicator = (x: number, y: number, width: number, height: number, hingeSide: 'left' | 'right') => {
+    // Determine the points for the dashed line
+    let startX, startY, middleX, middleY, endX, endY;
+    
+    if (hingeSide === 'left') {
+      // If hinges are on the left, line starts at top right, goes to middle left, then to bottom right
+      startX = x + width; // Top right corner X
+      startY = y;         // Top right corner Y
+      middleX = x;        // Middle left X
+      middleY = y + (height / 2); // Middle left Y
+      endX = x + width;   // Bottom right corner X
+      endY = y + height;  // Bottom right corner Y
+    } else {
+      // If hinges are on the right, line starts at top left, goes to middle right, then to bottom left
+      startX = x;         // Top left corner X
+      startY = y;         // Top left corner Y
+      middleX = x + width; // Middle right X
+      middleY = y + (height / 2); // Middle right Y
+      endX = x;          // Bottom left corner X
+      endY = y + height; // Bottom left corner Y
+    }
+    
+    return (
+      <polyline
+        points={`${startX},${startY} ${middleX},${middleY} ${endX},${endY}`}
+        fill="none"
+        stroke="#334155"
+        strokeWidth="1"
+        strokeDasharray="3,3"
+      />
+    );
+  };
+  
 
   
   // Render the appropriate window based on type
@@ -181,7 +215,26 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-
+            {/* Hinge indicators based on which casements can open */}
+            {(openableCasements === "left" || openableCasements === "both") && (
+              renderHingeIndicator(
+                frameInset, 
+                frameInset, 
+                svgWidth - (frameInset * 2), 
+                svgHeight - (frameInset * 2), 
+                'left'
+              )
+            )}
+            
+            {(openableCasements === "right" || openableCasements === "both") && (
+              renderHingeIndicator(
+                frameInset, 
+                frameInset, 
+                svgWidth - (frameInset * 2), 
+                svgHeight - (frameInset * 2), 
+                'right'
+              )
+            )}
           </>
         );
       
@@ -266,7 +319,26 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-
+            {/* Hinge indicators for left and right casements */}
+            {(openableCasements === "left" || openableCasements === "both") && (
+              renderHingeIndicator(
+                frameInset, 
+                frameInset, 
+                (svgWidth / 2) - frameInset - (frameThickness / 2), 
+                svgHeight - (frameInset * 2), 
+                'left'
+              )
+            )}
+            
+            {(openableCasements === "right" || openableCasements === "both") && (
+              renderHingeIndicator(
+                (svgWidth / 2) + (frameThickness / 2), 
+                frameInset, 
+                (svgWidth / 2) - frameInset - (frameThickness / 2), 
+                svgHeight - (frameInset * 2), 
+                'right'
+              )
+            )}
           </>
         );
       
@@ -400,6 +472,35 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
+            {/* Hinge indicators for each casement */}
+            {(openableCasements === "left" || openableCasements === "both") && (
+              renderHingeIndicator(
+                frameInset, 
+                frameInset, 
+                (svgWidth / 3) - frameInset - (frameThickness / 2), 
+                svgHeight - (frameInset * 2), 
+                'left'
+              )
+            )}
+            
+            {/* Middle casement always opens */}
+            {renderHingeIndicator(
+              (svgWidth / 3) + (frameThickness / 2), 
+              frameInset, 
+              (svgWidth / 3) - frameThickness, 
+              svgHeight - (frameInset * 2), 
+              'left'
+            )}
+            
+            {(openableCasements === "right" || openableCasements === "both") && (
+              renderHingeIndicator(
+                ((svgWidth / 3) * 2) + (frameThickness / 2), 
+                frameInset, 
+                (svgWidth / 3) - frameInset - (frameThickness / 2), 
+                svgHeight - (frameInset * 2), 
+                'right'
+              )
+            )}
 
           </>
         );
@@ -464,7 +565,26 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             <circle cx={svgWidth * 0.45} cy={svgHeight * 0.5} r={3} fill="#334155" />
             <circle cx={svgWidth * 0.55} cy={svgHeight * 0.5} r={3} fill="#334155" />
             
-
+            {/* Hinge indicators for patio doors */}
+            {(openableCasements === "left" || openableCasements === "both") && (
+              renderHingeIndicator(
+                frameInset, 
+                frameInset, 
+                (svgWidth / 2) - frameInset - (frameThickness / 2), 
+                svgHeight - (frameInset * 2), 
+                'left'
+              )
+            )}
+            
+            {(openableCasements === "right" || openableCasements === "both") && (
+              renderHingeIndicator(
+                (svgWidth / 2) + (frameThickness / 2), 
+                frameInset, 
+                (svgWidth / 2) - frameInset - (frameThickness / 2), 
+                svgHeight - (frameInset * 2), 
+                'right'
+              )
+            )}
           </>
         );
       
