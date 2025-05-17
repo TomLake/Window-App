@@ -65,38 +65,6 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   // Inner padding for blue glass sections
   const innerPadding = Math.max(4, Math.round(25 * scaleFactor)); // Scale 25mm to SVG size
   
-  // Horn size (45mm x 45mm)
-  const hornSize = Math.max(3, Math.round(45 * scaleFactor)); // Scale 45mm to SVG size
-  
-  // Function to draw corner horns at the bottom of window
-  const renderCornerHorns = (x: number, y: number, width: number, height: number) => {
-    return (
-      <>
-        {/* Left bottom corner horn */}
-        <rect
-          x={x - hornSize}
-          y={y + height - hornSize}
-          width={hornSize}
-          height={hornSize}
-          fill="white"
-          stroke="#94a3b8"
-          strokeWidth="1"
-        />
-        
-        {/* Right bottom corner horn */}
-        <rect
-          x={x + width}
-          y={y + height - hornSize}
-          width={hornSize}
-          height={hornSize}
-          fill="white"
-          stroke="#94a3b8"
-          strokeWidth="1"
-        />
-      </>
-    );
-  };
-  
   // Function to add a blue inner pane to a casement
   const addInnerGlassPane = (x: number, y: number, width: number, height: number) => {
     // Add padding inside the casement for the blue area
@@ -273,14 +241,6 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               frameInset,
               frameInset,
               svgWidth - (frameInset * 2)
-            )}
-            
-            {/* Add corner horns at the bottom */}
-            {renderCornerHorns(
-              frameInset,
-              frameInset,
-              svgWidth - (frameInset * 2),
-              svgHeight - (frameInset * 2)
             )}
             
             {/* Casement indicators */}
