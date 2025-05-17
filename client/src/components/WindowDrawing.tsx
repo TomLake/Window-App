@@ -495,30 +495,34 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-            {/* Left pane opening indication - arrow pointing to hinge side */}
-            <line 
-              x1={svgWidth * 0.05} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.25} 
-              y2={svgHeight * 0.5} 
-              className="window-hinge" 
-            />
-            <line 
-              x1={svgWidth * 0.05} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.13} 
-              y2={svgHeight * 0.35} 
-              className="window-hinge" 
-            />
-            <line 
-              x1={svgWidth * 0.05} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.13} 
-              y2={svgHeight * 0.65} 
-              className="window-hinge" 
-            />
+            {/* Left pane opening indication - only show if left or both casements open */}
+            {(openableCasements === "left" || openableCasements === "both") && (
+              <>
+                <line 
+                  x1={svgWidth * 0.05} 
+                  y1={svgHeight * 0.5} 
+                  x2={svgWidth * 0.25} 
+                  y2={svgHeight * 0.5} 
+                  className="window-hinge" 
+                />
+                <line 
+                  x1={svgWidth * 0.05} 
+                  y1={svgHeight * 0.5} 
+                  x2={svgWidth * 0.13} 
+                  y2={svgHeight * 0.35} 
+                  className="window-hinge" 
+                />
+                <line 
+                  x1={svgWidth * 0.05} 
+                  y1={svgHeight * 0.5} 
+                  x2={svgWidth * 0.13} 
+                  y2={svgHeight * 0.65} 
+                  className="window-hinge" 
+                />
+              </>
+            )}
             
-            {/* Middle pane opening indication - arrow pointing to center */}
+            {/* Middle pane opening indication - always shown since middle pane typically opens */}
             <line 
               x1={svgWidth * 0.5} 
               y1={svgHeight * 0.5} 
@@ -541,28 +545,32 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-hinge" 
             />
             
-            {/* Right pane opening indication - arrow pointing to hinge side */}
-            <line 
-              x1={svgWidth * 0.95} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.75} 
-              y2={svgHeight * 0.5} 
-              className="window-hinge" 
-            />
-            <line 
-              x1={svgWidth * 0.95} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.87} 
-              y2={svgHeight * 0.35} 
-              className="window-hinge" 
-            />
-            <line 
-              x1={svgWidth * 0.95} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.87} 
-              y2={svgHeight * 0.65} 
-              className="window-hinge" 
-            />
+            {/* Right pane opening indication - only show if right or both casements open */}
+            {(openableCasements === "right" || openableCasements === "both") && (
+              <>
+                <line 
+                  x1={svgWidth * 0.95} 
+                  y1={svgHeight * 0.5} 
+                  x2={svgWidth * 0.75} 
+                  y2={svgHeight * 0.5} 
+                  className="window-hinge" 
+                />
+                <line 
+                  x1={svgWidth * 0.95} 
+                  y1={svgHeight * 0.5} 
+                  x2={svgWidth * 0.87} 
+                  y2={svgHeight * 0.35} 
+                  className="window-hinge" 
+                />
+                <line 
+                  x1={svgWidth * 0.95} 
+                  y1={svgHeight * 0.5} 
+                  x2={svgWidth * 0.87} 
+                  y2={svgHeight * 0.65} 
+                  className="window-hinge" 
+                />
+              </>
+            )}
           </>
         );
         
