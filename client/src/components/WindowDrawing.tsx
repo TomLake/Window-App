@@ -257,6 +257,13 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               svgHeight - (frameInset * 2)
             )}
             
+            {/* Transom for right pane */}
+            {renderTransom(
+              (svgWidth / 2) + (frameThickness / 2),
+              frameInset,
+              (svgWidth / 2) - frameInset - (frameThickness / 2)
+            )}
+            
             {/* Left casement */}
             <rect 
               x={frameInset - 1} 
@@ -368,6 +375,13 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               svgHeight - (frameInset * 2)
             )}
             
+            {/* Transom for first pane */}
+            {renderTransom(
+              frameInset,
+              frameInset,
+              (svgWidth / 3) - frameInset - (frameThickness / 2)
+            )}
+            
             {/* Second pane glass */}
             <rect 
               x={(svgWidth / 3) + (frameThickness / 2)} 
@@ -387,6 +401,13 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               svgHeight - (frameInset * 2)
             )}
             
+            {/* Transom for second pane */}
+            {renderTransom(
+              (svgWidth / 3) + (frameThickness / 2),
+              frameInset,
+              (svgWidth / 3) - frameThickness
+            )}
+            
             {/* Third pane glass */}
             <rect 
               x={((svgWidth / 3) * 2) + (frameThickness / 2)} 
@@ -404,6 +425,13 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               frameInset,
               (svgWidth / 3) - frameInset - (frameThickness / 2),
               svgHeight - (frameInset * 2)
+            )}
+            
+            {/* Transom for third pane */}
+            {renderTransom(
+              ((svgWidth / 3) * 2) + (frameThickness / 2),
+              frameInset,
+              (svgWidth / 3) - frameInset - (frameThickness / 2)
             )}
             
             {/* Casements for each section */}
