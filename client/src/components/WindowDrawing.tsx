@@ -842,21 +842,34 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             />
             
             {/* Vertical mullions */}
-            <rect 
-              x={(svgWidth / 3) - (mullionThickness / 2)} 
-              y={frameInset} 
-              width={mullionThickness} 
-              height={svgHeight - (frameInset * 2)} 
-              className="window-mullion" 
-            />
-            
-            <rect 
-              x={((svgWidth / 3) * 2) - (mullionThickness / 2)} 
-              y={frameInset} 
-              width={mullionThickness} 
-              height={svgHeight - (frameInset * 2)} 
-              className="window-mullion" 
-            />
+            {(() => {
+              // Calculate the effective total width for dividing (minus frame insets on both sides)
+              const effectiveWidth = svgWidth - (frameInset * 2);
+              // Each section gets exactly one third of the effective width
+              const sectionWidth = effectiveWidth / 3;
+              
+              return (
+                <>
+                  {/* First mullion (between left and middle) */}
+                  <rect 
+                    x={frameInset + sectionWidth - (mullionThickness / 2)} 
+                    y={frameInset} 
+                    width={mullionThickness} 
+                    height={svgHeight - (frameInset * 2)} 
+                    className="window-mullion" 
+                  />
+                  
+                  {/* Second mullion (between middle and right) */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) - (mullionThickness / 2)} 
+                    y={frameInset} 
+                    width={mullionThickness} 
+                    height={svgHeight - (frameInset * 2)} 
+                    className="window-mullion" 
+                  />
+                </>
+              );
+            })()}
             
             {/* Horizontal transom bar - fixed at top 1/3 of the window */}
             <rect 
@@ -867,119 +880,144 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-mullion" 
             />
             
-            {/* Upper left fixed casement */}
-            <rect 
-              x={frameInset - 1} 
-              y={frameInset - 1} 
-              width={(svgWidth / 3) - frameInset - (frameThickness / 2) + 1} 
-              height={(svgHeight / 3) + 1} 
-              fill="none" 
-              className="window-casement" 
-            />
+            {/* Upper casements, all with equal width */}
+            {(() => {
+              // Calculate the effective total width for dividing (minus frame insets on both sides)
+              const effectiveWidth = svgWidth - (frameInset * 2);
+              // Each section gets exactly one third of the effective width
+              const sectionWidth = effectiveWidth / 3;
+              
+              return (
+                <>
+                  {/* Upper left fixed casement */}
+                  <rect 
+                    x={frameInset - 1} 
+                    y={frameInset - 1} 
+                    width={sectionWidth + 2} 
+                    height={(svgHeight / 3) + 1} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Upper left casement inner border with light blue fill */}
+                  <rect 
+                    x={frameInset + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - (innerBorderWidth * 2)} 
+                    height={(svgHeight / 3) - (innerBorderWidth * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Upper middle fixed casement */}
+                  <rect 
+                    x={frameInset + sectionWidth - 1} 
+                    y={frameInset - 1} 
+                    width={sectionWidth + 2} 
+                    height={(svgHeight / 3) + 1} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Upper middle casement inner border with light blue fill */}
+                  <rect 
+                    x={frameInset + sectionWidth + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - (innerBorderWidth * 2)} 
+                    height={(svgHeight / 3) - (innerBorderWidth * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Upper right fixed casement */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) - 1} 
+                    y={frameInset - 1} 
+                    width={sectionWidth + 2} 
+                    height={(svgHeight / 3) + 1} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Upper right casement inner border with light blue fill */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - (innerBorderWidth * 2)} 
+                    height={(svgHeight / 3) - (innerBorderWidth * 2)} 
+                    className="window-casement-interior"
+                  />
+                </>
+              );
+            })()}
             
-            {/* Upper left casement inner border with light blue fill */}
-            <rect 
-              x={frameInset + innerBorderWidth} 
-              y={frameInset + innerBorderWidth} 
-              width={(svgWidth / 3) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 1} 
-              height={(svgHeight / 3) - (innerBorderWidth * 2)} 
-              className="window-casement-interior"
-            />
-            
-            {/* Upper middle fixed casement */}
-            <rect 
-              x={(svgWidth / 3) + (mullionThickness / 2)} 
-              y={frameInset - 1} 
-              width={(svgWidth / 3) - mullionThickness} 
-              height={(svgHeight / 3) + 1} 
-              fill="none" 
-              className="window-casement" 
-            />
-            
-            {/* Upper middle casement inner border with light blue fill */}
-            <rect 
-              x={(svgWidth / 3) + (mullionThickness / 2) + innerBorderWidth} 
-              y={frameInset + innerBorderWidth} 
-              width={(svgWidth / 3) - mullionThickness - (innerBorderWidth * 2)} 
-              height={(svgHeight / 3) - (innerBorderWidth * 2)} 
-              className="window-casement-interior"
-            />
-            
-            {/* Upper right fixed casement */}
-            <rect 
-              x={((svgWidth / 3) * 2) + (mullionThickness / 2)} 
-              y={frameInset - 1} 
-              width={(svgWidth / 3) - frameInset - (mullionThickness / 2) + 1} 
-              height={(svgHeight / 3) + 1} 
-              fill="none" 
-              className="window-casement" 
-            />
-            
-            {/* Upper right casement inner border with light blue fill */}
-            <rect 
-              x={((svgWidth / 3) * 2) + (mullionThickness / 2) + innerBorderWidth} 
-              y={frameInset + innerBorderWidth} 
-              width={(svgWidth / 3) - frameInset - (mullionThickness / 2) - (innerBorderWidth * 2) + 1} 
-              height={(svgHeight / 3) - (innerBorderWidth * 2)} 
-              className="window-casement-interior"
-            />
-            
-            {/* Lower left opening casement */}
-            <rect 
-              x={frameInset - 1} 
-              y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
-              width={(svgWidth / 3) - frameInset - (frameThickness / 2) + 1} 
-              height={(svgHeight * 2/3) - frameInset - mullionThickness + 1} 
-              fill="none" 
-              className="window-casement" 
-            />
-            
-            {/* Lower left casement inner border with light blue fill */}
-            <rect 
-              x={frameInset + innerBorderWidth} 
-              y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
-              width={(svgWidth / 3) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 1} 
-              height={(svgHeight * 2/3) - frameInset - mullionThickness - (innerBorderWidth * 2) + 1} 
-              className="window-casement-interior"
-            />
-            
-            {/* Lower middle fixed casement */}
-            <rect 
-              x={(svgWidth / 3) + (mullionThickness / 2)} 
-              y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
-              width={(svgWidth / 3) - mullionThickness} 
-              height={(svgHeight * 2/3) - frameInset - mullionThickness + 1} 
-              fill="none" 
-              className="window-casement" 
-            />
-            
-            {/* Lower middle casement inner border with light blue fill */}
-            <rect 
-              x={(svgWidth / 3) + (mullionThickness / 2) + innerBorderWidth} 
-              y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
-              width={(svgWidth / 3) - mullionThickness - (innerBorderWidth * 2)} 
-              height={(svgHeight * 2/3) - frameInset - mullionThickness - (innerBorderWidth * 2) + 1} 
-              className="window-casement-interior"
-            />
-            
-            {/* Lower right opening casement */}
-            <rect 
-              x={((svgWidth / 3) * 2) + (mullionThickness / 2)} 
-              y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
-              width={(svgWidth / 3) - frameInset - (mullionThickness / 2) + 1} 
-              height={(svgHeight * 2/3) - frameInset - mullionThickness + 1} 
-              fill="none" 
-              className="window-casement" 
-            />
-            
-            {/* Lower right casement inner border with light blue fill */}
-            <rect 
-              x={((svgWidth / 3) * 2) + (mullionThickness / 2) + innerBorderWidth} 
-              y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
-              width={(svgWidth / 3) - frameInset - (mullionThickness / 2) - (innerBorderWidth * 2) + 1} 
-              height={(svgHeight * 2/3) - frameInset - mullionThickness - (innerBorderWidth * 2) + 1} 
-              className="window-casement-interior"
-            />
+            {/* Lower casements with equal widths */}
+            {(() => {
+              // Calculate the effective total width for dividing (minus frame insets on both sides)
+              const effectiveWidth = svgWidth - (frameInset * 2);
+              // Each section gets exactly one third of the effective width
+              const sectionWidth = effectiveWidth / 3;
+              const lowerHeight = (svgHeight * 2/3) - frameInset - mullionThickness + 1;
+              
+              return (
+                <>
+                  {/* Lower left opening casement */}
+                  <rect 
+                    x={frameInset - 1} 
+                    y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
+                    width={sectionWidth + 2} 
+                    height={lowerHeight} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Lower left casement inner border with light blue fill */}
+                  <rect 
+                    x={frameInset + innerBorderWidth} 
+                    y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
+                    width={sectionWidth - (innerBorderWidth * 2)} 
+                    height={lowerHeight - (innerBorderWidth * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Lower middle casement */}
+                  <rect 
+                    x={frameInset + sectionWidth - 1} 
+                    y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
+                    width={sectionWidth + 2} 
+                    height={lowerHeight} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Lower middle casement inner border with light blue fill */}
+                  <rect 
+                    x={frameInset + sectionWidth + innerBorderWidth} 
+                    y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
+                    width={sectionWidth - (innerBorderWidth * 2)} 
+                    height={lowerHeight - (innerBorderWidth * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Lower right opening casement */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) - 1} 
+                    y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
+                    width={sectionWidth + 2} 
+                    height={lowerHeight} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Lower right casement inner border with light blue fill */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) + innerBorderWidth} 
+                    y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
+                    width={sectionWidth - (innerBorderWidth * 2)} 
+                    height={lowerHeight - (innerBorderWidth * 2)} 
+                    className="window-casement-interior"
+                  />
+                </>
+              );
+            })()}
             
             {/* Georgian bars if enabled */}
             {renderGeorgianBars(
