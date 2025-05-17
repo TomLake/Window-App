@@ -21,6 +21,9 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     transomHeight = 400,
     paintColor = "white" // Default paint color is white
   } = window;
+
+  // Ensure paintColor is always a string
+  const frameColor = paintColor || "white";
   
   // Calculate SVG dimensions while maintaining a minimum size and aspect ratio
   const maxSvgWidth = 300;
@@ -185,7 +188,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
         return (
           <>
             {/* Outer Frame */}
-            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" stroke={paintColor} />
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" stroke={frameColor} />
             
             {/* Glass */}
             <rect 
@@ -262,7 +265,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
         return (
           <>
             {/* Main frame */}
-            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" stroke={paintColor} />
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" stroke={frameColor} />
             
 
             

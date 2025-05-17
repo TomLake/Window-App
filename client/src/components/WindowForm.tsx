@@ -60,6 +60,7 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
     width: 1100,
     height: 1100,
     glassType: "Clear",
+    paintColor: "white",
     openableCasements: "left",
     hasGeorgianBars: false,
     georgianBarsHorizontal: 1,
@@ -82,6 +83,7 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
       const windowData = {
         ...selectedWindow,
         openableCasements: selectedWindow.openableCasements || "left",
+        paintColor: selectedWindow.paintColor || "white",
         hasGeorgianBars: selectedWindow.hasGeorgianBars === true,
         georgianBarsHorizontal: selectedWindow.georgianBarsHorizontal ?? 1,
         georgianBarsVertical: selectedWindow.georgianBarsVertical ?? 1,
