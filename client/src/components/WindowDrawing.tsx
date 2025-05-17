@@ -270,7 +270,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               x={frameInset - 1} 
               y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
               width={svgWidth - (frameInset * 2) + 2} 
-              height={svgHeight - frameInset - (svgHeight / 3) - mullionThickness - 45} 
+              height={svgHeight - frameInset - (svgHeight / 3) - mullionThickness} 
               fill="none" 
               className="window-casement" 
             />
@@ -280,7 +280,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               x={frameInset + innerBorderWidth} 
               y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
               width={svgWidth - ((frameInset + innerBorderWidth) * 2)} 
-              height={svgHeight - frameInset - (svgHeight / 3) - mullionThickness - innerBorderWidth * 2 - 45} 
+              height={svgHeight - frameInset - (svgHeight / 3) - mullionThickness - innerBorderWidth * 2} 
               className="window-casement-interior"
             />
             
@@ -479,7 +479,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               x={frameInset - 1} 
               y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
               width={(svgWidth / 2) - frameInset - (mullionThickness / 2) + 1} 
-              height={svgHeight - frameInset - (svgHeight / 3) - mullionThickness - 45} 
+              height={svgHeight - frameInset - (svgHeight / 3) - mullionThickness} 
               fill="none" 
               className="window-casement" 
             />
@@ -489,7 +489,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               x={frameInset + innerBorderWidth} 
               y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
               width={(svgWidth / 2) - frameInset - (mullionThickness / 2) - (innerBorderWidth * 2)} 
-              height={svgHeight - frameInset - (svgHeight / 3) - mullionThickness - (innerBorderWidth * 2) - 45} 
+              height={svgHeight - frameInset - (svgHeight / 3) - mullionThickness - (innerBorderWidth * 2)} 
               className="window-casement-interior"
             />
             
@@ -498,7 +498,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               x={(svgWidth / 2) + (mullionThickness / 2)} 
               y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
               width={(svgWidth / 2) - frameInset - (mullionThickness / 2) + 1} 
-              height={svgHeight - frameInset - (svgHeight / 3) - mullionThickness - 45} 
+              height={svgHeight - frameInset - (svgHeight / 3) - mullionThickness} 
               fill="none" 
               className="window-casement" 
             />
@@ -508,7 +508,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               x={(svgWidth / 2) + (mullionThickness / 2) + innerBorderWidth} 
               y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
               width={(svgWidth / 2) - frameInset - (mullionThickness / 2) - (innerBorderWidth * 2)} 
-              height={svgHeight - frameInset - (svgHeight / 3) - mullionThickness - (innerBorderWidth * 2) - 45} 
+              height={svgHeight - frameInset - (svgHeight / 3) - mullionThickness - (innerBorderWidth * 2)} 
               className="window-casement-interior"
             />
             
