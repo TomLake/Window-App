@@ -2,7 +2,6 @@ import { useState } from "react";
 import Header from "@/components/Header";
 import WindowForm from "@/components/WindowForm";
 import WindowDesignCanvas from "@/components/WindowDesignCanvas";
-import WindowTemplates from "@/components/WindowTemplates";
 import ProjectWindowsList from "@/components/ProjectWindowsList";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";

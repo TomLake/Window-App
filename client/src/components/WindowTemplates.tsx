@@ -11,9 +11,8 @@ const templates = [
   { id: 2, name: "Hallway", type: "double", width: 1090, height: 1100, location: "Hallway", glassType: "Clear", projectId: 1, positionX: 0, positionY: 0 },
   { id: 3, name: "Bathroom", type: "double", width: 890, height: 940, location: "Bathroom", glassType: "Obscure", projectId: 1, positionX: 0, positionY: 0 },
   { id: 4, name: "Kitchen", type: "triple", width: 1470, height: 970, location: "Kitchen", glassType: "Clear", projectId: 1, positionX: 0, positionY: 0 },
-  { id: 5, name: "Dining Room 1", type: "fixed", width: 760, height: 1100, location: "Dining Room", glassType: "Clear", projectId: 1, positionX: 0, positionY: 0 },
-  { id: 6, name: "Dining Room 2", type: "double", width: 760, height: 1100, location: "Dining Room", glassType: "Clear", projectId: 1, positionX: 0, positionY: 0 },
-  { id: 7, name: "Patio Doors", type: "patio", width: 1810, height: 2100, location: "Patio", glassType: "Clear", projectId: 1, positionX: 0, positionY: 0 }
+  { id: 5, name: "Dining Room", type: "double", width: 760, height: 1100, location: "Dining Room", glassType: "Clear", projectId: 1, positionX: 0, positionY: 0 },
+  { id: 6, name: "Patio Doors", type: "patio", width: 1810, height: 2100, location: "Patio", glassType: "Clear", projectId: 1, positionX: 0, positionY: 0 }
 ];
 
 export default function WindowTemplates({ onSelectTemplate }: WindowTemplatesProps) {
