@@ -222,16 +222,13 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-            {/* Inner border 50mm wide */}
+            {/* Inner border 50mm wide with light blue fill */}
             <rect 
               x={frameInset + innerBorderWidth} 
               y={frameInset + innerBorderWidth} 
               width={svgWidth - ((frameInset + innerBorderWidth) * 2)} 
               height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
-              fill="none" 
-              stroke="#334155" 
-              strokeWidth="1" 
-              strokeDasharray="1,1"
+              className="window-casement-interior"
             />
             
             {/* Hinge indicators based on which casements can open */}
@@ -301,16 +298,13 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-            {/* Left casement inner border 50mm wide */}
+            {/* Left casement inner border 50mm wide with light blue fill */}
             <rect 
               x={frameInset + innerBorderWidth} 
               y={frameInset + innerBorderWidth} 
               width={(svgWidth / 2) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2} 
               height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
-              fill="none" 
-              stroke="#334155" 
-              strokeWidth="1" 
-              strokeDasharray="1,1"
+              className="window-casement-interior"
             />
             
             {/* Right casement */}
@@ -323,16 +317,13 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-            {/* Right casement inner border 50mm wide */}
+            {/* Right casement inner border 50mm wide with light blue fill */}
             <rect 
               x={(svgWidth / 2) + (frameThickness / 2) + innerBorderWidth} 
               y={frameInset + innerBorderWidth} 
               width={(svgWidth / 2) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2} 
               height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
-              fill="none" 
-              stroke="#334155" 
-              strokeWidth="1" 
-              strokeDasharray="1,1"
+              className="window-casement-interior"
             />
             
             {/* Hinge indicators for left and right casements */}
@@ -402,16 +393,13 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-            {/* Left casement inner border 50mm wide */}
+            {/* Left casement inner border 50mm wide with light blue fill */}
             <rect 
               x={frameInset + innerBorderWidth} 
               y={frameInset + innerBorderWidth} 
               width={(svgWidth / 3) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2} 
               height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
-              fill="none" 
-              stroke="#334155" 
-              strokeWidth="1" 
-              strokeDasharray="1,1"
+              className="window-casement-interior"
             />
             
             <rect 
@@ -423,16 +411,13 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-            {/* Middle casement inner border 50mm wide */}
+            {/* Middle casement inner border 50mm wide with light blue fill */}
             <rect 
               x={(svgWidth / 3) + (frameThickness / 2) + innerBorderWidth} 
               y={frameInset + innerBorderWidth} 
               width={(svgWidth / 3) - frameThickness - (innerBorderWidth * 2) + 2} 
               height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
-              fill="none" 
-              stroke="#334155" 
-              strokeWidth="1" 
-              strokeDasharray="1,1"
+              className="window-casement-interior"
             />
             
             <rect 
@@ -444,19 +429,33 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-            {/* Right casement inner border 50mm wide */}
+            {/* Right casement inner border 50mm wide with light blue fill */}
             <rect 
               x={((svgWidth / 3) * 2) + (frameThickness / 2) + innerBorderWidth} 
               y={frameInset + innerBorderWidth} 
               width={(svgWidth / 3) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2} 
               height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
-              fill="none" 
-              stroke="#334155" 
-              strokeWidth="1" 
-              strokeDasharray="1,1"
+              className="window-casement-interior"
             />
             
-            {/* Hinge indicators for each casement */}
+            {/* Mullions (vertical dividers between sections) */}
+            <rect 
+              x={(svgWidth / 3) - (mullionThickness / 2)} 
+              y={frameInset} 
+              width={mullionThickness} 
+              height={svgHeight - (frameInset * 2)} 
+              className="window-mullion" 
+            />
+            
+            <rect 
+              x={((svgWidth / 3) * 2) - (mullionThickness / 2)} 
+              y={frameInset} 
+              width={mullionThickness} 
+              height={svgHeight - (frameInset * 2)} 
+              className="window-mullion" 
+            />
+            
+            {/* Hinge indicators for left and right sections */}
             {(openableCasements === "left" || openableCasements === "both") && (
               renderHingeIndicator(
                 frameInset, 
@@ -467,8 +466,6 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               )
             )}
             
-            {/* Middle casement is fixed by default, so no hinges */}
-            
             {(openableCasements === "right" || openableCasements === "both") && (
               renderHingeIndicator(
                 ((svgWidth / 3) * 2) + (frameThickness / 2), 
@@ -478,17 +475,14 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                 'right'
               )
             )}
-
           </>
         );
         
-      case "patio":
+      case "slider":
         return (
           <>
             {/* Frame */}
             <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
-            
-
             
             {/* Single glass pane */}
             <rect 
@@ -501,189 +495,211 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               strokeWidth="1" 
             />
             
-            {/* Casements */}
+            {/* Georgian bars for entire window */}
+            {renderGeorgianBars(
+              frameInset,
+              frameInset,
+              svgWidth - (frameInset * 2),
+              svgHeight - (frameInset * 2)
+            )}
+            
+            {/* Transom for entire window */}
+            {renderTransom(
+              frameInset,
+              frameInset,
+              svgWidth - (frameInset * 2)
+            )}
+            
+            {/* Mullion in the middle */}
+            <rect 
+              x={(svgWidth / 2) - (mullionThickness / 2)} 
+              y={frameInset} 
+              width={mullionThickness} 
+              height={svgHeight - (frameInset * 2)} 
+              className="window-mullion" 
+            />
+            
+            {/* Left slider (fixed) */}
             <rect 
               x={frameInset - 1} 
               y={frameInset - 1} 
-              width={(svgWidth / 2) - frameInset - (frameThickness / 2) + 2} 
-              height={svgHeight - (frameInset * 2) + 2} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) + 1} 
+              height={svgHeight - (frameInset * 2) + 2}
               fill="none" 
               className="window-casement" 
             />
             
-            {/* Left casement inner border 50mm wide */}
+            {/* Left casement inner border 50mm wide with light blue fill */}
             <rect 
               x={frameInset + innerBorderWidth} 
               y={frameInset + innerBorderWidth} 
-              width={(svgWidth / 2) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) - innerBorderWidth} 
               height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
-              fill="none" 
-              stroke="#334155" 
-              strokeWidth="1" 
-              strokeDasharray="1,1"
+              className="window-casement-interior"
             />
             
+            {/* Right slider (sliding part) */}
             <rect 
-              x={(svgWidth / 2) + (frameThickness / 2) - 1} 
-              y={frameInset - 1} 
-              width={(svgWidth / 2) - frameInset - (frameThickness / 2) + 2} 
+              x={(svgWidth / 2) + (mullionThickness / 2)} 
+              y={frameInset - 1}  
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) + 1} 
               height={svgHeight - (frameInset * 2) + 2} 
               fill="none" 
               className="window-casement" 
             />
             
-            {/* Right casement inner border 50mm wide */}
+            {/* Right casement inner border 50mm wide with light blue fill */}
             <rect 
-              x={(svgWidth / 2) + (frameThickness / 2) + innerBorderWidth} 
+              x={(svgWidth / 2) + (mullionThickness / 2) + innerBorderWidth} 
               y={frameInset + innerBorderWidth} 
-              width={(svgWidth / 2) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) - innerBorderWidth} 
               height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
-              fill="none" 
+              className="window-casement-interior"
+            />
+            
+            {/* Arrow indicating slider direction */}
+            <line 
+              x1={(svgWidth / 2) + (frameInset * 1.5)} 
+              y1={svgHeight / 2} 
+              x2={svgWidth - (frameInset * 1.5)} 
+              y2={svgHeight / 2} 
               stroke="#334155" 
-              strokeWidth="1" 
-              strokeDasharray="1,1"
+              strokeWidth="1.5" 
             />
             
-            {/* Door handles - bigger for visibility */}
-            <circle cx={svgWidth * 0.45} cy={svgHeight * 0.5} r={3} fill="#334155" />
-            <circle cx={svgWidth * 0.55} cy={svgHeight * 0.5} r={3} fill="#334155" />
+            {/* Arrow heads */}
+            <polyline 
+              points={`${(svgWidth / 2) + (frameInset * 1.5)},${(svgHeight / 2) - 5} ${(svgWidth / 2) + (frameInset * 1.5)},${svgHeight / 2} ${(svgWidth / 2) + (frameInset * 1.5)},${(svgHeight / 2) + 5}`} 
+              stroke="#334155" 
+              strokeWidth="1.5" 
+              fill="none" 
+            />
             
-            {/* Hinge indicators for patio doors */}
-            {(openableCasements === "left" || openableCasements === "both") && (
-              renderHingeIndicator(
-                frameInset, 
-                frameInset, 
-                (svgWidth / 2) - frameInset - (frameThickness / 2), 
-                svgHeight - (frameInset * 2), 
-                'left'
-              )
-            )}
-            
-            {(openableCasements === "right" || openableCasements === "both") && (
-              renderHingeIndicator(
-                (svgWidth / 2) + (frameThickness / 2), 
-                frameInset, 
-                (svgWidth / 2) - frameInset - (frameThickness / 2), 
-                svgHeight - (frameInset * 2), 
-                'right'
-              )
-            )}
+            <polyline 
+              points={`${svgWidth - (frameInset * 1.5)},${(svgHeight / 2) - 5} ${svgWidth - (frameInset * 1.5)},${svgHeight / 2} ${svgWidth - (frameInset * 1.5)},${(svgHeight / 2) + 5}`} 
+              stroke="#334155" 
+              strokeWidth="1.5" 
+              fill="none" 
+            />
           </>
         );
-      
+        
       default:
-        return (
-          <>
-            {/* Default window (single) */}
-            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
-            
-            <rect 
-              x={frameInset} 
-              y={frameInset} 
-              width={svgWidth - (frameInset * 2)} 
-              height={svgHeight - (frameInset * 2)} 
-              fill="none" 
-              stroke="black" 
-              strokeWidth="1" 
-            />
-            
-            <rect 
-              x={frameInset - 1} 
-              y={frameInset - 1} 
-              width={svgWidth - (frameInset * 2) + 2} 
-              height={svgHeight - (frameInset * 2) + 2} 
-              fill="none" 
-              className="window-casement" 
-            />
-            
-            {/* Opening indication - arrow pointing to hinge side */}
-            <line 
-              x1={svgWidth * 0.15} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.85} 
-              y2={svgHeight * 0.5} 
-              className="window-hinge" 
-            />
-            <line 
-              x1={svgWidth * 0.15} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.4} 
-              y2={svgHeight * 0.25} 
-              className="window-hinge" 
-            />
-            <line 
-              x1={svgWidth * 0.15} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.4} 
-              y2={svgHeight * 0.75} 
-              className="window-hinge" 
-            />
-          </>
-        );
+        return null;
     }
   };
-  
+
   return (
-    <div className="mb-16 inline-block mx-4">
-      <div className="relative">
-        <svg 
-          width={svgWidth + extraWidthForDimensions} 
-          height={svgHeight + extraHeightForDimensions} 
-          viewBox={`0 0 ${svgWidth + extraWidthForDimensions} ${svgHeight + extraHeightForDimensions}`} 
-          xmlns="http://www.w3.org/2000/svg"
-          className="overflow-visible"
-        >
-          {/* Window rendering */}
+    <div className="window-drawing">
+      <svg 
+        width={svgWidth + extraWidthForDimensions} 
+        height={svgHeight + extraHeightForDimensions + extraHeightForLabel} 
+        viewBox={`0 0 ${svgWidth + extraWidthForDimensions} ${svgHeight + extraHeightForDimensions + extraHeightForLabel}`}
+        className="window-drawing-svg"
+      >
+        {/* Main window drawing, positioned with space for dimensions */}
+        <g transform={`translate(0, 10)`}>
           {renderWindow()}
-          
-          {/* Width dimension - bottom */}
-          <line x1="0" y1={svgHeight + 15} x2={svgWidth} y2={svgHeight + 15} stroke="#64748b" strokeWidth="1" />
-          <line x1="0" y1={svgHeight + 10} x2="0" y2={svgHeight + 20} stroke="#64748b" strokeWidth="1" />
-          <line x1={svgWidth} y1={svgHeight + 10} x2={svgWidth} y2={svgHeight + 20} stroke="#64748b" strokeWidth="1" />
-          <text x={svgWidth / 2} y={svgHeight + 30} textAnchor="middle" className="dimension-text">{width} mm</text>
-          
-          {/* Height dimension - right side */}
-          <line x1={svgWidth + 15} y1="0" x2={svgWidth + 15} y2={svgHeight} stroke="#64748b" strokeWidth="1" />
-          <line x1={svgWidth + 10} y1="0" x2={svgWidth + 20} y2="0" stroke="#64748b" strokeWidth="1" />
-          <line x1={svgWidth + 10} y1={svgHeight} x2={svgWidth + 20} y2={svgHeight} stroke="#64748b" strokeWidth="1" />
-          
-          {/* Height dimension text - improved visibility */}
-          <text 
-            x={svgWidth + 35} 
-            y={svgHeight / 2} 
-            textAnchor="middle" 
-            transform={`rotate(90, ${svgWidth + 35}, ${svgHeight / 2})`} 
-            className="dimension-text"
-          >
-            {height} mm
-          </text>
-          
-          {/* Window Name label */}
-          <text 
-            x={svgWidth / 2} 
-            y={svgHeight + 50} 
-            textAnchor="middle" 
-            fontSize="11" 
-            fontWeight="500" 
-            fill="#334155"
-          >
-            {name}
-          </text>
-          
-          {/* Glass type indication if obscure */}
-          {isObscureGlass && (
-            <text 
-              x={svgWidth / 2} 
-              y={svgHeight - 10} 
-              textAnchor="middle" 
-              fontSize="8" 
-              fill="#334155"
-            >
-              ({glassType})
-            </text>
-          )}
-        </svg>
-      </div>
+        </g>
+        
+        {/* Dimension line for width */}
+        <line 
+          x1="0" 
+          y1={svgHeight + 20} 
+          x2={svgWidth} 
+          y2={svgHeight + 20} 
+          stroke="black" 
+          strokeWidth="1" 
+        />
+        
+        {/* Dimension arrows */}
+        <line 
+          x1="0" 
+          y1={svgHeight + 15} 
+          x2="0" 
+          y2={svgHeight + 25} 
+          stroke="black" 
+          strokeWidth="1" 
+        />
+        <line 
+          x1={svgWidth} 
+          y1={svgHeight + 15} 
+          x2={svgWidth} 
+          y2={svgHeight + 25} 
+          stroke="black" 
+          strokeWidth="1" 
+        />
+        
+        {/* Width text */}
+        <text 
+          x={svgWidth / 2} 
+          y={svgHeight + 35} 
+          textAnchor="middle" 
+          className="dimension-text"
+        >
+          {width}mm
+        </text>
+        
+        {/* Dimension line for height on the right side */}
+        <line 
+          x1={svgWidth + 20} 
+          y1="10" 
+          x2={svgWidth + 20} 
+          y2={svgHeight + 10} 
+          stroke="black" 
+          strokeWidth="1" 
+        />
+        
+        {/* Dimension arrows for height */}
+        <line 
+          x1={svgWidth + 15} 
+          y1="10" 
+          x2={svgWidth + 25} 
+          y2="10" 
+          stroke="black" 
+          strokeWidth="1" 
+        />
+        <line 
+          x1={svgWidth + 15} 
+          y1={svgHeight + 10} 
+          x2={svgWidth + 25} 
+          y2={svgHeight + 10} 
+          stroke="black" 
+          strokeWidth="1" 
+        />
+        
+        {/* Height text vertical on the right */}
+        <text 
+          x={svgWidth + 35} 
+          y={(svgHeight / 2) + 10} 
+          textAnchor="middle" 
+          className="dimension-text"
+        >
+          {height}mm
+        </text>
+        
+        {/* Window label at bottom */}
+        <text 
+          x={svgWidth / 2} 
+          y={svgHeight + extraHeightForDimensions + 10} 
+          textAnchor="middle" 
+          className="dimension-text" 
+          fontWeight="bold"
+        >
+          {name}
+        </text>
+        
+        {/* Window type label under name */}
+        <text 
+          x={svgWidth / 2} 
+          y={svgHeight + extraHeightForDimensions + 22} 
+          textAnchor="middle" 
+          className="dimension-text"
+          fontSize="8"
+        >
+          {windowConfig.label}
+        </text>
+      </svg>
     </div>
   );
 }
