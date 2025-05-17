@@ -667,120 +667,161 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               svgHeight - (frameInset * 2)
             )}
             
-            {/* Casements for each section */}
-            <rect 
-              x={frameInset - 1} 
-              y={frameInset - 1} 
-              width={(svgWidth / 3) - frameInset - (frameThickness / 2) + 2} 
-              height={svgHeight - (frameInset * 2) + 2} 
-              fill="none" 
-              className="window-casement" 
-            />
-            
-            {/* Left casement inner border 50mm wide with light blue fill */}
-            <rect 
-              x={frameInset + innerBorderWidth} 
-              y={frameInset + innerBorderWidth} 
-              width={(svgWidth / 3) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2} 
-              height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
-              className="window-casement-interior"
-            />
-            
-            <rect 
-              x={(svgWidth / 3) + (frameThickness / 2) - 1} 
-              y={frameInset - 1} 
-              width={(svgWidth / 3) - frameThickness + 2} 
-              height={svgHeight - (frameInset * 2) + 2} 
-              fill="none" 
-              className="window-casement" 
-            />
-            
-            {/* Middle casement inner border 50mm wide with light blue fill */}
-            <rect 
-              x={(svgWidth / 3) + (frameThickness / 2) + innerBorderWidth} 
-              y={frameInset + innerBorderWidth} 
-              width={(svgWidth / 3) - frameThickness - (innerBorderWidth * 2) + 2} 
-              height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
-              className="window-casement-interior"
-            />
-            
-            <rect 
-              x={((svgWidth / 3) * 2) + (frameThickness / 2) - 1} 
-              y={frameInset - 1} 
-              width={(svgWidth / 3) - frameInset - (frameThickness / 2) + 2} 
-              height={svgHeight - (frameInset * 2) + 2} 
-              fill="none" 
-              className="window-casement" 
-            />
-            
-            {/* Right casement inner border 50mm wide with light blue fill */}
-            <rect 
-              x={((svgWidth / 3) * 2) + (frameThickness / 2) + innerBorderWidth} 
-              y={frameInset + innerBorderWidth} 
-              width={(svgWidth / 3) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2} 
-              height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
-              className="window-casement-interior"
-            />
+            {/* Casements for each section - Equal division of width for all three sections */}
+            {/* Calculate section width with equal divisions */}
+            {(() => {
+              // Calculate the effective total width for dividing (minus frame insets on both sides)
+              const effectiveWidth = svgWidth - (frameInset * 2);
+              // Each section gets exactly one third of the effective width
+              const sectionWidth = effectiveWidth / 3;
+              
+              return (
+                <>
+                  {/* Left casement */}
+                  <rect 
+                    x={frameInset - 1} 
+                    y={frameInset - 1} 
+                    width={sectionWidth} 
+                    height={svgHeight - (frameInset * 2) + 2} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Left casement inner border 50mm wide with light blue fill */}
+                  <rect 
+                    x={frameInset + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - (innerBorderWidth * 2)} 
+                    height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Middle casement */}
+                  <rect 
+                    x={frameInset + sectionWidth - 1} 
+                    y={frameInset - 1} 
+                    width={sectionWidth + 2} 
+                    height={svgHeight - (frameInset * 2) + 2} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Middle casement inner border 50mm wide with light blue fill */}
+                  <rect 
+                    x={frameInset + sectionWidth + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - (innerBorderWidth * 2)} 
+                    height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Right casement */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) - 1} 
+                    y={frameInset - 1} 
+                    width={sectionWidth + 2} 
+                    height={svgHeight - (frameInset * 2) + 2} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Right casement inner border 50mm wide with light blue fill */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - (innerBorderWidth * 2)} 
+                    height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+                    className="window-casement-interior"
+                  />
+                </>
+              );
+            })()}
             
             {/* Mullions (vertical dividers between sections) */}
-            <rect 
-              x={(svgWidth / 3) - (mullionThickness / 2)} 
-              y={frameInset} 
-              width={mullionThickness} 
-              height={svgHeight - (frameInset * 2)} 
-              className="window-mullion" 
-            />
-            
-            <rect 
-              x={((svgWidth / 3) * 2) - (mullionThickness / 2)} 
-              y={frameInset} 
-              width={mullionThickness} 
-              height={svgHeight - (frameInset * 2)} 
-              className="window-mullion" 
-            />
+            {(() => {
+              // Calculate the effective total width for dividing (minus frame insets on both sides)
+              const effectiveWidth = svgWidth - (frameInset * 2);
+              // Each section gets exactly one third of the effective width
+              const sectionWidth = effectiveWidth / 3;
+              
+              return (
+                <>
+                  {/* First mullion (between left and middle) */}
+                  <rect 
+                    x={frameInset + sectionWidth - (mullionThickness / 2)} 
+                    y={frameInset} 
+                    width={mullionThickness} 
+                    height={svgHeight - (frameInset * 2)} 
+                    className="window-mullion" 
+                  />
+                  
+                  {/* Second mullion (between middle and right) */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) - (mullionThickness / 2)} 
+                    y={frameInset} 
+                    width={mullionThickness} 
+                    height={svgHeight - (frameInset * 2)} 
+                    className="window-mullion" 
+                  />
+                </>
+              );
+            })()}
             
             {/* Hinge indicators for left and right sections */}
-            {(openableCasements === "left" || openableCasements === "both") && (
-              renderHingeIndicator(
-                frameInset, 
-                frameInset, 
-                (svgWidth / 3) - frameInset - (frameThickness / 2), 
-                svgHeight - (frameInset * 2), 
-                'left'
-              )
-            )}
-            
-            {(openableCasements === "right" || openableCasements === "both") && (
-              renderHingeIndicator(
-                ((svgWidth / 3) * 2) + (frameThickness / 2), 
-                frameInset, 
-                (svgWidth / 3) - frameInset - (frameThickness / 2), 
-                svgHeight - (frameInset * 2), 
-                'right'
-              )
-            )}
-            
-            {/* Center casement opening - hinged on the left */}
-            {openableCasements === "center-left" && (
-              renderHingeIndicator(
-                (svgWidth / 3) + (frameThickness / 2), 
-                frameInset, 
-                (svgWidth / 3) - frameThickness, 
-                svgHeight - (frameInset * 2), 
-                'left'
-              )
-            )}
-            
-            {/* Center casement opening - hinged on the right */}
-            {openableCasements === "center-right" && (
-              renderHingeIndicator(
-                (svgWidth / 3) + (frameThickness / 2), 
-                frameInset, 
-                (svgWidth / 3) - frameThickness, 
-                svgHeight - (frameInset * 2), 
-                'right'
-              )
-            )}
+            {(() => {
+              // Calculate the effective total width for dividing (minus frame insets on both sides)
+              const effectiveWidth = svgWidth - (frameInset * 2);
+              // Each section gets exactly one third of the effective width
+              const sectionWidth = effectiveWidth / 3;
+              
+              return (
+                <>
+                  {/* Left section opening */}
+                  {(openableCasements === "left" || openableCasements === "both") && (
+                    renderHingeIndicator(
+                      frameInset, 
+                      frameInset, 
+                      sectionWidth, 
+                      svgHeight - (frameInset * 2), 
+                      'left'
+                    )
+                  )}
+                  
+                  {/* Right section opening */}
+                  {(openableCasements === "right" || openableCasements === "both") && (
+                    renderHingeIndicator(
+                      frameInset + (sectionWidth * 2), 
+                      frameInset, 
+                      sectionWidth, 
+                      svgHeight - (frameInset * 2), 
+                      'right'
+                    )
+                  )}
+                  
+                  {/* Center casement opening - hinged on the left */}
+                  {openableCasements === "center-left" && (
+                    renderHingeIndicator(
+                      frameInset + sectionWidth, 
+                      frameInset, 
+                      sectionWidth, 
+                      svgHeight - (frameInset * 2), 
+                      'left'
+                    )
+                  )}
+                  
+                  {/* Center casement opening - hinged on the right */}
+                  {openableCasements === "center-right" && (
+                    renderHingeIndicator(
+                      frameInset + sectionWidth, 
+                      frameInset, 
+                      sectionWidth, 
+                      svgHeight - (frameInset * 2), 
+                      'right'
+                    )
+                  )}
+                </>
+              );
+            })()}
           </>
         );
         
