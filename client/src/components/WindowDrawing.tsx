@@ -43,8 +43,12 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   // Find window type configuration
   const windowConfig = windowTypes.find(w => w.id === type) || windowTypes[0];
   
-  // Use a light blue for glass
-  const glassColor = "#e5f0ff"; // Light blue color for glass
+  // White color for the outer frame
+  const frameColor = "white";
+  // Color for standard glass panes (empty/transparent)
+  const glassColor = "white"; 
+  // Light blue color for inner glass panes
+  const innerGlassColor = "#e5f0ff";
   
   // Frame thickness (45mm scaled to SVG size)
   const frameThickness = Math.max(3, Math.round(45 * scaleFactor)); // 45mm scaled to SVG size, minimum 3px
@@ -184,7 +188,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             {/* Outer Frame */}
             <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
             
-            {/* Glass */}
+            {/* Glass background */}
             <rect 
               x={frameInset} 
               y={frameInset} 
@@ -193,6 +197,16 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               fill={glassColor} 
               stroke="#94a3b8" 
               strokeWidth="1" 
+            />
+            
+            {/* Inner blue glass pane */}
+            <rect 
+              x={frameInset + 10} 
+              y={frameInset + 10} 
+              width={svgWidth - (frameInset * 2) - 20} 
+              height={svgHeight - (frameInset * 2) - 20} 
+              fill={innerGlassColor} 
+              stroke="none" 
             />
             
             {/* Georgian bars if enabled */}
