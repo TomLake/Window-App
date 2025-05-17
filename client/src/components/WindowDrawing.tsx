@@ -43,8 +43,8 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   // Find window type configuration
   const windowConfig = windowTypes.find(w => w.id === type) || windowTypes[0];
   
-  // Use a very light blue-gray for glass
-  const glassColor = "#f7f9fb"; // Very light blue-gray for glass
+  // Use a light blue for glass
+  const glassColor = "#e5f0ff"; // Light blue color for glass
   
   // Frame thickness (45mm scaled to SVG size)
   const frameThickness = Math.max(3, Math.round(45 * scaleFactor)); // 45mm scaled to SVG size, minimum 3px
