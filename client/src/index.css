@@ -78,7 +78,7 @@
 }
 
 .window-casement {
-  stroke: transparent;
+  stroke: black;
   stroke-width: 0;
   stroke-dasharray: none;
 }
@@ -92,7 +92,7 @@
 .window-mullion {
   fill: white;
   stroke: black;
-  stroke-width: 1px;
+  stroke-width: 1;
 }
 
 .window-section {
@@ -101,15 +101,10 @@
   fill: none;
 }
 
-/* Override SVG strokes for window elements */
-.window-drawing-svg rect:not(.window-casement) {
+/* Override all SVG strokes to use black */
+.window-drawing-svg rect {
   stroke: black;
   stroke-width: 1;
-}
-
-.window-drawing-svg rect.window-casement {
-  stroke: transparent;
-  stroke-width: 0;
 }
 
 .window-drawing-svg line {
