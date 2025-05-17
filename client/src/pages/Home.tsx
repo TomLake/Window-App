@@ -97,9 +97,10 @@ export default function Home() {
       
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <aside className="w-80 bg-white border-r border-gray-200 flex flex-col">
-          <div className="p-4 border-b border-gray-200">
-            <h2 className="font-medium text-lg text-textPrimary mb-4">Window Parameters</h2>
+        <aside className="w-80 bg-white border-r border-gray-200 flex flex-col h-full overflow-hidden">
+          {/* Make this section scrollable independently */}
+          <div className="p-4 border-b border-gray-200 overflow-y-auto flex-1">
+            <h2 className="font-medium text-lg text-textPrimary mb-4 sticky top-0 bg-white pt-1">Window Parameters</h2>
             <WindowForm 
               selectedWindow={selectedWindow} 
               onSave={handleSaveWindow} 
@@ -107,13 +108,15 @@ export default function Home() {
             />
           </div>
           
-          <div className="p-4 flex-1 overflow-y-auto">
-            <h2 className="font-medium text-lg text-textPrimary mb-4">Window Templates</h2>
+          {/* Templates section */}
+          <div className="p-4 border-t border-gray-200 overflow-y-auto max-h-[25vh]">
+            <h2 className="font-medium text-lg text-textPrimary mb-4 sticky top-0 bg-white">Window Templates</h2>
             <WindowTemplates onSelectTemplate={setSelectedWindow} />
           </div>
           
-          <div className="p-4 border-t border-gray-200">
-            <h2 className="font-medium text-lg text-textPrimary mb-4">Current Project</h2>
+          {/* Current project section */}
+          <div className="p-4 border-t border-gray-200 overflow-y-auto max-h-[25vh]">
+            <h2 className="font-medium text-lg text-textPrimary mb-4 sticky top-0 bg-white">Current Project</h2>
             <ProjectWindowsList 
               windows={windows} 
               onEdit={handleEditWindow} 
