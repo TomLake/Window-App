@@ -568,6 +568,13 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               svgHeight - (frameInset * 2)
             )}
             
+            {/* Transom for left pane */}
+            {renderTransom(
+              frameInset,
+              frameInset,
+              (svgWidth / 2) - frameInset - (frameThickness / 2)
+            )}
+            
             <rect 
               x={(svgWidth / 2) + (frameThickness / 2)} 
               y={frameInset} 
