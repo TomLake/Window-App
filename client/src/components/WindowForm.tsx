@@ -27,7 +27,7 @@ import type { Window } from "@shared/schema";
 const windowFormSchema = z.object({
   id: z.number().optional(),
   projectId: z.number().default(1), // Default project ID
-  name: z.string().min(1, "Name is required"),
+  name: z.string().default("New Window"),
   type: z.string().min(1, "Type is required"),
   width: z.coerce.number().min(300, "Width must be at least 300mm").max(3000, "Width must be at most 3000mm"),
   height: z.coerce.number().min(300, "Height must be at least 300mm").max(3000, "Height must be at most 3000mm"),
