@@ -223,6 +223,9 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
         );
       
       case "single-transom":
+        // Calculate the scaled transom height
+        const scaledTransomHeight = transomHeight * scaleFactor;
+        
         return (
           <>
             {/* Outer Frame */}
@@ -238,10 +241,10 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               stroke="none" 
             />
             
-            {/* Horizontal transom bar - fixed at top 1/3 of the window */}
+            {/* Horizontal transom bar - position based on transom height parameter */}
             <rect 
               x={frameInset} 
-              y={frameInset + (svgHeight / 3)} 
+              y={frameInset + scaledTransomHeight} 
               width={svgWidth - (frameInset * 2)} 
               height={mullionThickness} 
               className="window-mullion" 

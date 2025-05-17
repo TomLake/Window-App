@@ -31,7 +31,8 @@ export const windows = pgTable("windows", {
   georgianBarsHorizontal: integer("georgian_bars_horizontal").default(1), // number of horizontal bars
   georgianBarsVertical: integer("georgian_bars_vertical").default(1), // number of vertical bars
   openableCasements: varchar("openable_casements", { length: 50 }).default("left"), // which casements can open: "left", "right", "both", "none"
-
+  transomHeight: integer("transom_height").default(400), // height of transom from top in mm (for transom window types)
+  
   positionX: integer("position_x").default(0), // position in canvas
   positionY: integer("position_y").default(0), // position in canvas
 });
