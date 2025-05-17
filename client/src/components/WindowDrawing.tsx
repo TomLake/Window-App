@@ -24,6 +24,10 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   const svgWidth = Math.round(width * scaleFactor);
   const svgHeight = Math.round(height * scaleFactor);
   
+  // Add extra space for dimensions on the sides
+  const extraWidthForDimensions = 50; // Space for height dimension on the right
+  const extraHeightForDimensions = 60; // Space for width dimension at the bottom
+  
   // Find window type configuration
   const windowConfig = windowTypes.find(w => w.id === type) || windowTypes[0];
   
@@ -161,28 +165,40 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     <div className="mb-16 inline-block mx-4">
       <div className="relative">
         <svg 
-          width={svgWidth} 
-          height={svgHeight + 60} // Add extra height for dimensions
-          viewBox={`0 0 ${svgWidth} ${svgHeight + 60}`} 
+          width={svgWidth + extraWidthForDimensions} 
+          height={svgHeight + extraHeightForDimensions} 
+          viewBox={`0 0 ${svgWidth + extraWidthForDimensions} ${svgHeight + extraHeightForDimensions}`} 
           xmlns="http://www.w3.org/2000/svg"
+          className="overflow-visible"
         >
           {/* Window rendering */}
           {renderWindow()}
           
-          {/* Width dimension */}
+          {/* Width dimension - bottom */}
           <line x1="1" y1={svgHeight + 15} x2={svgWidth - 1} y2={svgHeight + 15} stroke="#64748b" strokeWidth="1" />
           <line x1="1" y1={svgHeight + 10} x2="1" y2={svgHeight + 20} stroke="#64748b" strokeWidth="1" />
           <line x1={svgWidth - 1} y1={svgHeight + 10} x2={svgWidth - 1} y2={svgHeight + 20} stroke="#64748b" strokeWidth="1" />
-          <text x={svgWidth / 2} y={svgHeight + 30} textAnchor="middle" className="dimension-text">{width} mm</text>
+          <text x={svgWidth / 2} y={svgHeight + 30} textAnchor="middle" fontSize="10" fill="#475569">{width} mm</text>
           
-          {/* Height dimension */}
+          {/* Height dimension - right side */}
           <line x1={svgWidth + 15} y1="1" x2={svgWidth + 15} y2={svgHeight - 1} stroke="#64748b" strokeWidth="1" />
           <line x1={svgWidth + 10} y1="1" x2={svgWidth + 20} y2="1" stroke="#64748b" strokeWidth="1" />
           <line x1={svgWidth + 10} y1={svgHeight - 1} x2={svgWidth + 20} y2={svgHeight - 1} stroke="#64748b" strokeWidth="1" />
-          <text x={svgWidth + 30} y={svgHeight / 2} textAnchor="middle" transform={`rotate(90, ${svgWidth + 30}, ${svgHeight / 2})`} className="dimension-text">{height} mm</text>
+          
+          {/* Height dimension text - improved visibility */}
+          <text 
+            x={svgWidth + 35} 
+            y={svgHeight / 2} 
+            textAnchor="middle" 
+            transform={`rotate(90, ${svgWidth + 35}, ${svgHeight / 2})`} 
+            fontSize="10" 
+            fill="#475569"
+          >
+            {height} mm
+          </text>
           
           {/* Location label */}
-          <text x={svgWidth / 2} y={svgHeight + 50} textAnchor="middle" className="dimension-text font-medium">{location}</text>
+          <text x={svgWidth / 2} y={svgHeight + 50} textAnchor="middle" fontSize="11" fontWeight="500" fill="#334155">{location}</text>
           
           {/* Glass type indication if obscure */}
           {isObscureGlass && (
