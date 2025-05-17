@@ -297,13 +297,44 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               svgHeight - (frameInset * 2)
             )}
             
+            {/* Hinge indicators for the top casement - with hinges at the top */}
+            {(topCasementsOpenable === "left" || topCasementsOpenable === "both") && (
+              <>
+                <line 
+                  x1={frameInset + 20} 
+                  y1={frameInset + 20} 
+                  x2={svgWidth / 2 - 20} 
+                  y2={frameInset + 20} 
+                  stroke="black" 
+                  strokeDasharray="5,5" 
+                  strokeWidth="1"
+                />
+                <circle cx={frameInset + (svgWidth/4)} cy={frameInset + 5} r={2} fill="black" />
+              </>
+            )}
+            
+            {(topCasementsOpenable === "right" || topCasementsOpenable === "both") && (
+              <>
+                <line 
+                  x1={svgWidth / 2 + 20} 
+                  y1={frameInset + 20} 
+                  x2={svgWidth - frameInset - 20} 
+                  y2={frameInset + 20} 
+                  stroke="black" 
+                  strokeDasharray="5,5" 
+                  strokeWidth="1"
+                />
+                <circle cx={frameInset + (svgWidth*3/4)} cy={frameInset + 5} r={2} fill="black" />
+              </>
+            )}
+            
             {/* Hinge indicators for the lower casement */}
             {(openableCasements === "left" || openableCasements === "both") && (
               renderHingeIndicator(
                 frameInset, 
-                frameInset + (svgHeight / 3) + mullionThickness, 
+                frameInset + scaledTransomHeight + mullionThickness, 
                 svgWidth - (frameInset * 2), 
-                (svgHeight * 2/3) - frameInset - mullionThickness, 
+                svgHeight - frameInset - scaledTransomHeight - mullionThickness, 
                 'left'
               )
             )}
@@ -311,9 +342,9 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             {(openableCasements === "right" || openableCasements === "both") && (
               renderHingeIndicator(
                 frameInset, 
-                frameInset + (svgHeight / 3) + mullionThickness, 
+                frameInset + scaledTransomHeight + mullionThickness, 
                 svgWidth - (frameInset * 2), 
-                (svgHeight * 2/3) - frameInset - mullionThickness, 
+                svgHeight - frameInset - scaledTransomHeight - mullionThickness, 
                 'right'
               )
             )}
