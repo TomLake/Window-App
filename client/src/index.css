@@ -73,12 +73,12 @@
 /* Window Drawing Styles */
 .window-frame {
   stroke: black;
-  stroke-width: 2;
+  stroke-width: 1;
   fill: white;
 }
 
 .window-casement {
-  stroke: transparent;
+  stroke: black;
   stroke-width: 0;
   stroke-dasharray: none;
 }
@@ -91,20 +91,20 @@
 
 .window-mullion {
   fill: white;
-  stroke: transparent;
-  stroke-width: 0;
+  stroke: black;
+  stroke-width: 1;
 }
 
 .window-section {
-  stroke: transparent;
-  stroke-width: 0;
+  stroke: black;
+  stroke-width: 1;
   fill: none;
 }
 
-/* Override SVG strokes - only keep outer frame stroke */
+/* Override all SVG strokes to use black */
 .window-drawing-svg rect {
-  stroke: transparent;
-  stroke-width: 0;
+  stroke: black;
+  stroke-width: 1;
 }
 
 .window-drawing-svg line {
