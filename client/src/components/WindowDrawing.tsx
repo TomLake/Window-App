@@ -79,27 +79,6 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     );
   };
   
-  // Function to add window sill that extends 50mm on both sides
-  const renderWindowSill = () => {
-    // Calculate the sill extension (50mm scaled)
-    const sillExtension = Math.max(2, Math.round(50 * scaleFactor));
-    
-    // Height of the sill (15mm scaled)
-    const sillHeight = Math.max(2, Math.round(15 * scaleFactor));
-    
-    return (
-      <rect
-        x={-sillExtension}
-        y={svgHeight}
-        width={svgWidth + (sillExtension * 2)}
-        height={sillHeight}
-        fill="white"
-        stroke="#94a3b8"
-        strokeWidth="1"
-      />
-    );
-  };
-  
   // Function to render Georgian bars for a window pane
   const renderGeorgianBars = (x: number, y: number, width: number, height: number) => {
     if (!hasGeorgianBars) return null;
@@ -304,9 +283,6 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                 'right'
               )
             )}
-            
-            {/* Add window sill */}
-            {renderWindowSill()}
           </>
         );
       
@@ -408,9 +384,6 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                 'right'
               )
             )}
-            
-            {/* Add window sill */}
-            {renderWindowSill()}
           </>
         );
       
@@ -624,9 +597,6 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                 'right'
               )
             )}
-            
-            {/* Add window sill */}
-            {renderWindowSill()}
           </>
         );
       
