@@ -81,7 +81,6 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
       const windowData = {
         ...selectedWindow,
         openableCasements: selectedWindow.openableCasements || "left",
-        paintColor: selectedWindow.paintColor || "white",
         hasGeorgianBars: selectedWindow.hasGeorgianBars === true,
         georgianBarsHorizontal: selectedWindow.georgianBarsHorizontal ?? 1,
         georgianBarsVertical: selectedWindow.georgianBarsVertical ?? 1,

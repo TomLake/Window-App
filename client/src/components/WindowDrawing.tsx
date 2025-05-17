@@ -18,12 +18,8 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     georgianBarsHorizontal = 1,
     georgianBarsVertical = 1,
     hasTransom = false,
-    transomHeight = 400,
-    paintColor = "white" // Default paint color is white
+    transomHeight = 400
   } = window;
-
-  // Ensure paintColor is always a string
-  const frameColor = paintColor || "white";
   
   // Calculate SVG dimensions while maintaining a minimum size and aspect ratio
   const maxSvgWidth = 300;
@@ -188,7 +184,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
         return (
           <>
             {/* Outer Frame */}
-            <rect x="0" y="0" width={svgWidth} height={svgHeight} fill="#f8fafc" strokeWidth="2.5" stroke={frameColor} />
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
             
             {/* Glass */}
             <rect 
@@ -265,7 +261,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
         return (
           <>
             {/* Main frame */}
-            <rect x="0" y="0" width={svgWidth} height={svgHeight} fill="#f8fafc" strokeWidth="2.5" stroke={frameColor} />
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
             
 
             
@@ -366,7 +362,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
         return (
           <>
             {/* Frame */}
-            <rect x="0" y="0" width={svgWidth} height={svgHeight} fill="#f8fafc" strokeWidth="2.5" stroke={frameColor} />
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
             
 
             
@@ -490,7 +486,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
         return (
           <>
             {/* Frame */}
-            <rect x="0" y="0" width={svgWidth} height={svgHeight} fill="#f8fafc" strokeWidth="2.5" stroke={frameColor} />
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
             
 
             
