@@ -43,12 +43,10 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   // Find window type configuration
   const windowConfig = windowTypes.find(w => w.id === type) || windowTypes[0];
   
-  // White color for the outer frame
+  // White color for all parts of the window
   const frameColor = "white";
-  // Color for standard glass panes (empty/transparent)
   const glassColor = "white"; 
-  // Light blue color for inner glass panes
-  const innerGlassColor = "#e5f0ff";
+  const innerGlassColor = "white";
   
   // Frame thickness (45mm scaled to SVG size)
   const frameThickness = Math.max(3, Math.round(45 * scaleFactor)); // 45mm scaled to SVG size, minimum 3px
