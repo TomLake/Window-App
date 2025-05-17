@@ -483,14 +483,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               )
             )}
             
-            {/* Middle casement always opens */}
-            {renderHingeIndicator(
-              (svgWidth / 3) + (frameThickness / 2), 
-              frameInset, 
-              (svgWidth / 3) - frameThickness, 
-              svgHeight - (frameInset * 2), 
-              'left'
-            )}
+            {/* Middle casement is fixed by default, so no hinges */}
             
             {(openableCasements === "right" || openableCasements === "both") && (
               renderHingeIndicator(
