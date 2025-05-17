@@ -12,6 +12,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     width, 
     height, 
     name = "Window", // Provide default name to prevent rendering issues
+    glassType, 
     openableCasements = "left", // Default left casement opens
     hasGeorgianBars = false,
     georgianBarsHorizontal = 1,
@@ -43,10 +44,9 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   // Find window type configuration
   const windowConfig = windowTypes.find(w => w.id === type) || windowTypes[0];
   
-  // White color for all parts of the window
-  const frameColor = "white";
-  const glassColor = "white"; 
-  const innerGlassColor = "white";
+  // Determine if using obscure glass
+  const isObscureGlass = glassType === "Obscure" || glassType === "Tinted";
+  const glassColor = isObscureGlass ? "#e6f0fa" : "#dbeafe"; // Slightly different blue for obscure glass
   
   // Frame thickness (45mm scaled to SVG size)
   const frameThickness = Math.max(3, Math.round(45 * scaleFactor)); // 45mm scaled to SVG size, minimum 3px
@@ -59,25 +59,6 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   
   // Inner border for casements (50mm scaled to SVG size)
   const innerBorderWidth = Math.max(2, Math.round(50 * scaleFactor)); // Scale 50mm to SVG size, minimum 2px
-  
-  // Inner padding for blue glass sections
-  const innerPadding = Math.max(4, Math.round(25 * scaleFactor)); // Scale 25mm to SVG size
-  
-  // Function to add a blue inner pane to a casement
-  const addInnerGlassPane = (x: number, y: number, width: number, height: number) => {
-    // Add padding inside the casement for the blue area
-    const padding = Math.ceil(innerBorderWidth / 2);
-    return (
-      <rect
-        x={x + padding}
-        y={y + padding}
-        width={width - (padding * 2)}
-        height={height - (padding * 2)}
-        fill={innerGlassColor}
-        stroke="none"
-      />
-    );
-  };
   
   // Function to render Georgian bars for a window pane
   const renderGeorgianBars = (x: number, y: number, width: number, height: number) => {
@@ -205,7 +186,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             {/* Outer Frame */}
             <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
             
-            {/* Glass background */}
+            {/* Glass */}
             <rect 
               x={frameInset} 
               y={frameInset} 
@@ -215,16 +196,6 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               stroke="#94a3b8" 
               strokeWidth="1" 
             />
-            
-
-            
-            {/* Add blue inner pane */}
-            {addInnerGlassPane(
-              frameInset + innerBorderWidth,
-              frameInset + innerBorderWidth,
-              svgWidth - (frameInset * 2) - (innerBorderWidth * 2),
-              svgHeight - (frameInset * 2) - (innerBorderWidth * 2)
-            )}
             
             {/* Georgian bars if enabled */}
             {renderGeorgianBars(
@@ -700,7 +671,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
           </text>
           
           {/* Glass type indication if obscure */}
-          {false && (
+          {isObscureGlass && (
             <text 
               x={svgWidth / 2} 
               y={svgHeight - 10} 
@@ -708,7 +679,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               fontSize="8" 
               fill="#334155"
             >
-              Glass
+              ({glassType})
             </text>
           )}
         </svg>

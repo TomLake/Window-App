@@ -15,13 +15,6 @@
   stroke-width: 1.5;
 }
 
-.inner-glass {
-  fill: #e5f0ff;
-  stroke: #334155;
-  stroke-width: 1;
-  stroke-dasharray: 1,1;
-}
-
 :root {
       --background: 0 0% 100%;
 --foreground: 20 14.3% 4.1%;
