@@ -89,6 +89,12 @@
   stroke-width: 1;
 }
 
+.window-mullion {
+  fill: white;
+  stroke: black;
+  stroke-width: 1;
+}
+
 .window-section {
   stroke: black;
   stroke-width: 1;

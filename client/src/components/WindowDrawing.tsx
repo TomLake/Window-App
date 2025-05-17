@@ -697,7 +697,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
           className="dimension-text"
           fontSize="8"
         >
-          {windowConfig.label}
+          {windowConfig.name}
         </text>
       </svg>
     </div>
