@@ -62,6 +62,9 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   // Inner border for casements (50mm scaled to SVG size)
   const innerBorderWidth = Math.max(2, Math.round(50 * scaleFactor)); // Scale 50mm to SVG size, minimum 2px
   
+  // Inner padding for blue glass sections
+  const innerPadding = Math.max(4, Math.round(25 * scaleFactor)); // Scale 25mm to SVG size
+  
   // Function to render Georgian bars for a window pane
   const renderGeorgianBars = (x: number, y: number, width: number, height: number) => {
     if (!hasGeorgianBars) return null;
@@ -201,10 +204,10 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             
             {/* Inner blue glass pane */}
             <rect 
-              x={frameInset + 10} 
-              y={frameInset + 10} 
-              width={svgWidth - (frameInset * 2) - 20} 
-              height={svgHeight - (frameInset * 2) - 20} 
+              x={frameInset + innerPadding} 
+              y={frameInset + innerPadding} 
+              width={svgWidth - (frameInset * 2) - (innerPadding * 2)} 
+              height={svgHeight - (frameInset * 2) - (innerPadding * 2)} 
               fill={innerGlassColor} 
               stroke="none" 
             />
