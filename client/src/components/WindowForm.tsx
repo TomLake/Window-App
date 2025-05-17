@@ -37,8 +37,7 @@ const windowFormSchema = z.object({
   hasGeorgianBars: z.boolean().default(false),
   georgianBarsHorizontal: z.coerce.number().min(0).max(4).default(1),
   georgianBarsVertical: z.coerce.number().min(0).max(4).default(1),
-  hasTransom: z.boolean().default(false),
-  transomHeight: z.coerce.number().min(100).max(1000).default(400),
+  // Transom fields removed - now using dedicated window types
   positionX: z.number().default(0),
   positionY: z.number().default(0),
 });
@@ -63,8 +62,6 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
     hasGeorgianBars: false,
     georgianBarsHorizontal: 1,
     georgianBarsVertical: 1,
-    hasTransom: false,
-    transomHeight: 400,
     positionX: 0,
     positionY: 0,
   };
@@ -301,31 +298,7 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
         
 {/* Transom fields removed - now using dedicated window types with transoms */}
         
-        {form.watch("hasTransom") && (
-          <FormField
-            control={form.control}
-            name="transomHeight"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Transom Height</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    min="100"
-                    max="1000"
-                    value={field.value}
-                    onChange={(e) => {
-                      const value = !isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 400;
-                      field.onChange(value);
-                    }}
-                    onBlur={field.onBlur}
-                  />
-                </FormControl>
-                <FormDescription>Height from top of window in mm</FormDescription>
-              </FormItem>
-            )}
-          />
-        )}
+{/* Transom height field removed - now using dedicated window types with transoms */}
 
         <div className="flex justify-between">
           <Button type="button" variant="outline" onClick={handleReset}>
