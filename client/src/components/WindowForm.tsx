@@ -225,6 +225,7 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
                 <SelectContent>
                   <SelectItem value="left">Left Only</SelectItem>
                   <SelectItem value="right">Right Only</SelectItem>
+                  <SelectItem value="center">Center</SelectItem>
                   <SelectItem value="both">Both Left and Right</SelectItem>
                   <SelectItem value="none">None (Fixed)</SelectItem>
                 </SelectContent>
@@ -354,6 +355,7 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
                     <SelectContent>
                       <SelectItem value="left">Left Only</SelectItem>
                       <SelectItem value="right">Right Only</SelectItem>
+                      <SelectItem value="center">Center</SelectItem>
                       <SelectItem value="both">Both Left and Right</SelectItem>
                       <SelectItem value="none">None (Fixed)</SelectItem>
                     </SelectContent>

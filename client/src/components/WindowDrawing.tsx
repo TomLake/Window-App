@@ -119,7 +119,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   };
   
   // Function to render dashed lines to indicate the hinge side for opening casements
-  const renderHingeIndicator = (x: number, y: number, width: number, height: number, hingeSide: 'left' | 'right') => {
+  const renderHingeIndicator = (x: number, y: number, width: number, height: number, hingeSide: 'left' | 'right' | 'center') => {
     // Determine the points for the dashed line
     let startX, startY, middleX, middleY, endX, endY;
     
@@ -131,7 +131,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
       middleY = y + (height / 2); // Middle left Y
       endX = x + width;   // Bottom right corner X
       endY = y + height;  // Bottom right corner Y
-    } else {
+    } else if (hingeSide === 'right') {
       // If hinges are on the right, line starts at top left, goes to middle right, then to bottom left
       startX = x;         // Top left corner X
       startY = y;         // Top left corner Y
@@ -139,6 +139,14 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
       middleY = y + (height / 2); // Middle right Y
       endX = x;          // Bottom left corner X
       endY = y + height; // Bottom left corner Y
+    } else if (hingeSide === 'center') {
+      // If center opening (like a door), draw a vertical line down the middle
+      startX = x + (width / 2); // Top middle X
+      startY = y;              // Top middle Y
+      middleX = x + (width / 2); // Middle X
+      middleY = y + (height / 2); // Middle Y
+      endX = x + (width / 2);   // Bottom middle X
+      endY = y + height;       // Bottom Y
     }
     
     return (
@@ -328,6 +336,21 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               </>
             )}
             
+            {topCasementsOpenable === "center" && (
+              <>
+                {/* Center top casement - hinged at top */}
+                <path 
+                  d={`M ${svgWidth/2 - svgWidth/6} ${frameInset + scaledTransomHeight - 5} 
+                      L ${svgWidth/2} ${frameInset} 
+                      L ${svgWidth/2 + svgWidth/6} ${frameInset + scaledTransomHeight - 5}`}
+                  stroke="black" 
+                  strokeDasharray="5,5" 
+                  strokeWidth="1"
+                  fill="none"
+                />
+              </>
+            )}
+            
             {/* Hinge indicators for the lower casement */}
             {(openableCasements === "left" || openableCasements === "both") && (
               renderHingeIndicator(
@@ -346,6 +369,16 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                 svgWidth - (frameInset * 2), 
                 svgHeight - frameInset - scaledTransomHeight - mullionThickness, 
                 'right'
+              )
+            )}
+            
+            {openableCasements === "center" && (
+              renderHingeIndicator(
+                frameInset, 
+                frameInset + scaledTransomHeight + mullionThickness, 
+                svgWidth - (frameInset * 2), 
+                svgHeight - frameInset - scaledTransomHeight - mullionThickness, 
+                'center'
               )
             )}
           </>
@@ -434,6 +467,20 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                 svgHeight - (frameInset * 2), 
                 'right'
               )
+            )}
+            
+            {openableCasements === "center" && (
+              <>
+                {/* Center opening - center split line */}
+                <path 
+                  d={`M ${svgWidth/2} ${frameInset} 
+                      L ${svgWidth/2} ${svgHeight - frameInset}`}
+                  stroke="black" 
+                  strokeDasharray="5,5" 
+                  strokeWidth="1"
+                  fill="none"
+                />
+              </>
             )}
           </>
         );
