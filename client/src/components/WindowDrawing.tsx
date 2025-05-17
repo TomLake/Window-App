@@ -65,6 +65,22 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   // Inner padding for blue glass sections
   const innerPadding = Math.max(4, Math.round(25 * scaleFactor)); // Scale 25mm to SVG size
   
+  // Function to add a blue inner pane to a casement
+  const addInnerGlassPane = (x: number, y: number, width: number, height: number) => {
+    // Add padding inside the casement for the blue area
+    const padding = Math.ceil(innerBorderWidth / 2);
+    return (
+      <rect
+        x={x + padding}
+        y={y + padding}
+        width={width - (padding * 2)}
+        height={height - (padding * 2)}
+        fill={innerGlassColor}
+        stroke="none"
+      />
+    );
+  };
+  
   // Function to render Georgian bars for a window pane
   const renderGeorgianBars = (x: number, y: number, width: number, height: number) => {
     if (!hasGeorgianBars) return null;
@@ -202,15 +218,15 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               strokeWidth="1" 
             />
             
-            {/* Inner blue glass pane */}
-            <rect 
-              x={frameInset + innerPadding} 
-              y={frameInset + innerPadding} 
-              width={svgWidth - (frameInset * 2) - (innerPadding * 2)} 
-              height={svgHeight - (frameInset * 2) - (innerPadding * 2)} 
-              fill={innerGlassColor} 
-              stroke="none" 
-            />
+
+            
+            {/* Add blue inner pane */}
+            {addInnerGlassPane(
+              frameInset + innerBorderWidth,
+              frameInset + innerBorderWidth,
+              svgWidth - (frameInset * 2) - (innerBorderWidth * 2),
+              svgHeight - (frameInset * 2) - (innerBorderWidth * 2)
+            )}
             
             {/* Georgian bars if enabled */}
             {renderGeorgianBars(
