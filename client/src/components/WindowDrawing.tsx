@@ -134,37 +134,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     );
   };
   
-  // Function to render hinges for casements that can open
-  const renderHinges = (x: number, y: number, height: number, side: 'left' | 'right') => {
-    const hingeCount = 3; // Number of hinges to display
-    const hingeSpacing = height / (hingeCount + 1); // Evenly space hinges
-    const hingeLength = 10; // Length of hinge
-    const hingeWidth = 3; // Width of hinge
-    
-    const hinges = [];
-    
-    for (let i = 1; i <= hingeCount; i++) {
-      const hingeY = y + (hingeSpacing * i);
-      
-      // Position hinges on the correct side of the casement
-      const hingeX = side === 'left' ? x - hingeLength + (hingeWidth / 2) : x - (hingeWidth / 2);
-      
-      hinges.push(
-        <rect
-          key={`hinge-${i}`}
-          x={hingeX}
-          y={hingeY - hingeWidth / 2}
-          width={hingeWidth}
-          height={hingeLength}
-          fill="#64748b"
-          stroke="#334155"
-          strokeWidth="1"
-        />
-      );
-    }
-    
-    return hinges;
-  };
+
   
   // Render the appropriate window based on type
   const renderWindow = () => {
@@ -211,20 +181,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-            {/* Hinges based on which casements can open */}
-            {(openableCasements === "left" || openableCasements === "both") && (
-              <>
-                {/* Left side hinges */}
-                {renderHinges(frameInset, frameInset, svgHeight - (frameInset * 2), 'left')}
-              </>
-            )}
-            
-            {(openableCasements === "right" || openableCasements === "both") && (
-              <>
-                {/* Right side hinges */}
-                {renderHinges(svgWidth - frameInset, frameInset, svgHeight - (frameInset * 2), 'right')}
-              </>
-            )}
+
           </>
         );
       
@@ -309,20 +266,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-            {/* Hinges based on which casements can open */}
-            {(openableCasements === "left" || openableCasements === "both") && (
-              <>
-                {/* Left pane hinges */}
-                {renderHinges(frameInset, frameInset, svgHeight - (frameInset * 2), 'left')}
-              </>
-            )}
-            
-            {(openableCasements === "right" || openableCasements === "both") && (
-              <>
-                {/* Right pane hinges */}
-                {renderHinges(svgWidth - frameInset, frameInset, svgHeight - (frameInset * 2), 'right')}
-              </>
-            )}
+
           </>
         );
       
@@ -456,17 +400,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-            {/* Hinges based on which casements can open */}
-            {(openableCasements === "left" || openableCasements === "both") && 
-              renderHinges(frameInset, frameInset, svgHeight - (frameInset * 2), 'left')
-            }
-            
-            {/* Middle pane hinges */}
-            {renderHinges((svgWidth / 3) * 2, frameInset, svgHeight - (frameInset * 2), 'right')}
-            
-            {(openableCasements === "right" || openableCasements === "both") && 
-              renderHinges(svgWidth - frameInset, frameInset, svgHeight - (frameInset * 2), 'right')
-            }
+
           </>
         );
         
@@ -530,14 +464,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             <circle cx={svgWidth * 0.45} cy={svgHeight * 0.5} r={3} fill="#334155" />
             <circle cx={svgWidth * 0.55} cy={svgHeight * 0.5} r={3} fill="#334155" />
             
-            {/* Hinges based on which casements can open */}
-            {(openableCasements === "left" || openableCasements === "both") && 
-              renderHinges(frameInset, frameInset, svgHeight - (frameInset * 2), 'left')
-            }
-            
-            {(openableCasements === "right" || openableCasements === "both") && 
-              renderHinges(svgWidth - frameInset, frameInset, svgHeight - (frameInset * 2), 'right')
-            }
+
           </>
         );
       
