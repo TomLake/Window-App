@@ -72,31 +72,31 @@
 
 /* Window Drawing Styles */
 .window-frame {
-  stroke: transparent;
-  stroke-width: 0;
+  stroke: red;         /* Red: Outer frame border */
+  stroke-width: 1;
   fill: white;
 }
 
 .window-casement {
-  stroke: transparent;
-  stroke-width: 0;
+  stroke: green;       /* Green: Casement outer borders */
+  stroke-width: 1;
   stroke-dasharray: none;
 }
 
 .window-casement-interior {
   fill: #d4e6f9;
-  stroke: transparent;
-  stroke-width: 0;
+  stroke: blue;        /* Blue: Casement inner borders */
+  stroke-width: 1;
 }
 
 .window-mullion {
   fill: white;
-  stroke: black;
+  stroke: purple;      /* Purple: Mullion (divider) borders */
   stroke-width: 1;
 }
 
 .window-section {
-  stroke: black;
+  stroke: orange;      /* Orange: Section borders */
   stroke-width: 1;
   fill: none;
 }
