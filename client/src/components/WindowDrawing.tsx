@@ -53,6 +53,9 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   const frameInset = frameThickness + 2; // Inset from frame to glass
   const casementWidth = 2; // Casement line width
   
+  // Inner border for casements (50mm scaled to SVG size)
+  const innerBorderWidth = Math.max(2, Math.round(50 * scaleFactor)); // Scale 50mm to SVG size, minimum 2px
+  
   // Function to render Georgian bars for a window pane
   const renderGeorgianBars = (x: number, y: number, width: number, height: number) => {
     if (!hasGeorgianBars) return null;
@@ -215,6 +218,18 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
+            {/* Inner border 50mm wide */}
+            <rect 
+              x={frameInset + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={svgWidth - ((frameInset + innerBorderWidth) * 2)} 
+              height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+              fill="none" 
+              stroke="#334155" 
+              strokeWidth="1" 
+              strokeDasharray="1,1"
+            />
+            
             {/* Hinge indicators based on which casements can open */}
             {(openableCasements === "left" || openableCasements === "both") && (
               renderHingeIndicator(
@@ -309,6 +324,18 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
+            {/* Left casement inner border 50mm wide */}
+            <rect 
+              x={frameInset + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={(svgWidth / 2) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2} 
+              height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+              fill="none" 
+              stroke="#334155" 
+              strokeWidth="1" 
+              strokeDasharray="1,1"
+            />
+            
             {/* Right casement */}
             <rect 
               x={(svgWidth / 2) + (frameThickness / 2) - 1} 
@@ -317,6 +344,18 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               height={svgHeight - (frameInset * 2) + 2} 
               fill="none" 
               className="window-casement" 
+            />
+            
+            {/* Right casement inner border 50mm wide */}
+            <rect 
+              x={(svgWidth / 2) + (frameThickness / 2) + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={(svgWidth / 2) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2} 
+              height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+              fill="none" 
+              stroke="#334155" 
+              strokeWidth="1" 
+              strokeDasharray="1,1"
             />
             
             {/* Hinge indicators for left and right casements */}
@@ -454,6 +493,18 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
+            {/* Left casement inner border 50mm wide */}
+            <rect 
+              x={frameInset + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={(svgWidth / 3) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2} 
+              height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+              fill="none" 
+              stroke="#334155" 
+              strokeWidth="1" 
+              strokeDasharray="1,1"
+            />
+            
             <rect 
               x={(svgWidth / 3) + (frameThickness / 2) - 1} 
               y={frameInset - 1} 
@@ -463,6 +514,18 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
+            {/* Middle casement inner border 50mm wide */}
+            <rect 
+              x={(svgWidth / 3) + (frameThickness / 2) + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={(svgWidth / 3) - frameThickness - (innerBorderWidth * 2) + 2} 
+              height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+              fill="none" 
+              stroke="#334155" 
+              strokeWidth="1" 
+              strokeDasharray="1,1"
+            />
+            
             <rect 
               x={((svgWidth / 3) * 2) + (frameThickness / 2) - 1} 
               y={frameInset - 1} 
@@ -470,6 +533,18 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               height={svgHeight - (frameInset * 2) + 2} 
               fill="none" 
               className="window-casement" 
+            />
+            
+            {/* Right casement inner border 50mm wide */}
+            <rect 
+              x={((svgWidth / 3) * 2) + (frameThickness / 2) + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={(svgWidth / 3) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2} 
+              height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+              fill="none" 
+              stroke="#334155" 
+              strokeWidth="1" 
+              strokeDasharray="1,1"
             />
             
             {/* Hinge indicators for each casement */}
@@ -545,6 +620,18 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
+            {/* Left casement inner border 50mm wide */}
+            <rect 
+              x={frameInset + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={(svgWidth / 2) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2} 
+              height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+              fill="none" 
+              stroke="#334155" 
+              strokeWidth="1" 
+              strokeDasharray="1,1"
+            />
+            
             <rect 
               x={(svgWidth / 2) + (frameThickness / 2) - 1} 
               y={frameInset - 1} 
@@ -552,6 +639,18 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               height={svgHeight - (frameInset * 2) + 2} 
               fill="none" 
               className="window-casement" 
+            />
+            
+            {/* Right casement inner border 50mm wide */}
+            <rect 
+              x={(svgWidth / 2) + (frameThickness / 2) + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={(svgWidth / 2) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2} 
+              height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+              fill="none" 
+              stroke="#334155" 
+              strokeWidth="1" 
+              strokeDasharray="1,1"
             />
             
             {/* Door handles - bigger for visibility */}
