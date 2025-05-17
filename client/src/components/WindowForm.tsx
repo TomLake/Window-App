@@ -33,6 +33,7 @@ const windowFormSchema = z.object({
   height: z.coerce.number().min(300, "Height must be at least 300mm").max(3000, "Height must be at most 3000mm"),
   // location field removed
   glassType: z.string().min(1, "Glass type is required"),
+  openableCasements: z.string().default("left"),
   hasGeorgianBars: z.boolean().default(false),
   georgianBarsHorizontal: z.coerce.number().min(0).max(4).default(1),
   georgianBarsVertical: z.coerce.number().min(0).max(4).default(1),
@@ -58,6 +59,7 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
     width: 1100,
     height: 1100,
     glassType: "Clear",
+    openableCasements: "left",
     hasGeorgianBars: false,
     georgianBarsHorizontal: 1,
     georgianBarsVertical: 1,
@@ -78,6 +80,7 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
       // Ensure all properties have proper types
       const windowData = {
         ...selectedWindow,
+        openableCasements: selectedWindow.openableCasements || "left",
         hasGeorgianBars: selectedWindow.hasGeorgianBars === true,
         georgianBarsHorizontal: selectedWindow.georgianBarsHorizontal ?? 1,
         georgianBarsVertical: selectedWindow.georgianBarsVertical ?? 1,
@@ -189,6 +192,36 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
                   <SelectItem value="Low-E">Low-E</SelectItem>
                 </SelectContent>
               </Select>
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="openableCasements"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Openable Casements</FormLabel>
+              <Select 
+                onValueChange={field.onChange} 
+                defaultValue={field.value}
+                value={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select which casements open" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="left">Left Only</SelectItem>
+                  <SelectItem value="right">Right Only</SelectItem>
+                  <SelectItem value="both">Both Left and Right</SelectItem>
+                  <SelectItem value="none">None (Fixed)</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormDescription>
+                Specify which casements of the window can open
+              </FormDescription>
             </FormItem>
           )}
         />

@@ -22,7 +22,7 @@ export const windows = pgTable("windows", {
   id: serial("id").primaryKey(),
   projectId: integer("project_id").notNull(),
   name: text("name").notNull(),
-  type: text("type").notNull(), // bedroom, kitchen, bathroom, etc.
+  type: text("type").notNull(), // single, double, triple, patio
   width: integer("width").notNull(), // in mm
   height: integer("height").notNull(), // in mm
   // location field removed as requested
@@ -32,6 +32,7 @@ export const windows = pgTable("windows", {
   georgianBarsVertical: integer("georgian_bars_vertical").default(1), // number of vertical bars
   hasTransom: boolean("has_transom").default(false), // whether to display a transom
   transomHeight: integer("transom_height").default(400), // height of the transom from the top in mm
+  openableCasements: varchar("openable_casements", { length: 50 }).default("left"), // which casements can open: "left", "right", "both", "none"
   positionX: integer("position_x").default(0), // position in canvas
   positionY: integer("position_y").default(0), // position in canvas
 });
