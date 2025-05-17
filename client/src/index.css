@@ -72,8 +72,8 @@
 
 /* Window Drawing Styles */
 .window-frame {
-  stroke: black;
-  stroke-width: 1;
+  stroke: transparent;
+  stroke-width: 0;
   fill: white;
 }
 
