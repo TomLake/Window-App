@@ -107,12 +107,6 @@ export default function Home() {
             />
           </div>
           
-          {/* Templates section */}
-          <div className="p-4 border-t border-gray-200 overflow-y-auto max-h-[25vh]">
-            <h2 className="font-medium text-lg text-textPrimary mb-4 sticky top-0 bg-white">Window Templates</h2>
-            <WindowTemplates onSelectTemplate={setSelectedWindow} />
-          </div>
-          
           {/* Current project section */}
           <div className="p-4 border-t border-gray-200 overflow-y-auto max-h-[25vh]">
             <h2 className="font-medium text-lg text-textPrimary mb-4 sticky top-0 bg-white">Current Project</h2>
