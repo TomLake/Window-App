@@ -34,6 +34,8 @@ const windowFormSchema = z.object({
   location: z.string().min(1, "Location is required"),
   glassType: z.string().min(1, "Glass type is required"),
   hasGeorgianBars: z.boolean().default(false),
+  georgianBarsHorizontal: z.coerce.number().min(0).max(4).default(1),
+  georgianBarsVertical: z.coerce.number().min(0).max(4).default(1),
   positionX: z.number().default(0),
   positionY: z.number().default(0),
 });
@@ -56,6 +58,8 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
     location: "Living Room",
     glassType: "Clear",
     hasGeorgianBars: false,
+    georgianBarsHorizontal: 1,
+    georgianBarsVertical: 1,
     positionX: 0,
     positionY: 0,
   };
@@ -213,6 +217,50 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
             </FormItem>
           )}
         />
+        
+        {form.watch("hasGeorgianBars") && (
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="georgianBarsHorizontal"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Horizontal Bars</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      min="0"
+                      max="4"
+                      {...field}
+                      onChange={e => field.onChange(e.target.valueAsNumber || 0)}
+                    />
+                  </FormControl>
+                  <FormDescription>Number of horizontal bars</FormDescription>
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="georgianBarsVertical"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Vertical Bars</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      min="0"
+                      max="4"
+                      {...field}
+                      onChange={e => field.onChange(e.target.valueAsNumber || 0)}
+                    />
+                  </FormControl>
+                  <FormDescription>Number of vertical bars</FormDescription>
+                </FormItem>
+              )}
+            />
+          </div>
+        )}
 
         <div className="flex justify-between">
           <Button type="button" variant="outline" onClick={handleReset}>
