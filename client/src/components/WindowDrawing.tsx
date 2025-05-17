@@ -70,22 +70,13 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-            {/* Opening direction */}
+            {/* Single diagonal line for hinge indication (top-left to bottom-right) */}
             <line 
-              x1={svgWidth * 0.2} 
-              y1={svgHeight * 0.2} 
-              x2={svgWidth * 0.8} 
-              y2={svgHeight * 0.8} 
-              stroke="#334155" 
-              strokeWidth={casementWidth} 
-            />
-            <line 
-              x1={svgWidth * 0.2} 
-              y1={svgHeight * 0.8} 
-              x2={svgWidth * 0.8} 
-              y2={svgHeight * 0.2} 
-              stroke="#334155" 
-              strokeWidth={casementWidth} 
+              x1={frameInset} 
+              y1={frameInset} 
+              x2={svgWidth - frameInset} 
+              y2={svgHeight - frameInset} 
+              className="window-hinge" 
             />
           </>
         );
@@ -148,40 +139,22 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-            {/* Opening direction for left pane */}
+            {/* Left pane hinge indication (diagonal line from left edge) */}
             <line 
-              x1={svgWidth * 0.15} 
-              y1={svgHeight * 0.2} 
-              x2={svgWidth * 0.35} 
-              y2={svgHeight * 0.8} 
-              stroke="#334155" 
-              strokeWidth={casementWidth} 
-            />
-            <line 
-              x1={svgWidth * 0.15} 
-              y1={svgHeight * 0.8} 
-              x2={svgWidth * 0.35} 
-              y2={svgHeight * 0.2} 
-              stroke="#334155" 
-              strokeWidth={casementWidth} 
+              x1={frameInset} 
+              y1={frameInset} 
+              x2={(svgWidth / 2) - (frameThickness / 2) - 1} 
+              y2={svgHeight - frameInset} 
+              className="window-hinge" 
             />
             
-            {/* Opening direction for right pane */}
+            {/* Right pane hinge indication (diagonal line from right edge) */}
             <line 
-              x1={svgWidth * 0.65} 
-              y1={svgHeight * 0.2} 
-              x2={svgWidth * 0.85} 
-              y2={svgHeight * 0.8} 
-              stroke="#334155" 
-              strokeWidth={casementWidth} 
-            />
-            <line 
-              x1={svgWidth * 0.65} 
-              y1={svgHeight * 0.8} 
-              x2={svgWidth * 0.85} 
-              y2={svgHeight * 0.2} 
-              stroke="#334155" 
-              strokeWidth={casementWidth} 
+              x1={svgWidth - frameInset} 
+              y1={frameInset} 
+              x2={(svgWidth / 2) + (frameThickness / 2) + 1} 
+              y2={svgHeight - frameInset} 
+              className="window-hinge" 
             />
           </>
         );
@@ -271,40 +244,31 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-            {/* Opening direction for first pane */}
+            {/* Left pane hinge indication */}
             <line 
-              x1={svgWidth * 0.08} 
-              y1={svgHeight * 0.2} 
-              x2={svgWidth * 0.25} 
-              y2={svgHeight * 0.8} 
-              stroke="#334155" 
-              strokeWidth={casementWidth} 
-            />
-            <line 
-              x1={svgWidth * 0.08} 
-              y1={svgHeight * 0.8} 
-              x2={svgWidth * 0.25} 
-              y2={svgHeight * 0.2} 
-              stroke="#334155" 
-              strokeWidth={casementWidth} 
+              x1={frameInset} 
+              y1={frameInset} 
+              x2={(svgWidth / 3) - (frameThickness / 2) - 1} 
+              y2={svgHeight - frameInset} 
+              className="window-hinge" 
             />
             
-            {/* Opening direction for third pane */}
+            {/* Middle pane */}
             <line 
-              x1={svgWidth * 0.75} 
-              y1={svgHeight * 0.2} 
-              x2={svgWidth * 0.92} 
-              y2={svgHeight * 0.8} 
-              stroke="#334155" 
-              strokeWidth={casementWidth} 
+              x1={(svgWidth / 3) + (frameThickness / 2) + 1}
+              y1={frameInset} 
+              x2={(svgWidth / 3) * 2 - (frameThickness / 2) - 1} 
+              y2={svgHeight - frameInset} 
+              className="window-hinge" 
             />
+            
+            {/* Right pane hinge indication */}
             <line 
-              x1={svgWidth * 0.75} 
-              y1={svgHeight * 0.8} 
-              x2={svgWidth * 0.92} 
-              y2={svgHeight * 0.2} 
-              stroke="#334155" 
-              strokeWidth={casementWidth} 
+              x1={svgWidth - frameInset} 
+              y1={frameInset} 
+              x2={((svgWidth / 3) * 2) + (frameThickness / 2) + 1} 
+              y2={svgHeight - frameInset} 
+              className="window-hinge" 
             />
           </>
         );
@@ -365,46 +329,67 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-            {/* Sliding indicators (tracks) */}
+            {/* Sliding indicators (vertical tracks) - thicker like reference image */}
             <line 
               x1={svgWidth * 0.25} 
-              y1={svgHeight * 0.1} 
+              y1={frameInset} 
               x2={svgWidth * 0.25} 
-              y2={svgHeight * 0.9} 
+              y2={svgHeight - frameInset} 
               className="window-section" 
             />
             <line 
               x1={svgWidth * 0.75} 
-              y1={svgHeight * 0.1} 
+              y1={frameInset} 
               x2={svgWidth * 0.75} 
-              y2={svgHeight * 0.9} 
+              y2={svgHeight - frameInset} 
               className="window-section" 
             />
             
-            {/* Sliding arrows */}
+            {/* Horizontal lines to indicate sliding action */}
             <line 
-              x1={svgWidth * 0.6} 
+              x1={svgWidth * 0.38} 
               y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.9} 
+              x2={svgWidth * 0.12} 
               y2={svgHeight * 0.5} 
-              stroke="#334155" 
-              strokeWidth={casementWidth} 
+              className="window-hinge" 
             />
             <line 
-              x1={svgWidth * 0.85} 
+              x1={svgWidth * 0.62} 
+              y1={svgHeight * 0.5} 
+              x2={svgWidth * 0.88} 
+              y2={svgHeight * 0.5} 
+              className="window-hinge" 
+            />
+            
+            {/* Arrow indicators */}
+            <line 
+              x1={svgWidth * 0.17} 
               y1={svgHeight * 0.45} 
-              x2={svgWidth * 0.9} 
+              x2={svgWidth * 0.12} 
               y2={svgHeight * 0.5} 
-              stroke="#334155" 
-              strokeWidth={casementWidth} 
+              className="window-hinge" 
             />
             <line 
-              x1={svgWidth * 0.85} 
+              x1={svgWidth * 0.17} 
               y1={svgHeight * 0.55} 
-              x2={svgWidth * 0.9} 
+              x2={svgWidth * 0.12} 
               y2={svgHeight * 0.5} 
-              stroke="#334155" 
-              strokeWidth={casementWidth} 
+              className="window-hinge" 
+            />
+            
+            <line 
+              x1={svgWidth * 0.83} 
+              y1={svgHeight * 0.45} 
+              x2={svgWidth * 0.88} 
+              y2={svgHeight * 0.5} 
+              className="window-hinge" 
+            />
+            <line 
+              x1={svgWidth * 0.83} 
+              y1={svgHeight * 0.55} 
+              x2={svgWidth * 0.88} 
+              y2={svgHeight * 0.5} 
+              className="window-hinge" 
             />
           </>
         );
@@ -436,22 +421,20 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-            {/* Fixed indicators (crosshairs) */}
+            {/* Fixed indicators (crosshairs) with thicker lines */}
             <line 
-              x1={svgWidth * 0.3} 
-              y1={svgHeight * 0.3} 
-              x2={svgWidth * 0.7} 
-              y2={svgHeight * 0.7} 
-              stroke="#334155" 
-              strokeWidth="1" 
+              x1={frameInset + 5} 
+              y1={frameInset + 5} 
+              x2={svgWidth - frameInset - 5} 
+              y2={svgHeight - frameInset - 5} 
+              className="window-hinge" 
             />
             <line 
-              x1={svgWidth * 0.3} 
-              y1={svgHeight * 0.7} 
-              x2={svgWidth * 0.7} 
-              y2={svgHeight * 0.3} 
-              stroke="#334155" 
-              strokeWidth="1" 
+              x1={frameInset + 5} 
+              y1={svgHeight - frameInset - 5} 
+              x2={svgWidth - frameInset - 5} 
+              y2={frameInset + 5} 
+              className="window-hinge" 
             />
           </>
         );
@@ -516,20 +499,22 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             <circle cx={svgWidth * 0.45} cy={svgHeight * 0.5} r={3} fill="#334155" />
             <circle cx={svgWidth * 0.55} cy={svgHeight * 0.5} r={3} fill="#334155" />
             
-            {/* Opening indicators */}
+            {/* Left pane hinge indication - like in reference photo */}
             <line 
-              x1={svgWidth * 0.25} 
-              y1={svgHeight * 0.2} 
-              x2={svgWidth * 0.25} 
-              y2={svgHeight * 0.8} 
-              className="window-section" 
+              x1={frameInset} 
+              y1={frameInset} 
+              x2={(svgWidth / 2) - (frameThickness / 2) - 1} 
+              y2={svgHeight - frameInset} 
+              className="window-hinge" 
             />
+            
+            {/* Right pane hinge indication - like in reference photo */}
             <line 
-              x1={svgWidth * 0.75} 
-              y1={svgHeight * 0.2} 
-              x2={svgWidth * 0.75} 
-              y2={svgHeight * 0.8} 
-              className="window-section" 
+              x1={svgWidth - frameInset} 
+              y1={frameInset} 
+              x2={(svgWidth / 2) + (frameThickness / 2) + 1} 
+              y2={svgHeight - frameInset} 
+              className="window-hinge" 
             />
           </>
         );
@@ -557,6 +542,15 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               height={svgHeight - (frameInset * 2) + 2} 
               fill="none" 
               className="window-casement" 
+            />
+            
+            {/* Diagonal hinge line */}
+            <line 
+              x1={frameInset} 
+              y1={frameInset} 
+              x2={svgWidth - frameInset} 
+              y2={svgHeight - frameInset} 
+              className="window-hinge" 
             />
           </>
         );

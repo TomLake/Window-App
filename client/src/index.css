@@ -60,23 +60,29 @@
 /* Window Drawing Styles */
 .window-frame {
   stroke: #475569;
-  stroke-width: 2;
+  stroke-width: 2.5;
   fill: #f8fafc;
 }
 
 .window-casement {
   stroke: #64748b;
-  stroke-width: 1.5;
+  stroke-width: 2;
   stroke-dasharray: none;
 }
 
 .window-section {
   stroke: #64748b;
-  stroke-width: 1.5;
+  stroke-width: 2;
   fill: none;
 }
 
 .dimension-text {
   font-size: 10px;
   fill: #475569;
+}
+
+.window-hinge {
+  stroke: #334155;
+  stroke-width: 1.5;
+  fill: none;
 }
