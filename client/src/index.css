@@ -96,8 +96,8 @@
 }
 
 .window-section {
-  stroke: orange;      /* Orange: Section borders */
-  stroke-width: 1;
+  stroke: transparent;
+  stroke-width: 0;
   fill: none;
 }
 
