@@ -40,6 +40,58 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   const frameInset = frameThickness + 2; // Inset from frame to glass
   const casementWidth = 2; // Casement line width
   
+  // Function to render Georgian bars for a window pane
+  const renderGeorgianBars = (x: number, y: number, width: number, height: number) => {
+    if (!hasGeorgianBars) return null;
+    
+    // Calculate number of horizontal and vertical bars
+    // We want approximately 3-4 cells horizontally and vertically
+    const numHorizontalBars = 1; // 2 sections
+    const numVerticalBars = 1;   // 2 sections
+    
+    const barColor = "#475569";
+    const barWidth = 1.5;
+    
+    // Create the bars
+    const bars = [];
+    
+    // Horizontal bars
+    const horizontalSpacing = height / (numHorizontalBars + 1);
+    for (let i = 1; i <= numHorizontalBars; i++) {
+      const yPos = y + horizontalSpacing * i;
+      bars.push(
+        <line 
+          key={`h-${i}`}
+          x1={x} 
+          y1={yPos} 
+          x2={x + width} 
+          y2={yPos} 
+          stroke={barColor} 
+          strokeWidth={barWidth} 
+        />
+      );
+    }
+    
+    // Vertical bars
+    const verticalSpacing = width / (numVerticalBars + 1);
+    for (let i = 1; i <= numVerticalBars; i++) {
+      const xPos = x + verticalSpacing * i;
+      bars.push(
+        <line 
+          key={`v-${i}`}
+          x1={xPos} 
+          y1={y} 
+          x2={xPos} 
+          y2={y + height} 
+          stroke={barColor} 
+          strokeWidth={barWidth} 
+        />
+      );
+    }
+    
+    return bars;
+  };
+  
   // Render the appropriate window based on type
   const renderWindow = () => {
     switch (windowConfig.id) {
@@ -59,6 +111,14 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               stroke="#94a3b8" 
               strokeWidth="1" 
             />
+            
+            {/* Georgian bars if enabled */}
+            {renderGeorgianBars(
+              frameInset,
+              frameInset,
+              svgWidth - (frameInset * 2),
+              svgHeight - (frameInset * 2)
+            )}
             
             {/* Casement indicators */}
             <rect 
@@ -122,6 +182,14 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               strokeWidth="1" 
             />
             
+            {/* Georgian bars for left pane */}
+            {renderGeorgianBars(
+              frameInset,
+              frameInset,
+              (svgWidth / 2) - frameInset - (frameThickness / 2),
+              svgHeight - (frameInset * 2)
+            )}
+            
             {/* Right pane glass */}
             <rect 
               x={(svgWidth / 2) + (frameThickness / 2)} 
@@ -132,6 +200,14 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               stroke="#94a3b8" 
               strokeWidth="1" 
             />
+            
+            {/* Georgian bars for right pane */}
+            {renderGeorgianBars(
+              (svgWidth / 2) + (frameThickness / 2),
+              frameInset,
+              (svgWidth / 2) - frameInset - (frameThickness / 2),
+              svgHeight - (frameInset * 2)
+            )}
             
             {/* Left casement */}
             <rect 

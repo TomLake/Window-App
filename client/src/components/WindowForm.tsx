@@ -68,10 +68,12 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
   // Update form when selected window changes
   useEffect(() => {
     if (selectedWindow) {
-      // Ensure hasGeorgianBars is a boolean value (not null)
+      // Ensure all properties have proper types
       const windowData = {
         ...selectedWindow,
-        hasGeorgianBars: selectedWindow.hasGeorgianBars === true
+        hasGeorgianBars: selectedWindow.hasGeorgianBars === true,
+        positionX: selectedWindow.positionX || 0,
+        positionY: selectedWindow.positionY || 0
       };
       form.reset(windowData);
     }
