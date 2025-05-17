@@ -684,6 +684,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                     width={sectionWidth - (mullionThickness/2) + 1} 
                     height={svgHeight - (frameInset * 2) + 2} 
                     fill="none" 
+                    stroke="transparent"
                     className="window-casement" 
                   />
                   
