@@ -13,6 +13,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     height, 
     name = "Window", // Provide default name to prevent rendering issues
     glassType, 
+    openableCasements = "left", // Default left casement opens
     hasGeorgianBars = false,
     georgianBarsHorizontal = 1,
     georgianBarsVertical = 1,
@@ -178,28 +179,60 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement" 
             />
             
-            {/* Diagonal lines pointing to hinge side (forming an arrow to the left) */}
-            <line 
-              x1={svgWidth * 0.15} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.85} 
-              y2={svgHeight * 0.5} 
-              className="window-hinge" 
-            />
-            <line 
-              x1={svgWidth * 0.15} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.4} 
-              y2={svgHeight * 0.25} 
-              className="window-hinge" 
-            />
-            <line 
-              x1={svgWidth * 0.15} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.4} 
-              y2={svgHeight * 0.75} 
-              className="window-hinge" 
-            />
+            {/* Don't show opening indicators if casement doesn't open */}
+            {openableCasements !== "none" && (
+              openableCasements === "left" ? (
+                // Left hinge, opening to the right
+                <>
+                  <line 
+                    x1={svgWidth * 0.15} 
+                    y1={svgHeight * 0.5} 
+                    x2={svgWidth * 0.85} 
+                    y2={svgHeight * 0.5} 
+                    className="window-hinge" 
+                  />
+                  <line 
+                    x1={svgWidth * 0.15} 
+                    y1={svgHeight * 0.5} 
+                    x2={svgWidth * 0.4} 
+                    y2={svgHeight * 0.25} 
+                    className="window-hinge" 
+                  />
+                  <line 
+                    x1={svgWidth * 0.15} 
+                    y1={svgHeight * 0.5} 
+                    x2={svgWidth * 0.4} 
+                    y2={svgHeight * 0.75} 
+                    className="window-hinge" 
+                  />
+                </>
+              ) : (
+                // Right hinge, opening to the left
+                <>
+                  <line 
+                    x1={svgWidth * 0.85} 
+                    y1={svgHeight * 0.5} 
+                    x2={svgWidth * 0.15} 
+                    y2={svgHeight * 0.5} 
+                    className="window-hinge" 
+                  />
+                  <line 
+                    x1={svgWidth * 0.85} 
+                    y1={svgHeight * 0.5} 
+                    x2={svgWidth * 0.6} 
+                    y2={svgHeight * 0.25} 
+                    className="window-hinge" 
+                  />
+                  <line 
+                    x1={svgWidth * 0.85} 
+                    y1={svgHeight * 0.5} 
+                    x2={svgWidth * 0.6} 
+                    y2={svgHeight * 0.75} 
+                    className="window-hinge" 
+                  />
+                </>
+              )
+            )}
           </>
         );
       
@@ -593,51 +626,60 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             <circle cx={svgWidth * 0.45} cy={svgHeight * 0.5} r={3} fill="#334155" />
             <circle cx={svgWidth * 0.55} cy={svgHeight * 0.5} r={3} fill="#334155" />
             
-            {/* Left pane opening indication - arrow pointing to hinge side */}
-            <line 
-              x1={svgWidth * 0.1} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.4} 
-              y2={svgHeight * 0.5} 
-              className="window-hinge" 
-            />
-            <line 
-              x1={svgWidth * 0.1} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.2} 
-              y2={svgHeight * 0.35} 
-              className="window-hinge" 
-            />
-            <line 
-              x1={svgWidth * 0.1} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.2} 
-              y2={svgHeight * 0.65} 
-              className="window-hinge" 
-            />
+            {/* Opening indicators based on which casements can open */}
+            {(openableCasements === "left" || openableCasements === "both") && (
+              // Left pane opening indication - arrow pointing to hinge side
+              <>
+                <line 
+                  x1={svgWidth * 0.1} 
+                  y1={svgHeight * 0.5} 
+                  x2={svgWidth * 0.4} 
+                  y2={svgHeight * 0.5} 
+                  className="window-hinge" 
+                />
+                <line 
+                  x1={svgWidth * 0.1} 
+                  y1={svgHeight * 0.5} 
+                  x2={svgWidth * 0.2} 
+                  y2={svgHeight * 0.35} 
+                  className="window-hinge" 
+                />
+                <line 
+                  x1={svgWidth * 0.1} 
+                  y1={svgHeight * 0.5} 
+                  x2={svgWidth * 0.2} 
+                  y2={svgHeight * 0.65} 
+                  className="window-hinge" 
+                />
+              </>
+            )}
             
-            {/* Right pane opening indication - arrow pointing to hinge side */}
-            <line 
-              x1={svgWidth * 0.9} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.6} 
-              y2={svgHeight * 0.5} 
-              className="window-hinge" 
-            />
-            <line 
-              x1={svgWidth * 0.9} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.8} 
-              y2={svgHeight * 0.35} 
-              className="window-hinge" 
-            />
-            <line 
-              x1={svgWidth * 0.9} 
-              y1={svgHeight * 0.5} 
-              x2={svgWidth * 0.8} 
-              y2={svgHeight * 0.65} 
-              className="window-hinge" 
-            />
+            {(openableCasements === "right" || openableCasements === "both") && (
+              // Right pane opening indication - arrow pointing to hinge side
+              <>
+                <line 
+                  x1={svgWidth * 0.9} 
+                  y1={svgHeight * 0.5} 
+                  x2={svgWidth * 0.6} 
+                  y2={svgHeight * 0.5} 
+                  className="window-hinge" 
+                />
+                <line 
+                  x1={svgWidth * 0.9} 
+                  y1={svgHeight * 0.5} 
+                  x2={svgWidth * 0.8} 
+                  y2={svgHeight * 0.35} 
+                  className="window-hinge" 
+                />
+                <line 
+                  x1={svgWidth * 0.9} 
+                  y1={svgHeight * 0.5} 
+                  x2={svgWidth * 0.8} 
+                  y2={svgHeight * 0.65} 
+                  className="window-hinge" 
+                />
+              </>
+            )}
           </>
         );
       
