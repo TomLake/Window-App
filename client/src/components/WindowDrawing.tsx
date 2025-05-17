@@ -193,8 +193,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               width={svgWidth - (frameInset * 2)} 
               height={svgHeight - (frameInset * 2)} 
               fill="none" 
-              stroke="black" 
-              strokeWidth="1" 
+              stroke="none" 
             />
             
             {/* Georgian bars if enabled */}
@@ -269,8 +268,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               width={svgWidth - (frameInset * 2)} 
               height={svgHeight - (frameInset * 2)} 
               fill="none" 
-              stroke="black" 
-              strokeWidth="1" 
+              stroke="none" 
             />
             
             {/* Georgian bars for entire window */}
@@ -364,8 +362,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               width={svgWidth - (frameInset * 2)} 
               height={svgHeight - (frameInset * 2)} 
               fill="none" 
-              stroke="black" 
-              strokeWidth="1" 
+              stroke="none" 
             />
             
             {/* Georgian bars for entire window */}
@@ -491,8 +488,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               width={svgWidth - (frameInset * 2)} 
               height={svgHeight - (frameInset * 2)} 
               fill="none" 
-              stroke="black" 
-              strokeWidth="1" 
+              stroke="none" 
             />
             
             {/* Georgian bars for entire window */}
