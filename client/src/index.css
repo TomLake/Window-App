@@ -74,17 +74,17 @@
 .window-frame {
   stroke: #475569;
   stroke-width: 2.5;
-  fill: #f8fafc;
+  fill: white;
 }
 
 .window-casement {
-  stroke: #64748b;
+  stroke: #475569;
   stroke-width: 2;
   stroke-dasharray: none;
 }
 
 .window-section {
-  stroke: #64748b;
+  stroke: #475569;
   stroke-width: 2;
   fill: none;
 }
