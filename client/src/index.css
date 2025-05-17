@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom styles for window drawings */
+.window-frame {
+  fill: none;
+  stroke: #334155;
+  stroke-width: 3;
+}
+
+.window-casement {
+  fill: none;
+  stroke: white;
+  stroke-width: 1.5;
+}
+
 :root {
       --background: 0 0% 100%;
 --foreground: 20 14.3% 4.1%;
