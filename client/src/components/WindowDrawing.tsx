@@ -366,7 +366,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
         return (
           <>
             {/* Frame */}
-            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" style={{ stroke: frameColor }} />
             
 
             
@@ -490,7 +490,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
         return (
           <>
             {/* Frame */}
-            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" style={{ stroke: frameColor }} />
             
 
             
