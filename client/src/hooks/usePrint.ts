@@ -11,12 +11,13 @@ export function usePrint() {
     if (!printRef.current) return;
 
     try {
-      // Create a new PDF document, A4 size in portrait
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      // Create a new PDF document in landscape orientation
+      const pdf = new jsPDF('landscape', 'mm', 'a4');
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
-      const margin = 20; // 20mm margin
+      const margin = 15; // 15mm margin
       const contentWidth = pageWidth - (margin * 2);
+      const contentHeight = pageHeight - (margin * 2);
       
       // Add a title to the PDF
       const projectName = document.querySelector('.text-lg.font-medium')?.textContent || 'Window Design';
@@ -32,46 +33,102 @@ export function usePrint() {
         return;
       }
 
-      let yPosition = margin + 10; // Start position after title
+      // Calculate optimal layout to fit all windows on one page
+      const numWindows = windowElements.length;
       
-      // Process each window drawing and add it to the PDF
+      // Determine grid dimensions based on number of windows
+      let cols = Math.ceil(Math.sqrt(numWindows));
+      let rows = Math.ceil(numWindows / cols);
+      
+      // For better layout with few windows
+      if (numWindows <= 2) cols = numWindows;
+      if (numWindows <= 4) cols = 2;
+      
+      // Calculate available space for each window
+      const titleSpace = 15; // Space for title
+      const footerSpace = 10; // Space for footer
+      const spacing = 10; // Space between windows
+      
+      const availableHeight = contentHeight - titleSpace - footerSpace;
+      const availableWidth = contentWidth;
+      
+      const maxWindowWidth = (availableWidth - (spacing * (cols - 1))) / cols;
+      const maxWindowHeight = (availableHeight - (spacing * (rows - 1))) / rows;
+      
+      // Capture all windows as canvases
+      const windowCanvases = [];
       for (let i = 0; i < windowElements.length; i++) {
         const element = windowElements[i] as HTMLElement;
-        
-        // Use html2canvas to capture the SVG
         const canvas = await html2canvas(element, {
           backgroundColor: '#FFFFFF',
           scale: 2, // Higher scale for better quality
           logging: false,
           useCORS: true
         });
-        
-        // Convert canvas to image
-        const imgData = canvas.toDataURL('image/png');
-        
-        // Calculate dimensions to fit within the page width
-        const imgWidth = contentWidth;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        
-        // Check if this window will fit on the current page, otherwise add a new page
-        if (yPosition + imgHeight > pageHeight - margin) {
-          pdf.addPage();
-          yPosition = margin;
-        }
-        
-        // Add the image to the PDF
-        pdf.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
-        
-        // Update position for the next window with some spacing
-        yPosition += imgHeight + 15;
+        windowCanvases.push(canvas);
       }
       
-      // Add creation date at the bottom of the last page
+      // Calculate scale factor for each window to fit in the grid
+      const scaledWindows = windowCanvases.map(canvas => {
+        const aspectRatio = canvas.width / canvas.height;
+        
+        let width, height;
+        if (aspectRatio > maxWindowWidth / maxWindowHeight) {
+          // Width constrained
+          width = maxWindowWidth;
+          height = width / aspectRatio;
+        } else {
+          // Height constrained
+          height = maxWindowHeight;
+          width = height * aspectRatio;
+        }
+        
+        return {
+          canvas,
+          width,
+          height
+        };
+      });
+      
+      // Place windows on the PDF
+      let currentRow = 0;
+      let currentCol = 0;
+      
+      scaledWindows.forEach((item, i) => {
+        // Convert canvas to image
+        const imgData = item.canvas.toDataURL('image/png');
+        
+        // Calculate position for this window
+        const xPos = margin + (currentCol * (maxWindowWidth + spacing));
+        const yPos = margin + titleSpace + (currentRow * (maxWindowHeight + spacing));
+        
+        // Add the image to the PDF
+        pdf.addImage(imgData, 'PNG', xPos, yPos, item.width, item.height);
+        
+        // Get window info for label
+        const windowName = (windowElements[i] as HTMLElement).querySelector('.dimension-text.font-medium')?.textContent || '';
+        
+        // Add window name under the drawing if there's space
+        if (windowName) {
+          pdf.setFont('helvetica', 'normal');
+          pdf.setFontSize(8);
+          pdf.text(windowName, xPos + (item.width / 2), yPos + item.height + 5, { align: 'center' });
+        }
+        
+        // Update position for next window
+        currentCol++;
+        if (currentCol >= cols) {
+          currentCol = 0;
+          currentRow++;
+        }
+      });
+      
+      // Add creation date at the bottom of the page
       const today = new Date();
       const dateStr = today.toLocaleDateString();
       pdf.setFont('helvetica', 'normal');
-      pdf.setFontSize(10);
-      pdf.text(`Generated on ${dateStr}`, margin, pageHeight - 10);
+      pdf.setFontSize(8);
+      pdf.text(`Generated on ${dateStr}`, margin, pageHeight - 5);
       
       // Save the PDF
       pdf.save(`${projectName.replace(/\s+/g, '_')}.pdf`);
