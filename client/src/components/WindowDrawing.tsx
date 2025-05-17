@@ -167,8 +167,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     const safeTransomHeight = typeof transomHeight === 'number' ? transomHeight : 400;
     const scaledTransomHeight = Math.min(safeTransomHeight, height) * scaleFactor;
     const transomY = y + scaledTransomHeight;
-    // 30mm transom width scaled to SVG size
-    const transomThickness = Math.max(2, Math.round(30 * scaleFactor));
+    const transomThickness = 2.5; // Slightly thicker than other bars
     const transomColor = "#334155";
     
     return (
