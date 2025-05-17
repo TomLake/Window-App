@@ -92,12 +92,12 @@
 /* Override all SVG strokes to use black */
 .window-drawing-svg rect {
   stroke: black;
-  stroke-width: 0.75;
+  stroke-width: 1;
 }
 
 .window-drawing-svg line {
   stroke: black;
-  stroke-width: 0.75;
+  stroke-width: 1;
 }
 
 .dimension-text {
@@ -107,6 +107,6 @@
 
 .window-hinge {
   stroke: black;
-  stroke-width: 0.75;
+  stroke-width: 1;
   fill: none;
 }
