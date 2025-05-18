@@ -7,6 +7,8 @@ interface WindowDrawingProps {
 }
 
 export default function WindowDrawing({ window }: WindowDrawingProps) {
+  // Create unique class name for this window for PDF export
+  const windowClassName = `window-drawing-${window.id}`;
   const { 
     type, 
     width, 

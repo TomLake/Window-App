@@ -15,7 +15,7 @@ const WindowDesignCanvas = forwardRef<HTMLDivElement, WindowDesignCanvasProps>(
     const { toast } = useToast();
     const canvasContainerRef = useRef<HTMLDivElement>(null);
     
-    // Handle PDF export of all windows
+    // Handle PDF export of all windows in a grid layout
     const handleExportPDF = async () => {
       if (!canvasContainerRef.current || windows.length === 0) return;
       
@@ -31,52 +31,102 @@ const WindowDesignCanvas = forwardRef<HTMLDivElement, WindowDesignCanvasProps>(
         pdf.setFontSize(16);
         pdf.text(`Window Design - ${projectName}`, pageWidth / 2, margin, { align: 'center' });
         
-        // Get the drawing area element
-        const drawingArea = canvasContainerRef.current;
-        if (!drawingArea) return;
-        
-        // Capture the drawing area
-        const canvas = await html2canvas(drawingArea, {
-          backgroundColor: '#FFFFFF',
-          scale: 2, // Higher resolution
-          logging: false,
-          useCORS: true,
-          // Remove any UI elements from the capture
-          onclone: (document) => {
-            const clonedEl = document.querySelector('.border.border-gray-200.bg-gray-50') as HTMLElement;
-            if (clonedEl) {
-              // Make background white for PDF
-              clonedEl.style.backgroundColor = 'white';
-            }
-          }
-        });
-        
-        // Calculate scaling to fit on the page
+        // Available content area dimensions (accounting for margins and title space)
         const contentWidth = pageWidth - (margin * 2);
         const contentHeight = pageHeight - (margin * 2) - 15; // 15mm for the title
         
-        const imageRatio = canvas.width / canvas.height;
-        const pageRatio = contentWidth / contentHeight;
+        // Calculate optimal grid layout based on window count
+        const windowCount = windows.length;
         
-        let finalWidth, finalHeight;
+        // Determine the grid dimensions (columns and rows)
+        let cols = Math.ceil(Math.sqrt(windowCount));
+        let rows = Math.ceil(windowCount / cols);
         
-        if (imageRatio > pageRatio) {
-          // Image is wider than the page ratio
-          finalWidth = contentWidth;
-          finalHeight = contentWidth / imageRatio;
-        } else {
-          // Image is taller than the page ratio
-          finalHeight = contentHeight;
-          finalWidth = contentHeight * imageRatio;
+        // Adjust grid if the aspect ratio is very different from the page
+        if (pageWidth / pageHeight > 1.5) {
+          // Landscape orientation - favor more columns
+          cols = Math.min(Math.ceil(Math.sqrt(windowCount * 1.5)), 5);  
+          rows = Math.ceil(windowCount / cols);
         }
         
-        // Center the image on the page
-        const xPosition = margin + (contentWidth - finalWidth) / 2;
-        const yPosition = margin + 15; // Below the title
+        // Calculate individual window box dimensions
+        const boxWidth = contentWidth / cols;
+        const boxHeight = contentHeight / rows;
         
-        // Add the image to the PDF
-        const imgData = canvas.toDataURL('image/png');
-        pdf.addImage(imgData, 'PNG', xPosition, yPosition, finalWidth, finalHeight);
+        // Title space at top
+        const titleSpace = 15;
+        
+        // Capture and render each window individually
+        for (let i = 0; i < windows.length; i++) {
+          const window = windows[i];
+          const windowElement = canvasContainerRef.current.querySelector(`.window-drawing-${window.id}`) as HTMLElement;
+          
+          if (!windowElement) continue;
+          
+          // Calculate grid position
+          const col = i % cols;
+          const row = Math.floor(i / cols);
+          
+          // Calculate position in PDF
+          const xPos = margin + (col * boxWidth);
+          const yPos = margin + titleSpace + (row * boxHeight);
+          
+          // Create a temporary div to isolate the window for capture
+          const tempDiv = document.createElement('div');
+          tempDiv.style.position = 'absolute';
+          tempDiv.style.top = '0';
+          tempDiv.style.left = '0';
+          tempDiv.style.backgroundColor = 'white';
+          tempDiv.style.zIndex = '-1';
+          tempDiv.style.padding = '10px';
+          tempDiv.appendChild(windowElement.cloneNode(true));
+          document.body.appendChild(tempDiv);
+          
+          // Capture the individual window
+          const canvas = await html2canvas(tempDiv, {
+            backgroundColor: '#FFFFFF',
+            scale: 2, // Higher resolution
+            logging: false,
+            useCORS: true
+          });
+          
+          // Remove the temporary element
+          document.body.removeChild(tempDiv);
+          
+          // Calculate scaling to fit in the grid cell with some padding
+          const cellPadding = 5; // 5mm padding between cells
+          const availableWidth = boxWidth - (cellPadding * 2);
+          const availableHeight = boxHeight - (cellPadding * 2);
+          
+          const imageRatio = canvas.width / canvas.height;
+          const cellRatio = availableWidth / availableHeight;
+          
+          let finalWidth, finalHeight;
+          
+          if (imageRatio > cellRatio) {
+            // Image is wider than the cell ratio
+            finalWidth = availableWidth;
+            finalHeight = availableWidth / imageRatio;
+          } else {
+            // Image is taller than the cell ratio
+            finalHeight = availableHeight;
+            finalWidth = availableHeight * imageRatio;
+          }
+          
+          // Center the image in its cell
+          const cellXPos = xPos + cellPadding + (availableWidth - finalWidth) / 2;
+          const cellYPos = yPos + cellPadding + (availableHeight - finalHeight) / 2;
+          
+          // Add the image to the PDF
+          const imgData = canvas.toDataURL('image/png');
+          pdf.addImage(imgData, 'PNG', cellXPos, cellYPos, finalWidth, finalHeight);
+          
+          // Add window name below the image
+          pdf.setFont("helvetica", "normal");
+          pdf.setFontSize(8);
+          const nameYPos = cellYPos + finalHeight + 3;
+          pdf.text(window.name || `Window ${i+1}`, cellXPos + finalWidth/2, nameYPos, { align: 'center' });
+        }
         
         // Add timestamp at the bottom
         pdf.setFont("helvetica", "normal");
