@@ -66,9 +66,20 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   const renderGeorgianBars = (x: number, y: number, width: number, height: number, casementId: string = '') => {
     if (!hasGeorgianBars) return null;
     
-    // Use the user-defined number of horizontal and vertical bars
-    // If value is 0, no bars will be rendered
-    const numHorizontalBars = typeof georgianBarsHorizontal === 'number' ? georgianBarsHorizontal : 1;
+    // Determine number of horizontal bars based on casement type
+    // Top casements in transom windows should have maximum 1 horizontal bar
+    let numHorizontalBars;
+    if (casementId.includes('top') || casementId.includes('upper')) {
+      // Top casements in transom windows limited to 1 horizontal bar
+      numHorizontalBars = 1;
+    } else {
+      // Normal casements use the user-specified value (with max of 3 for bottom casements)
+      numHorizontalBars = typeof georgianBarsHorizontal === 'number' ? 
+        (casementId.includes('bottom') || casementId.includes('lower') ? 
+          Math.min(georgianBarsHorizontal, 3) : georgianBarsHorizontal) : 1;
+    }
+    
+    // For vertical bars, use the user-defined count
     const numVerticalBars = typeof georgianBarsVertical === 'number' ? georgianBarsVertical : 1;
     
     // Georgian bars are 25mm thick and white
@@ -924,6 +935,15 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                     className="window-casement-interior"
                   />
                   
+                  {/* Georgian bars for left casement */}
+                  {renderGeorgianBars(
+                    frameInset + innerBorderWidth,
+                    frameInset + innerBorderWidth,
+                    sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1,
+                    svgHeight - ((frameInset + innerBorderWidth) * 2),
+                    'triple-left'
+                  )}
+                  
                   {/* Middle casement */}
                   <rect 
                     x={frameInset + sectionWidth + (mullionThickness/2)} 
@@ -943,6 +963,15 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                     className="window-casement-interior"
                   />
                   
+                  {/* Georgian bars for middle casement */}
+                  {renderGeorgianBars(
+                    frameInset + sectionWidth + (mullionThickness/2) + innerBorderWidth,
+                    frameInset + innerBorderWidth,
+                    sectionWidth - mullionThickness - (innerBorderWidth * 2) + 2,
+                    svgHeight - ((frameInset + innerBorderWidth) * 2),
+                    'triple-middle'
+                  )}
+                  
                   {/* Right casement */}
                   <rect 
                     x={frameInset + (sectionWidth * 2) + (mullionThickness/2)} 
@@ -961,6 +990,15 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
                     height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
                     className="window-casement-interior"
                   />
+                  
+                  {/* Georgian bars for right casement */}
+                  {renderGeorgianBars(
+                    frameInset + (sectionWidth * 2) + (mullionThickness/2) + innerBorderWidth,
+                    frameInset + innerBorderWidth,
+                    sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1,
+                    svgHeight - ((frameInset + innerBorderWidth) * 2),
+                    'triple-right'
+                  )}
                 </>
               );
             })()}
