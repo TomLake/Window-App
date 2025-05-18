@@ -18,7 +18,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     openableCasements = "left", // Default left casement opens
     hasGeorgianBars = false,
     georgianBarsHorizontal = 1,
-    georgianBarsVertical = 1,
+    georgianBarsVertical = 0,
     transomHeight = 400, // Default transom height 400mm
     topCasementsOpenable = "none" // Default no top casements open
   } = window;
@@ -71,27 +71,32 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     const numHorizontalBars = typeof georgianBarsHorizontal === 'number' ? georgianBarsHorizontal : 1;
     const numVerticalBars = typeof georgianBarsVertical === 'number' ? georgianBarsVertical : 1;
     
-    const barColor = "#475569";
-    const barWidth = 1.5;
+    // Georgian bars are 25mm thick and white
+    const barColor = "#ffffff";
+    const georgianBarWidth = Math.max(2, Math.round(25 * scaleFactor)); // Scale 25mm to SVG size, minimum 2px
     
     // Create the bars
     const bars = [];
     
+    // Calculate the effective casement area (excluding the frame)
+    // This ensures the Georgian bars are positioned within the casement
+    const casementInnerWidth = width;
+    const casementInnerHeight = height;
+    
     // Horizontal bars
     if (numHorizontalBars > 0) {
       // Create horizontal bars based on specified count
-      const horizontalSpacing = height / (numHorizontalBars + 1);
+      const horizontalSpacing = casementInnerHeight / (numHorizontalBars + 1);
       for (let i = 1; i <= numHorizontalBars; i++) {
         const yPos = y + horizontalSpacing * i;
         bars.push(
-          <line 
+          <rect 
             key={`h-${i}`}
-            x1={x} 
-            y1={yPos} 
-            x2={x + width} 
-            y2={yPos} 
-            stroke={barColor} 
-            strokeWidth={barWidth} 
+            x={x} 
+            y={yPos - georgianBarWidth/2} 
+            width={casementInnerWidth} 
+            height={georgianBarWidth} 
+            fill={barColor} 
           />
         );
       }
@@ -100,18 +105,17 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     // Vertical bars
     if (numVerticalBars > 0) {
       // Create vertical bars based on specified count
-      const verticalSpacing = width / (numVerticalBars + 1);
+      const verticalSpacing = casementInnerWidth / (numVerticalBars + 1);
       for (let i = 1; i <= numVerticalBars; i++) {
         const xPos = x + verticalSpacing * i;
         bars.push(
-          <line 
+          <rect 
             key={`v-${i}`}
-            x1={xPos} 
-            y1={y} 
-            x2={xPos} 
-            y2={y + height} 
-            stroke={barColor} 
-            strokeWidth={barWidth} 
+            x={xPos - georgianBarWidth/2} 
+            y={y} 
+            width={georgianBarWidth} 
+            height={casementInnerHeight} 
+            fill={barColor} 
           />
         );
       }
@@ -171,8 +175,8 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     const doorFrameInset = doorFrameThickness + 2;
     
     // Door panel styles
-    const panelColor = "#8b5a2b"; // Wooden door color
-    const panelStrokeColor = "#5d3a1c"; // Darker brown for panel edges
+    const panelColor = "#ffffff"; // Wooden door color
+    const panelStrokeColor = "#000000"; // Darker brown for panel edges
     const glassColor = "#dbeafe"; // Light blue for glass
     
     // Basic door frame that all doors share
@@ -480,7 +484,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               x={frameInset - 1} 
               y={frameInset + scaledTransomHeight + mullionThickness - 1} 
               width={svgWidth - (frameInset * 2) + 2} 
-              height={svgHeight - frameInset - scaledTransomHeight - mullionThickness} 
+              height={svgHeight - frameInset - 10 - scaledTransomHeight - mullionThickness} 
               fill="none" 
               className="window-casement" 
             />
@@ -490,7 +494,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               x={frameInset + innerBorderWidth} 
               y={frameInset + scaledTransomHeight + mullionThickness + innerBorderWidth} 
               width={svgWidth - ((frameInset + innerBorderWidth) * 2)} 
-              height={svgHeight - frameInset - scaledTransomHeight - mullionThickness - innerBorderWidth * 2} 
+              height={svgHeight - frameInset - scaledTransomHeight - 10 - mullionThickness - innerBorderWidth * 2} 
               className="window-casement-interior"
             />
             
