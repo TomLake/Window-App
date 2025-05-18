@@ -7,6 +7,11 @@ interface WindowDrawingProps {
 }
 
 export default function WindowDrawing({ window }: WindowDrawingProps) {
+  // Add data attributes to help with PDF export
+  const windowAttributes = {
+    'data-window-id': window.id,
+    'data-window-name': window.name || 'New Window',
+  };
   const { 
     type, 
     width, 

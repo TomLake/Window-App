@@ -19,19 +19,25 @@ export function usePrint() {
       const contentWidth = pageWidth - (margin * 2);
       const contentHeight = pageHeight - (margin * 2);
       
+      // Get project name from page
+      const projectNameElement = document.querySelector('.text-lg.font-medium');
+      const projectName = projectNameElement?.textContent?.replace('Window Design - ', '') || 'Window Design';
+      
       // Add a title to the PDF
-      const projectName = document.querySelector('.text-lg.font-medium')?.textContent || 'Window Design';
       pdf.setFont('helvetica', 'bold');
       pdf.setFontSize(16);
       pdf.text(projectName, pageWidth / 2, margin, { align: 'center' });
       
-      // Get all window drawing elements
-      const windowElements = printRef.current.querySelectorAll('.mb-16.inline-block');
+      // Get all window drawing SVG elements - these are the actual window drawings
+      const windowElements = printRef.current.querySelectorAll('.window-drawing-svg');
       
       if (windowElements.length === 0) {
-        console.warn('No window elements found');
+        console.error('No window elements found for PDF export');
+        alert('No windows found to export. Please add at least one window to your project.');
         return;
       }
+
+      console.log(`Found ${windowElements.length} windows to export`);
 
       // Calculate optimal layout to fit all windows on one page
       const numWindows = windowElements.length;
@@ -59,18 +65,25 @@ export function usePrint() {
       const windowCanvases = [];
       for (let i = 0; i < windowElements.length; i++) {
         const element = windowElements[i] as HTMLElement;
+        console.log(`Capturing canvas for window ${i+1}`);
+        
         const canvas = await html2canvas(element, {
           backgroundColor: '#FFFFFF',
           scale: 2, // Higher scale for better quality
-          logging: false,
-          useCORS: true
+          logging: true,
+          useCORS: true,
+          allowTaint: true
         });
-        windowCanvases.push(canvas);
+        
+        windowCanvases.push({
+          canvas,
+          name: element.closest('[data-window-id]')?.getAttribute('data-window-name') || `Window ${i+1}`
+        });
       }
       
       // Calculate scale factor for each window to fit in the grid
-      const scaledWindows = windowCanvases.map(canvas => {
-        const aspectRatio = canvas.width / canvas.height;
+      const scaledWindows = windowCanvases.map(item => {
+        const aspectRatio = item.canvas.width / item.canvas.height;
         
         let width, height;
         if (aspectRatio > maxWindowWidth / maxWindowHeight) {
@@ -84,7 +97,8 @@ export function usePrint() {
         }
         
         return {
-          canvas,
+          canvas: item.canvas,
+          name: item.name,
           width,
           height
         };
@@ -94,7 +108,7 @@ export function usePrint() {
       let currentRow = 0;
       let currentCol = 0;
       
-      scaledWindows.forEach((item, i) => {
+      scaledWindows.forEach((item) => {
         // Convert canvas to image
         const imgData = item.canvas.toDataURL('image/png');
         
@@ -105,14 +119,11 @@ export function usePrint() {
         // Add the image to the PDF
         pdf.addImage(imgData, 'PNG', xPos, yPos, item.width, item.height);
         
-        // Get window info for label
-        const windowName = (windowElements[i] as HTMLElement).querySelector('.dimension-text.font-medium')?.textContent || '';
-        
-        // Add window name under the drawing if there's space
-        if (windowName) {
+        // Add window name under the drawing
+        if (item.name) {
           pdf.setFont('helvetica', 'normal');
-          pdf.setFontSize(8);
-          pdf.text(windowName, xPos + (item.width / 2), yPos + item.height + 5, { align: 'center' });
+          pdf.setFontSize(10);
+          pdf.text(item.name, xPos + (item.width / 2), yPos + item.height + 5, { align: 'center' });
         }
         
         // Update position for next window
@@ -132,9 +143,11 @@ export function usePrint() {
       
       // Save the PDF
       pdf.save(`${projectName.replace(/\s+/g, '_')}.pdf`);
+      console.log(`PDF saved as ${projectName.replace(/\s+/g, '_')}.pdf`);
       
     } catch (error) {
       console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
     }
   };
 
