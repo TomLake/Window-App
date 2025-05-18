@@ -84,7 +84,7 @@
 }
 
 .window-casement-interior {
-  fill: transparent;
+  fill: #d4e6f9;
   stroke: black;        /* Blue: Casement inner borders */
   stroke-width: 1;
 }

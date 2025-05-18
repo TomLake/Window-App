@@ -261,6 +261,15 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               strokeWidth="1"
             />
             
+            {/* Georgian bars for full glazed door */}
+            {hasGeorgianBars && renderGeorgianBars(
+              doorFrameInset + 20,
+              doorFrameInset + 20,
+              svgWidth - (doorFrameInset * 2) - 40,
+              svgHeight - (doorFrameInset * 2) - 40,
+              'door-full-glazed'
+            )}
+            
             {/* Door handle */}
             <circle
               cx={svgWidth - doorFrameInset - 15}
@@ -299,6 +308,15 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               stroke={panelStrokeColor}
               strokeWidth="1"
             />
+            
+            {/* Georgian bars for half glazed door (top section only) */}
+            {hasGeorgianBars && renderGeorgianBars(
+              doorFrameInset + 15,
+              doorFrameInset + 15,
+              svgWidth - (doorFrameInset * 2) - 30,
+              (svgHeight - doorFrameInset * 2) / 2 - 15,
+              'door-half-glazed'
+            )}
             
             {/* Door handle */}
             <circle
@@ -638,13 +656,6 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               stroke="none" 
             />
             
-            {/* Georgian bars for entire window */}
-            {renderGeorgianBars(
-              frameInset,
-              frameInset,
-              svgWidth - (frameInset * 2),
-              svgHeight - (frameInset * 2)
-            )}
             
             {/* Left casement */}
             <rect 
@@ -898,13 +909,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               stroke="none" 
             />
             
-            {/* Georgian bars for entire window */}
-            {renderGeorgianBars(
-              frameInset,
-              frameInset,
-              svgWidth - (frameInset * 2),
-              svgHeight - (frameInset * 2)
-            )}
+        
             
             {/* Casements for each section - Equal division of width for all three sections */}
             {/* Calculate section width with equal divisions */}
@@ -1107,13 +1112,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               stroke="none" 
             />
             
-            {/* Georgian bars for entire window */}
-            {renderGeorgianBars(
-              frameInset,
-              frameInset,
-              svgWidth - (frameInset * 2),
-              svgHeight - (frameInset * 2)
-            )}
+      
             
             {/* Casements for each section - Equal division of width for all four sections */}
             {(() => {
@@ -1851,13 +1850,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               stroke="none" 
             />
             
-            {/* Georgian bars for entire window */}
-            {renderGeorgianBars(
-              frameInset,
-              frameInset,
-              svgWidth - (frameInset * 2),
-              svgHeight - (frameInset * 2)
-            )}
+          
             
             {/* Mullion in the middle */}
             <rect 
