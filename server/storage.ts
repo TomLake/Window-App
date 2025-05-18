@@ -1,6 +1,4 @@
-import { db } from './db';
-import { eq } from 'drizzle-orm';
-import { users, windows, projects, type User, type InsertUser, type Window, type InsertWindow, type Project, type InsertProject } from "@shared/schema";
+import { users, type User, type InsertUser, type Window, type InsertWindow, type Project, type InsertProject } from "@shared/schema";
 
 // Storage interface with CRUD methods for all entities
 export interface IStorage {
@@ -25,86 +23,139 @@ export interface IStorage {
   getWindowsByProject(projectId: number): Promise<Window[]>;
 }
 
-export class DatabaseStorage implements IStorage {
+// Memory storage implementation
+export class MemStorage implements IStorage {
+  private users: Map<number, User>;
+  private windows: Map<number, Window>;
+  private projects: Map<number, Project>;
+  
+  private userIdCounter: number;
+  private windowIdCounter: number;
+  private projectIdCounter: number;
+
+  constructor() {
+    this.users = new Map();
+    this.windows = new Map();
+    this.projects = new Map();
+    
+    this.userIdCounter = 1;
+    this.windowIdCounter = 1;
+    this.projectIdCounter = 1;
+    
+    // Create default project
+    this.createProject({
+      userId: 1, // Default user
+      name: "Untitled Project",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    });
+    
+    // Create some sample windows
+    this.createWindow({
+      projectId: 1,
+      name: "Bedroom Window",
+      type: "double",
+      width: 1110,
+      height: 1130,
+      location: "Bedroom",
+      glassType: "Clear",
+      positionX: 0,
+      positionY: 0,
+    });
+    
+    this.createWindow({
+      projectId: 1,
+      name: "Kitchen Window",
+      type: "triple",
+      width: 1470,
+      height: 970,
+      location: "Kitchen",
+      glassType: "Clear",
+      positionX: 0,
+      positionY: 0,
+    });
+  }
+
   // User methods
   async getUser(id: number): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user || undefined;
+    return this.users.get(id);
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.username, username));
-    return user || undefined;
+    return Array.from(this.users.values()).find(
+      (user) => user.username === username,
+    );
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db.insert(users).values(insertUser).returning();
+    const id = this.userIdCounter++;
+    const user: User = { ...insertUser, id };
+    this.users.set(id, user);
     return user;
   }
 
   // Window methods
   async getWindow(id: number): Promise<Window | undefined> {
-    const [window] = await db.select().from(windows).where(eq(windows.id, id));
-    return window || undefined;
+    return this.windows.get(id);
   }
 
   async getAllWindows(): Promise<Window[]> {
-    return await db.select().from(windows);
+    return Array.from(this.windows.values());
   }
 
   async createWindow(insertWindow: InsertWindow): Promise<Window> {
-    const [window] = await db.insert(windows).values(insertWindow).returning();
+    const id = this.windowIdCounter++;
+    const window: Window = { ...insertWindow, id };
+    this.windows.set(id, window);
     return window;
   }
 
   async updateWindow(window: Window): Promise<Window> {
-    const [updatedWindow] = await db
-      .update(windows)
-      .set(window)
-      .where(eq(windows.id, window.id))
-      .returning();
-    return updatedWindow;
+    this.windows.set(window.id, window);
+    return window;
   }
 
   async deleteWindow(id: number): Promise<void> {
-    await db.delete(windows).where(eq(windows.id, id));
+    this.windows.delete(id);
   }
 
   // Project methods
   async getProject(id: number): Promise<Project | undefined> {
-    const [project] = await db.select().from(projects).where(eq(projects.id, id));
-    return project || undefined;
+    return this.projects.get(id);
   }
 
   async getAllProjects(): Promise<Project[]> {
-    return await db.select().from(projects);
+    return Array.from(this.projects.values());
   }
 
   async createProject(insertProject: InsertProject): Promise<Project> {
-    const [project] = await db.insert(projects).values(insertProject).returning();
+    const id = this.projectIdCounter++;
+    const project: Project = { ...insertProject, id };
+    this.projects.set(id, project);
     return project;
   }
 
   async updateProject(project: Project): Promise<Project> {
-    const [updatedProject] = await db
-      .update(projects)
-      .set(project)
-      .where(eq(projects.id, project.id))
-      .returning();
-    return updatedProject;
+    this.projects.set(project.id, project);
+    return project;
   }
 
   async deleteProject(id: number): Promise<void> {
-    // First delete all windows in the project
-    await db.delete(windows).where(eq(windows.projectId, id));
+    this.projects.delete(id);
     
-    // Then delete the project
-    await db.delete(projects).where(eq(projects.id, id));
+    // Delete all windows associated with this project
+    for (const [windowId, window] of this.windows.entries()) {
+      if (window.projectId === id) {
+        this.windows.delete(windowId);
+      }
+    }
   }
 
   async getWindowsByProject(projectId: number): Promise<Window[]> {
-    return await db.select().from(windows).where(eq(windows.projectId, projectId));
+    return Array.from(this.windows.values()).filter(
+      (window) => window.projectId === projectId
+    );
   }
 }
 
-export const storage = new DatabaseStorage();
+export const storage = new MemStorage();
