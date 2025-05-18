@@ -292,26 +292,28 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
           )}
         />
         
-        <FormField
-          control={form.control}
-          name="hasGeorgianBars"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>Georgian Bars</FormLabel>
-                <FormDescription>
-                  Add decorative Georgian bars to the window
-                </FormDescription>
-              </div>
-            </FormItem>
-          )}
-        />
+        {designCategory === 'window' && (
+          <FormField
+            control={form.control}
+            name="hasGeorgianBars"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>Georgian Bars</FormLabel>
+                  <FormDescription>
+                    Add decorative Georgian bars to the window
+                  </FormDescription>
+                </div>
+              </FormItem>
+            )}
+          />
+        )}
         
         {form.watch("hasGeorgianBars") && (
           <div className="grid grid-cols-2 gap-4">
