@@ -11,8 +11,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get all windows
   app.get('/api/windows', async (req, res) => {
     try {
-      const windows = await storage.getAllWindows();
-      return res.json(windows);
+      // Get project ID from query parameter if it exists
+      const projectId = req.query.projectId ? parseInt(req.query.projectId as string) : undefined;
+      
+      if (projectId) {
+        // Get windows for specific project
+        const windows = await storage.getWindowsByProject(projectId);
+        return res.json(windows);
+      } else {
+        // Get all windows
+        const windows = await storage.getAllWindows();
+        return res.json(windows);
+      }
     } catch (error) {
       console.error('Error getting windows:', error);
       return res.status(500).json({ error: 'Failed to get windows' });
@@ -116,6 +126,104 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error getting projects:', error);
       return res.status(500).json({ error: 'Failed to get projects' });
+    }
+  });
+  
+  // Get project by ID
+  app.get('/api/projects/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid project ID' });
+      }
+      
+      const project = await storage.getProject(id);
+      if (!project) {
+        return res.status(404).json({ error: 'Project not found' });
+      }
+      
+      return res.json(project);
+    } catch (error) {
+      console.error('Error getting project:', error);
+      return res.status(500).json({ error: 'Failed to get project' });
+    }
+  });
+  
+  // Create a new project
+  app.post('/api/projects', async (req, res) => {
+    try {
+      const { name, description = '' } = req.body;
+      
+      if (!name) {
+        return res.status(400).json({ error: 'Project name is required' });
+      }
+      
+      const newProject = await storage.createProject({
+        userId: 1, // Using default user ID for now
+        name,
+        description,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      });
+      
+      return res.status(201).json(newProject);
+    } catch (error) {
+      console.error('Error creating project:', error);
+      return res.status(500).json({ error: 'Failed to create project' });
+    }
+  });
+  
+  // Update a project
+  app.put('/api/projects/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid project ID' });
+      }
+      
+      const { name, description } = req.body;
+      
+      if (!name) {
+        return res.status(400).json({ error: 'Project name is required' });
+      }
+      
+      const existingProject = await storage.getProject(id);
+      if (!existingProject) {
+        return res.status(404).json({ error: 'Project not found' });
+      }
+      
+      const updatedProject = await storage.updateProject({
+        ...existingProject,
+        name,
+        description: description || existingProject.description,
+        updatedAt: new Date().toISOString()
+      });
+      
+      return res.json(updatedProject);
+    } catch (error) {
+      console.error('Error updating project:', error);
+      return res.status(500).json({ error: 'Failed to update project' });
+    }
+  });
+  
+  // Delete a project and all associated windows
+  app.delete('/api/projects/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid project ID' });
+      }
+      
+      const existingProject = await storage.getProject(id);
+      if (!existingProject) {
+        return res.status(404).json({ error: 'Project not found' });
+      }
+      
+      await storage.deleteProject(id);
+      return res.status(204).send();
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      return res.status(500).json({ error: 'Failed to delete project' });
     }
   });
 

@@ -16,150 +16,125 @@ export function usePrint() {
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
       const margin = 15; // 15mm margin
-      
-      // Get project name from page
-      const projectNameElement = document.querySelector('.text-lg.font-medium');
-      const projectName = projectNameElement?.textContent?.replace('Window Design - ', '') || 'Window Design';
+      const contentWidth = pageWidth - (margin * 2);
+      const contentHeight = pageHeight - (margin * 2);
       
       // Add a title to the PDF
+      const projectName = document.querySelector('.text-lg.font-medium')?.textContent || 'Window Design';
       pdf.setFont('helvetica', 'bold');
       pdf.setFontSize(16);
       pdf.text(projectName, pageWidth / 2, margin, { align: 'center' });
       
-      // Get all individual window divs
-      const windowContainers = document.querySelectorAll('.mb-16.inline-block');
+      // Get all window drawing elements
+      const windowElements = printRef.current.querySelectorAll('.mb-16.inline-block');
       
-      if (windowContainers.length === 0) {
-        alert('No windows found to export. Please add at least one window to your project.');
+      if (windowElements.length === 0) {
+        console.warn('No window elements found');
         return;
       }
 
-      // Calculate layout
-      const numWindows = windowContainers.length;
-      let rows = 1, cols = 1;
+      // Calculate optimal layout to fit all windows on one page
+      const numWindows = windowElements.length;
       
-      if (numWindows === 2) {
-        cols = 2;
-      } else if (numWindows <= 4) {
-        rows = 2;
-        cols = 2;
-      } else if (numWindows <= 6) {
-        rows = 2;
-        cols = 3;
-      } else {
-        rows = 3;
-        cols = 3;
+      // Determine grid dimensions based on number of windows
+      let cols = Math.ceil(Math.sqrt(numWindows));
+      let rows = Math.ceil(numWindows / cols);
+      
+      // For better layout with few windows
+      if (numWindows <= 2) cols = numWindows;
+      if (numWindows <= 4) cols = 2;
+      
+      // Calculate available space for each window
+      const titleSpace = 15; // Space for title
+      const footerSpace = 10; // Space for footer
+      const spacing = 10; // Space between windows
+      
+      const availableHeight = contentHeight - titleSpace - footerSpace;
+      const availableWidth = contentWidth;
+      
+      const maxWindowWidth = (availableWidth - (spacing * (cols - 1))) / cols;
+      const maxWindowHeight = (availableHeight - (spacing * (rows - 1))) / rows;
+      
+      // Capture all windows as canvases
+      const windowCanvases = [];
+      for (let i = 0; i < windowElements.length; i++) {
+        const element = windowElements[i] as HTMLElement;
+        const canvas = await html2canvas(element, {
+          backgroundColor: '#FFFFFF',
+          scale: 2, // Higher scale for better quality
+          logging: false,
+          useCORS: true
+        });
+        windowCanvases.push(canvas);
       }
       
-      // Set up pagination if needed
-      const windowsPerPage = rows * cols;
-      const totalPages = Math.ceil(numWindows / windowsPerPage);
-      
-      // Available space calculations
-      const titleHeight = 20;
-      const footerHeight = 10;
-      const windowSpacing = 10;
-      const windowLabelHeight = 10;
-      
-      const availableContentWidth = pageWidth - (margin * 2);
-      const availableContentHeight = pageHeight - margin - titleHeight - footerHeight - margin;
-      
-      const maxWindowWidth = (availableContentWidth - ((cols-1) * windowSpacing)) / cols;
-      const maxWindowHeight = (availableContentHeight - ((rows-1) * windowSpacing) - (rows * windowLabelHeight)) / rows;
-      
-      // Process windows page by page
-      for (let pageNum = 0; pageNum < totalPages; pageNum++) {
-        // Add a new page if not the first page
-        if (pageNum > 0) {
-          pdf.addPage('landscape');
-          // Add title to new page
-          pdf.setFont('helvetica', 'bold');
-          pdf.setFontSize(16);
-          pdf.text(`${projectName} (${pageNum + 1}/${totalPages})`, pageWidth / 2, margin, { align: 'center' });
-        } else if (totalPages > 1) {
-          // Update first page title with page count
-          pdf.text(`${projectName} (1/${totalPages})`, pageWidth / 2, margin, { align: 'center' });
+      // Calculate scale factor for each window to fit in the grid
+      const scaledWindows = windowCanvases.map(canvas => {
+        const aspectRatio = canvas.width / canvas.height;
+        
+        let width, height;
+        if (aspectRatio > maxWindowWidth / maxWindowHeight) {
+          // Width constrained
+          width = maxWindowWidth;
+          height = width / aspectRatio;
+        } else {
+          // Height constrained
+          height = maxWindowHeight;
+          width = height * aspectRatio;
         }
         
-        // Process windows for this page
-        for (let i = 0; i < windowsPerPage; i++) {
-          const windowIndex = pageNum * windowsPerPage + i;
-          if (windowIndex >= numWindows) break;
-          
-          const windowContainer = windowContainers[windowIndex] as HTMLElement;
-          const windowSvg = windowContainer.querySelector('.window-drawing-svg');
-          
-          if (!windowSvg) continue;
-          
-          // Get window name
-          const windowName = windowContainer.querySelector('.dimension-text[font-weight="bold"]')?.textContent || `Window ${windowIndex + 1}`;
-          
-          // Calculate position in grid
-          const row = Math.floor(i / cols);
-          const col = i % cols;
-          
-          // Calculate position on page
-          const xPos = margin + (col * (maxWindowWidth + windowSpacing));
-          const yPos = margin + titleHeight + (row * (maxWindowHeight + windowSpacing + windowLabelHeight));
-
-          // Capture the SVG as canvas
-          const canvas = await html2canvas(windowSvg as HTMLElement, {
-            backgroundColor: '#FFFFFF',
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-            logging: false,
-          });
-          
-          // Calculate scaling to fit within grid cell
-          const originalWidth = canvas.width;
-          const originalHeight = canvas.height;
-          const widthRatio = maxWindowWidth / originalWidth;
-          const heightRatio = maxWindowHeight / originalHeight;
-          const scale = Math.min(widthRatio, heightRatio);
-          
-          const scaledWidth = originalWidth * scale;
-          const scaledHeight = originalHeight * scale;
-          
-          // Center in grid cell
-          const centeredX = xPos + ((maxWindowWidth - scaledWidth) / 2);
-          const centeredY = yPos + ((maxWindowHeight - scaledHeight) / 2);
-          
-          // Add image to PDF
-          pdf.addImage(
-            canvas.toDataURL('image/png'), 
-            'PNG', 
-            centeredX, 
-            centeredY, 
-            scaledWidth, 
-            scaledHeight
-          );
-          
-          // Add window name below image
+        return {
+          canvas,
+          width,
+          height
+        };
+      });
+      
+      // Place windows on the PDF
+      let currentRow = 0;
+      let currentCol = 0;
+      
+      scaledWindows.forEach((item, i) => {
+        // Convert canvas to image
+        const imgData = item.canvas.toDataURL('image/png');
+        
+        // Calculate position for this window
+        const xPos = margin + (currentCol * (maxWindowWidth + spacing));
+        const yPos = margin + titleSpace + (currentRow * (maxWindowHeight + spacing));
+        
+        // Add the image to the PDF
+        pdf.addImage(imgData, 'PNG', xPos, yPos, item.width, item.height);
+        
+        // Get window info for label
+        const windowName = (windowElements[i] as HTMLElement).querySelector('.dimension-text.font-medium')?.textContent || '';
+        
+        // Add window name under the drawing if there's space
+        if (windowName) {
           pdf.setFont('helvetica', 'normal');
-          pdf.setFontSize(10);
-          pdf.text(
-            windowName, 
-            xPos + maxWindowWidth / 2, 
-            centeredY + scaledHeight + 7, 
-            { align: 'center' }
-          );
+          pdf.setFontSize(8);
+          pdf.text(windowName, xPos + (item.width / 2), yPos + item.height + 5, { align: 'center' });
         }
         
-        // Add footer with date
-        const today = new Date();
-        const dateStr = today.toLocaleDateString();
-        pdf.setFont('helvetica', 'normal');
-        pdf.setFontSize(8);
-        pdf.text(`Generated on ${dateStr}`, margin, pageHeight - 5);
-      }
+        // Update position for next window
+        currentCol++;
+        if (currentCol >= cols) {
+          currentCol = 0;
+          currentRow++;
+        }
+      });
+      
+      // Add creation date at the bottom of the page
+      const today = new Date();
+      const dateStr = today.toLocaleDateString();
+      pdf.setFont('helvetica', 'normal');
+      pdf.setFontSize(8);
+      pdf.text(`Generated on ${dateStr}`, margin, pageHeight - 5);
       
       // Save the PDF
       pdf.save(`${projectName.replace(/\s+/g, '_')}.pdf`);
       
     } catch (error) {
       console.error('Error generating PDF:', error);
-      alert('Failed to generate PDF. Please try again.');
     }
   };
 
