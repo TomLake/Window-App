@@ -82,99 +82,18 @@ export default function Home() {
   const handleDeleteWindow = (windowId: number) => {
     deleteWindow.mutate(windowId);
   };
-  
-  // Handle PDF export of all windows
-  const handleExportPDF = async () => {
-    if (!canvasRef.current || windows.length === 0) return;
-    
-    try {
-      // Create a new PDF document in landscape orientation
-      const pdf = new jsPDF('landscape', 'mm', 'a4');
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const margin = 15; // 15mm margin
-      
-      // Add a title to the PDF
-      pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(16);
-      pdf.text(`Window Design - ${projectName}`, pageWidth / 2, margin, { align: 'center' });
-      
-      // Get the drawing area element
-      const drawingArea = canvasRef.current.querySelector('.border.border-gray-200.bg-gray-50');
-      if (!drawingArea) return;
-      
-      // Capture the drawing area
-      const canvas = await html2canvas(drawingArea as HTMLElement, {
-        backgroundColor: '#FFFFFF',
-        scale: 2, // Higher resolution
-        logging: false,
-        useCORS: true,
-        // Remove any UI elements from the capture
-        onclone: (document) => {
-          const clonedEl = document.querySelector('.border.border-gray-200.bg-gray-50') as HTMLElement;
-          if (clonedEl) {
-            // Make background white for PDF
-            clonedEl.style.backgroundColor = 'white';
-          }
-        }
-      });
-      
-      // Calculate scaling to fit on the page
-      const contentWidth = pageWidth - (margin * 2);
-      const contentHeight = pageHeight - (margin * 2) - 15; // 15mm for the title
-      
-      const imageRatio = canvas.width / canvas.height;
-      const pageRatio = contentWidth / contentHeight;
-      
-      let finalWidth, finalHeight;
-      
-      if (imageRatio > pageRatio) {
-        // Image is wider than the page ratio
-        finalWidth = contentWidth;
-        finalHeight = contentWidth / imageRatio;
-      } else {
-        // Image is taller than the page ratio
-        finalHeight = contentHeight;
-        finalWidth = contentHeight * imageRatio;
-      }
-      
-      // Center the image on the page
-      const xPosition = margin + (contentWidth - finalWidth) / 2;
-      const yPosition = margin + 15; // Below the title
-      
-      // Add the image to the PDF
-      const imgData = canvas.toDataURL('image/png');
-      pdf.addImage(imgData, 'PNG', xPosition, yPosition, finalWidth, finalHeight);
-      
-      // Add timestamp at the bottom
-      pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(8);
-      const dateStr = new Date().toLocaleString();
-      pdf.text(`Generated on ${dateStr}`, margin, pageHeight - 5);
-      
-      // Save the PDF
-      pdf.save(`${projectName.replace(/\s+/g, '_')}_windows.pdf`);
-      
-      toast({
-        title: "PDF Exported",
-        description: "All windows have been exported to PDF",
-      });
-    } catch (error) {
-      console.error('Error exporting PDF:', error);
-      toast({
-        title: "Export Failed",
-        description: "Failed to export windows to PDF",
-        variant: "destructive"
-      });
-    }
-  };
 
   return (
     <div className="h-screen flex flex-col">
       <Header 
         projectName={projectName} 
         onProjectNameChange={setProjectName} 
-        onExportPDF={handleExportPDF}
+        onExportPDF={() => {
+          const exportButton = designCanvasRef.current?.querySelector('.bg-blue-600');
+          if (exportButton) {
+            exportButton.click();
+          }
+        }}
       />
       
       <div className="flex flex-1 overflow-hidden">
@@ -203,7 +122,7 @@ export default function Home() {
         
         {/* Main content area */}
         <WindowDesignCanvas 
-          ref={printRef}
+          ref={designCanvasRef}
           windows={windows} 
           projectName={projectName}
         />
