@@ -162,8 +162,203 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   
 
   
-  // Render the appropriate window based on type
+  // Function to render door designs
+  const renderDoor = (doorType: string) => {
+    // Door frame thickness - slightly thicker than windows
+    const doorFrameThickness = Math.max(4, Math.round(55 * scaleFactor)); // 55mm scaled to SVG size
+    const doorFrameInset = doorFrameThickness + 2;
+    
+    // Door panel styles
+    const panelColor = "#8b5a2b"; // Wooden door color
+    const panelStrokeColor = "#5d3a1c"; // Darker brown for panel edges
+    const glassColor = "#dbeafe"; // Light blue for glass
+    
+    // Basic door frame that all doors share
+    const doorFrame = (
+      <>
+        {/* Outer Frame */}
+        <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
+        
+        {/* Inner area */}
+        <rect 
+          x={doorFrameInset} 
+          y={doorFrameInset} 
+          width={svgWidth - (doorFrameInset * 2)} 
+          height={svgHeight - (doorFrameInset * 2)} 
+          fill={panelColor} 
+          stroke={panelStrokeColor}
+          strokeWidth="1"
+        />
+      </>
+    );
+    
+    switch(doorType) {
+      case "door-fully-boarded":
+        return (
+          <>
+            {doorFrame}
+            
+            {/* Horizontal panels for fully boarded effect */}
+            {Array.from({ length: 6 }).map((_, index) => {
+              const panelHeight = (svgHeight - (doorFrameInset * 2)) / 6;
+              const yPos = doorFrameInset + (index * panelHeight);
+              
+              return (
+                <rect
+                  key={`board-${index}`}
+                  x={doorFrameInset}
+                  y={yPos}
+                  width={svgWidth - (doorFrameInset * 2)}
+                  height={panelHeight}
+                  fill={panelColor}
+                  stroke={panelStrokeColor}
+                  strokeWidth="0.5"
+                />
+              );
+            })}
+            
+            {/* Door handle */}
+            <circle
+              cx={svgWidth - doorFrameInset - 15}
+              cy={svgHeight / 2}
+              r={4}
+              fill="#888"
+              stroke="#555"
+              strokeWidth="1"
+            />
+          </>
+        );
+        
+      case "door-full-glazed":
+        return (
+          <>
+            {doorFrame}
+            
+            {/* Large glass panel */}
+            <rect
+              x={doorFrameInset + 20}
+              y={doorFrameInset + 20}
+              width={svgWidth - (doorFrameInset * 2) - 40}
+              height={svgHeight - (doorFrameInset * 2) - 40}
+              fill={glassColor}
+              stroke={panelStrokeColor}
+              strokeWidth="1"
+            />
+            
+            {/* Door handle */}
+            <circle
+              cx={svgWidth - doorFrameInset - 15}
+              cy={svgHeight / 2}
+              r={4}
+              fill="#888"
+              stroke="#555"
+              strokeWidth="1"
+            />
+          </>
+        );
+        
+      case "door-half-glazed":
+        return (
+          <>
+            {doorFrame}
+            
+            {/* Bottom half - wood panel */}
+            <rect
+              x={doorFrameInset}
+              y={doorFrameInset + (svgHeight - doorFrameInset * 2) / 2}
+              width={svgWidth - (doorFrameInset * 2)}
+              height={(svgHeight - doorFrameInset * 2) / 2}
+              fill={panelColor}
+              stroke={panelStrokeColor}
+              strokeWidth="1"
+            />
+            
+            {/* Top half - glass panel */}
+            <rect
+              x={doorFrameInset + 15}
+              y={doorFrameInset + 15}
+              width={svgWidth - (doorFrameInset * 2) - 30}
+              height={(svgHeight - doorFrameInset * 2) / 2 - 15}
+              fill={glassColor}
+              stroke={panelStrokeColor}
+              strokeWidth="1"
+            />
+            
+            {/* Door handle */}
+            <circle
+              cx={svgWidth - doorFrameInset - 15}
+              cy={svgHeight / 2}
+              r={4}
+              fill="#888"
+              stroke="#555"
+              strokeWidth="1"
+            />
+          </>
+        );
+        
+      case "door-6-panel":
+        return (
+          <>
+            {doorFrame}
+            
+            {/* 6 panel layout - 2 columns by 3 rows */}
+            {Array.from({ length: 6 }).map((_, index) => {
+              const columnCount = 2;
+              const rowCount = 3;
+              
+              const panelWidth = (svgWidth - (doorFrameInset * 2)) / columnCount;
+              const panelHeight = (svgHeight - (doorFrameInset * 2)) / rowCount;
+              
+              const column = index % columnCount;
+              const row = Math.floor(index / columnCount);
+              
+              const xPos = doorFrameInset + (column * panelWidth);
+              const yPos = doorFrameInset + (row * panelHeight);
+              
+              // Add a small margin between panels
+              const panelMargin = 4;
+              
+              return (
+                <rect
+                  key={`panel-${index}`}
+                  x={xPos + panelMargin}
+                  y={yPos + panelMargin}
+                  width={panelWidth - (panelMargin * 2)}
+                  height={panelHeight - (panelMargin * 2)}
+                  fill={panelColor}
+                  stroke={panelStrokeColor}
+                  strokeWidth="1"
+                  rx={2}
+                  ry={2}
+                />
+              );
+            })}
+            
+            {/* Door handle */}
+            <circle
+              cx={svgWidth - doorFrameInset - 15}
+              cy={svgHeight / 2}
+              r={4}
+              fill="#888"
+              stroke="#555"
+              strokeWidth="1"
+            />
+          </>
+        );
+        
+      default:
+        return doorFrame;
+    }
+  };
+
+  // Render the appropriate window or door based on type
   const renderWindow = () => {
+    // Check if it's a door type
+    if (windowConfig.category === "door") {
+      return renderDoor(windowConfig.id);
+    }
+    
+    // Otherwise it's a window type
     switch (windowConfig.id) {
       case "single":
         return (

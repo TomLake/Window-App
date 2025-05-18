@@ -1,4 +1,4 @@
-// Define all available window types with their properties
+// Define all available window and door types with their properties
 export const windowTypes = [
   // Standard window types
   {
@@ -9,6 +9,7 @@ export const windowTypes = [
     maxWidth: 1000,
     minHeight: 500,
     maxHeight: 2000,
+    category: "window",
   },
   {
     id: "double",
@@ -18,6 +19,7 @@ export const windowTypes = [
     maxWidth: 2000,
     minHeight: 500,
     maxHeight: 2000,
+    category: "window",
   },
   {
     id: "triple",
@@ -27,6 +29,7 @@ export const windowTypes = [
     maxWidth: 2500,
     minHeight: 500,
     maxHeight: 2000,
+    category: "window",
   },
   {
     id: "quad",
@@ -36,6 +39,7 @@ export const windowTypes = [
     maxWidth: 3000,
     minHeight: 500,
     maxHeight: 2000,
+    category: "window",
   },
   
   // Transom window types
@@ -47,6 +51,7 @@ export const windowTypes = [
     maxWidth: 1000,
     minHeight: 800,
     maxHeight: 2000,
+    category: "window",
   },
   {
     id: "double-transom",
@@ -56,6 +61,7 @@ export const windowTypes = [
     maxWidth: 2000,
     minHeight: 800,
     maxHeight: 2000,
+    category: "window",
   },
   {
     id: "triple-transom",
@@ -65,6 +71,7 @@ export const windowTypes = [
     maxWidth: 2500,
     minHeight: 800,
     maxHeight: 2000,
+    category: "window",
   },
   {
     id: "quad-transom",
@@ -74,6 +81,7 @@ export const windowTypes = [
     maxWidth: 3000,
     minHeight: 800,
     maxHeight: 2000,
+    category: "window",
   },
   
   {
@@ -84,6 +92,57 @@ export const windowTypes = [
     maxWidth: 3000,
     minHeight: 2000,
     maxHeight: 2500,
+    category: "window",
+  },
+  
+  // Door types
+  {
+    id: "door-fully-boarded",
+    name: "Fully Boarded Door",
+    description: "A traditional door with no glass panels",
+    minWidth: 700,
+    maxWidth: 1000,
+    minHeight: 1800,
+    maxHeight: 2400,
+    category: "door",
+    defaultWidth: 900,
+    defaultHeight: 2100,
+  },
+  {
+    id: "door-full-glazed",
+    name: "Full Glazed Door",
+    description: "A door with a large glass panel covering most of the door",
+    minWidth: 700,
+    maxWidth: 1000,
+    minHeight: 1800,
+    maxHeight: 2400,
+    category: "door",
+    defaultWidth: 900,
+    defaultHeight: 2100,
+  },
+  {
+    id: "door-half-glazed",
+    name: "Half Glazed Door",
+    description: "A door with the upper half containing a glass panel",
+    minWidth: 700,
+    maxWidth: 1000,
+    minHeight: 1800,
+    maxHeight: 2400,
+    category: "door",
+    defaultWidth: 900,
+    defaultHeight: 2100,
+  },
+  {
+    id: "door-6-panel",
+    name: "6 Panel Door",
+    description: "A classic door design with six panels",
+    minWidth: 700,
+    maxWidth: 1000,
+    minHeight: 1800,
+    maxHeight: 2400,
+    category: "door",
+    defaultWidth: 900,
+    defaultHeight: 2100,
   }
 ];
 
