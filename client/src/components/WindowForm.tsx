@@ -19,7 +19,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { windowTypes } from "@/lib/windowTypes";
 import type { Window } from "@shared/schema";
 
@@ -53,6 +53,7 @@ interface WindowFormProps {
 }
 
 export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFormProps) {
+  const [designCategory, setDesignCategory] = useState<'window' | 'door'>('window');
   const defaultValues: WindowFormValues = {
     projectId: 1,
     name: "",
@@ -106,27 +107,68 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
     onReset();
   };
 
+  // Filter window types by the selected category
+  const filteredTypes = windowTypes.filter(type => 
+    type.category === designCategory
+  );
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSave)} className="space-y-4">
+        {/* Category Selector */}
+        <div className="flex items-center space-x-4 mb-4 p-2 bg-gray-50 rounded-md">
+          <div className="text-sm font-medium text-gray-600">Design Type:</div>
+          <div className="flex items-center space-x-2">
+            <Button 
+              type="button"
+              variant={designCategory === 'window' ? "default" : "outline"}
+              size="sm"
+              onClick={() => setDesignCategory('window')}
+              className="flex items-center"
+            >
+              <span className="material-icons text-sm mr-1">grid_view</span>
+              Windows
+            </Button>
+            <Button 
+              type="button"
+              variant={designCategory === 'door' ? "default" : "outline"}
+              size="sm"
+              onClick={() => setDesignCategory('door')}
+              className="flex items-center"
+            >
+              <span className="material-icons text-sm mr-1">door_front</span>
+              Doors
+            </Button>
+          </div>
+        </div>
+
         <FormField
           control={form.control}
           name="type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Window Type</FormLabel>
+              <FormLabel>{designCategory === 'window' ? 'Window Type' : 'Door Type'}</FormLabel>
               <Select 
-                onValueChange={field.onChange} 
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  
+                  // Set default dimensions based on type
+                  const selectedType = windowTypes.find(type => type.id === value);
+                  if (selectedType && selectedType.defaultWidth && selectedType.defaultHeight) {
+                    form.setValue('width', selectedType.defaultWidth);
+                    form.setValue('height', selectedType.defaultHeight);
+                  }
+                }} 
                 defaultValue={field.value}
                 value={field.value}
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select window type" />
+                    <SelectValue placeholder={`Select ${designCategory} type`} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {windowTypes.map(type => (
+                  {filteredTypes.map(type => (
                     <SelectItem key={type.id} value={type.id}>{type.name}</SelectItem>
                   ))}
                 </SelectContent>
@@ -140,9 +182,9 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Window Name</FormLabel>
+              <FormLabel>{designCategory === 'window' ? 'Window Name' : 'Door Name'}</FormLabel>
               <FormControl>
-                <Input placeholder="Kitchen Window" {...field} />
+                <Input placeholder={designCategory === 'window' ? "Kitchen Window" : "Front Door"} {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -187,6 +229,8 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
                 onValueChange={field.onChange} 
                 defaultValue={field.value}
                 value={field.value}
+                disabled={designCategory === 'door' && 
+                  (form.watch("type") === "door-fully-boarded" || form.watch("type") === "door-6-panel")}
               >
                 <FormControl>
                   <SelectTrigger>
@@ -200,6 +244,12 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
                   <SelectItem value="Low-E">Low-E</SelectItem>
                 </SelectContent>
               </Select>
+              {designCategory === 'door' && 
+               (form.watch("type") === "door-fully-boarded" || form.watch("type") === "door-6-panel") && (
+                <FormDescription className="text-amber-600">
+                  Not applicable for this door type as it has no glass panels.
+                </FormDescription>
+              )}
             </FormItem>
           )}
         />
