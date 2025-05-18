@@ -13,6 +13,9 @@ export default function Home() {
   const { toast } = useToast();
   const [selectedWindow, setSelectedWindow] = useState<Window | null>(null);
   const [projectName, setProjectName] = useState("Untitled Project");
+  
+  // Setup printing functionality
+  const { printRef, handlePrint } = usePrint();
 
   // Fetch windows from the server
   const { data: windows = [], refetch: refetchWindows } = useQuery({
