@@ -72,26 +72,26 @@
 
 /* Window Drawing Styles */
 .window-frame {
-  stroke: red;         /* Red: Outer frame border */
+  stroke: black;         /* Red: Outer frame border */
   stroke-width: 1;
   fill: white;
 }
 
 .window-casement {
-  stroke: green;       /* Green: Casement outer borders */
+  stroke: black;       /* Green: Casement outer borders */
   stroke-width: 1;
   stroke-dasharray: none;
 }
 
 .window-casement-interior {
   fill: #d4e6f9;
-  stroke: blue;        /* Blue: Casement inner borders */
+  stroke: black;        /* Blue: Casement inner borders */
   stroke-width: 1;
 }
 
 .window-mullion {
-  fill: white;
-  stroke: transparent;
+  fill: transparent;
+  stroke: black;
   stroke-width: 0;
 }
 
@@ -102,10 +102,7 @@
 }
 
 /* Override all SVG strokes to use black */
-.window-drawing-svg rect {
-  stroke: black;
-  stroke-width: 1;
-}
+
 
 .window-drawing-svg line {
   stroke: black;
@@ -119,6 +116,6 @@
 
 .window-hinge {
   stroke: black;
-  stroke-width: 1;
+  stroke-width: 0;
   fill: none;
 }

@@ -28,6 +28,15 @@ export const windowTypes = [
     minHeight: 500,
     maxHeight: 2000,
   },
+  {
+    id: "quad",
+    name: "Quad Casement",
+    description: "A window with four panes side by side",
+    minWidth: 1600,
+    maxWidth: 3000,
+    minHeight: 500,
+    maxHeight: 2000,
+  },
   
   // Transom window types
   {
@@ -54,6 +63,15 @@ export const windowTypes = [
     description: "A triple casement window with a fixed rectangular transom at the top",
     minWidth: 1200,
     maxWidth: 2500,
+    minHeight: 800,
+    maxHeight: 2000,
+  },
+  {
+    id: "quad-transom",
+    name: "Quad with Transom",
+    description: "A quad casement window with a fixed rectangular transom at the top",
+    minWidth: 1600,
+    maxWidth: 3000,
     minHeight: 800,
     maxHeight: 2000,
   },

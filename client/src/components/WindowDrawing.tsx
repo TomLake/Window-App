@@ -824,6 +824,215 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             })()}
           </>
         );
+
+      case "quad":
+        return (
+          <>
+            {/* Frame */}
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
+            
+            {/* Single glass pane */}
+            <rect 
+              x={frameInset} 
+              y={frameInset} 
+              width={svgWidth - (frameInset * 2)} 
+              height={svgHeight - (frameInset * 2)} 
+              fill="none" 
+              stroke="none" 
+            />
+            
+            {/* Georgian bars for entire window */}
+            {renderGeorgianBars(
+              frameInset,
+              frameInset,
+              svgWidth - (frameInset * 2),
+              svgHeight - (frameInset * 2)
+            )}
+            
+            {/* Casements for each section - Equal division of width for all four sections */}
+            {(() => {
+              // Calculate the effective total width for dividing (minus frame insets on both sides)
+              const effectiveWidth = svgWidth - (frameInset * 2);
+              // Each section gets exactly one fourth of the effective width
+              const sectionWidth = effectiveWidth / 4;
+              
+              return (
+                <>
+                  {/* Section 1 (leftmost) */}
+                  <rect 
+                    x={frameInset - 1} 
+                    y={frameInset - 1} 
+                    width={sectionWidth - (mullionThickness/2) + 1} 
+                    height={svgHeight - (frameInset * 2) + 2} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Section 1 inner border 50mm wide with light blue fill */}
+                  <rect 
+                    x={frameInset + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1} 
+                    height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Section 2 */}
+                  <rect 
+                    x={frameInset + sectionWidth + (mullionThickness/2)} 
+                    y={frameInset - 1} 
+                    width={sectionWidth - mullionThickness + 2} 
+                    height={svgHeight - (frameInset * 2) + 2} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Section 2 inner border 50mm wide with light blue fill */}
+                  <rect 
+                    x={frameInset + sectionWidth + (mullionThickness/2) + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - mullionThickness - (innerBorderWidth * 2) + 2} 
+                    height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Section 3 */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) + (mullionThickness/2)} 
+                    y={frameInset - 1} 
+                    width={sectionWidth - mullionThickness + 2} 
+                    height={svgHeight - (frameInset * 2) + 2} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Section 3 inner border 50mm wide with light blue fill */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) + (mullionThickness/2) + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - mullionThickness - (innerBorderWidth * 2) + 2} 
+                    height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Section 4 (rightmost) */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 3) + (mullionThickness/2)} 
+                    y={frameInset - 1} 
+                    width={sectionWidth - (mullionThickness/2) + 1} 
+                    height={svgHeight - (frameInset * 2) + 2} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Section 4 inner border 50mm wide with light blue fill */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 3) + (mullionThickness/2) + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1} 
+                    height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+                    className="window-casement-interior"
+                  />
+                </>
+              );
+            })()}
+            
+            {/* Mullions (vertical dividers between sections) */}
+            {(() => {
+              // Calculate the effective total width for dividing (minus frame insets on both sides)
+              const effectiveWidth = svgWidth - (frameInset * 2);
+              // Each section gets exactly one fourth of the effective width
+              const sectionWidth = effectiveWidth / 4;
+              
+              return (
+                <>
+                  {/* First mullion (between section 1 and 2) */}
+                  <rect 
+                    x={frameInset + sectionWidth - (mullionThickness / 2)} 
+                    y={frameInset} 
+                    width={mullionThickness} 
+                    height={svgHeight - (frameInset * 2)} 
+                    className="window-mullion" 
+                  />
+                  
+                  {/* Second mullion (between section 2 and 3) */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) - (mullionThickness / 2)} 
+                    y={frameInset} 
+                    width={mullionThickness} 
+                    height={svgHeight - (frameInset * 2)} 
+                    className="window-mullion" 
+                  />
+                  
+                  {/* Third mullion (between section 3 and 4) */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 3) - (mullionThickness / 2)} 
+                    y={frameInset} 
+                    width={mullionThickness} 
+                    height={svgHeight - (frameInset * 2)} 
+                    className="window-mullion" 
+                  />
+                </>
+              );
+            })()}
+            
+            {/* Hinge indicators for casements */}
+            {(() => {
+              // Calculate the effective total width for dividing (minus frame insets on both sides)
+              const effectiveWidth = svgWidth - (frameInset * 2);
+              // Each section gets exactly one fourth of the effective width
+              const sectionWidth = effectiveWidth / 4;
+              
+              return (
+                <>
+                  {/* Leftmost section (1) */}
+                  {(openableCasements === "left" || openableCasements === "both" || openableCasements === "outer") && (
+                    renderHingeIndicator(
+                      frameInset, 
+                      frameInset, 
+                      sectionWidth - (mullionThickness/2), 
+                      svgHeight - (frameInset * 2), 
+                      'left'
+                    )
+                  )}
+                  
+                  {/* Section 2 */}
+                  {(openableCasements === "center-left") && (
+                    renderHingeIndicator(
+                      frameInset + sectionWidth + (mullionThickness/2), 
+                      frameInset, 
+                      sectionWidth - mullionThickness, 
+                      svgHeight - (frameInset * 2), 
+                      'left'
+                    )
+                  )}
+                  
+                  {/* Section 3 */}
+                  {(openableCasements === "center-right") && (
+                    renderHingeIndicator(
+                      frameInset + (sectionWidth * 2) + (mullionThickness/2), 
+                      frameInset, 
+                      sectionWidth - mullionThickness, 
+                      svgHeight - (frameInset * 2), 
+                      'right'
+                    )
+                  )}
+                  
+                  {/* Rightmost section (4) */}
+                  {(openableCasements === "right" || openableCasements === "both" || openableCasements === "outer") && (
+                    renderHingeIndicator(
+                      frameInset + (sectionWidth * 3) + (mullionThickness/2), 
+                      frameInset, 
+                      sectionWidth - (mullionThickness/2), 
+                      svgHeight - (frameInset * 2), 
+                      'right'
+                    )
+                  )}
+                </>
+              );
+            })()}
+          </>
+        );
         
       case "triple-transom":
         return (
