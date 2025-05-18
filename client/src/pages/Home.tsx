@@ -23,7 +23,7 @@ export default function Home() {
       const url = currentProject 
         ? `/api/windows?projectId=${currentProject.id}` 
         : '/api/windows';
-      return await apiRequest(url);
+      return await apiRequest('GET', url);
     },
   });
 
@@ -36,11 +36,7 @@ export default function Home() {
         projectId: currentProject?.id || 1, // Default to project ID 1 if none is selected
       };
       
-      return apiRequest('/api/windows', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(windowToCreate),
-      });
+      return apiRequest('POST', '/api/windows', windowToCreate);
     },
     onSuccess: () => {
       toast({
@@ -54,11 +50,7 @@ export default function Home() {
   // Update window mutation
   const updateWindow = useMutation({
     mutationFn: async (windowData: Window) => {
-      return apiRequest(`/api/windows/${windowData.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(windowData),
-      });
+      return apiRequest('PUT', `/api/windows/${windowData.id}`, windowData);
     },
     onSuccess: () => {
       toast({
@@ -73,9 +65,7 @@ export default function Home() {
   // Delete window mutation
   const deleteWindow = useMutation({
     mutationFn: async (windowId: number) => {
-      await apiRequest(`/api/windows/${windowId}`, {
-        method: 'DELETE',
-      });
+      await apiRequest('DELETE', `/api/windows/${windowId}`);
     },
     onSuccess: () => {
       toast({
