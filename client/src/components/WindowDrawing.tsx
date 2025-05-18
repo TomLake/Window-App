@@ -506,12 +506,13 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement-interior"
             />
             
-            {/* Georgian bars if enabled */}
+            {/* Georgian bars for lower casement */}
             {renderGeorgianBars(
-              frameInset,
-              frameInset,
-              svgWidth - (frameInset * 2),
-              svgHeight - (frameInset * 2)
+              frameInset + innerBorderWidth,
+              frameInset + scaledTransomHeight + mullionThickness + innerBorderWidth,
+              svgWidth - ((frameInset + innerBorderWidth) * 2),
+              svgHeight - frameInset - scaledTransomHeight - 10 - mullionThickness - innerBorderWidth * 2,
+              'lower'
             )}
             
             {/* Hinge indicators for the top casement - with hinges at the top */}
