@@ -1034,6 +1034,294 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
           </>
         );
         
+      case "quad-transom":
+        // Calculate the scaled transom height, default to 400mm if not specified
+        const quadScaledTransomHeight = (transomHeight ?? 400) * scaleFactor;
+        
+        return (
+          <>
+            {/* Frame */}
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
+            
+            {/* Glass */}
+            <rect 
+              x={frameInset} 
+              y={frameInset} 
+              width={svgWidth - (frameInset * 2)} 
+              height={svgHeight - (frameInset * 2)} 
+              fill="none" 
+              stroke="none" 
+            />
+            
+            {/* Horizontal transom bar - position based on transom height parameter */}
+            <rect 
+              x={frameInset} 
+              y={frameInset + quadScaledTransomHeight} 
+              width={svgWidth - (frameInset * 2)} 
+              height={mullionThickness} 
+              className="window-mullion" 
+            />
+            
+            {/* Casements and mullions for each section */}
+            {(() => {
+              // Calculate the effective total width for dividing (minus frame insets on both sides)
+              const effectiveWidth = svgWidth - (frameInset * 2);
+              // Each section gets exactly one fourth of the effective width
+              const sectionWidth = effectiveWidth / 4;
+              
+              return (
+                <>
+                  {/* Vertical mullions */}
+                  {/* First mullion (between section 1 and 2) */}
+                  <rect 
+                    x={frameInset + sectionWidth - (mullionThickness / 2)} 
+                    y={frameInset} 
+                    width={mullionThickness} 
+                    height={svgHeight - (frameInset * 2)} 
+                    className="window-mullion" 
+                  />
+                  
+                  {/* Second mullion (between section 2 and 3) */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) - (mullionThickness / 2)} 
+                    y={frameInset} 
+                    width={mullionThickness} 
+                    height={svgHeight - (frameInset * 2)} 
+                    className="window-mullion" 
+                  />
+                  
+                  {/* Third mullion (between section 3 and 4) */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 3) - (mullionThickness / 2)} 
+                    y={frameInset} 
+                    width={mullionThickness} 
+                    height={svgHeight - (frameInset * 2)} 
+                    className="window-mullion" 
+                  />
+                  
+                  {/* Top row casements - 4 sections */}
+                  {/* Top left casement */}
+                  <rect 
+                    x={frameInset - 1} 
+                    y={frameInset - 1} 
+                    width={sectionWidth - (mullionThickness/2) + 1} 
+                    height={quadScaledTransomHeight + 1} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Top left casement inner border */}
+                  <rect 
+                    x={frameInset + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1} 
+                    height={quadScaledTransomHeight - (innerBorderWidth * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Top second casement */}
+                  <rect 
+                    x={frameInset + sectionWidth + (mullionThickness/2) - 1} 
+                    y={frameInset - 1} 
+                    width={sectionWidth - mullionThickness + 2} 
+                    height={quadScaledTransomHeight + 1} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Top second casement inner border */}
+                  <rect 
+                    x={frameInset + sectionWidth + (mullionThickness/2) + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - mullionThickness - (innerBorderWidth * 2) + 2} 
+                    height={quadScaledTransomHeight - (innerBorderWidth * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Top third casement */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) + (mullionThickness/2) - 1} 
+                    y={frameInset - 1} 
+                    width={sectionWidth - mullionThickness + 2} 
+                    height={quadScaledTransomHeight + 1} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Top third casement inner border */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) + (mullionThickness/2) + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - mullionThickness - (innerBorderWidth * 2) + 2} 
+                    height={quadScaledTransomHeight - (innerBorderWidth * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Top right casement */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 3) + (mullionThickness/2) - 1} 
+                    y={frameInset - 1} 
+                    width={sectionWidth - (mullionThickness/2) + 1} 
+                    height={quadScaledTransomHeight + 1} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Top right casement inner border */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 3) + (mullionThickness/2) + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1} 
+                    height={quadScaledTransomHeight - (innerBorderWidth * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Bottom row casements - 4 sections */}
+                  {/* Bottom left casement */}
+                  <rect 
+                    x={frameInset - 1} 
+                    y={frameInset + quadScaledTransomHeight + mullionThickness - 1} 
+                    width={sectionWidth - (mullionThickness/2) + 1} 
+                    height={svgHeight - frameInset - quadScaledTransomHeight - mullionThickness + 1} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Bottom left casement inner border */}
+                  <rect 
+                    x={frameInset + innerBorderWidth} 
+                    y={frameInset + quadScaledTransomHeight + mullionThickness + innerBorderWidth} 
+                    width={sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1} 
+                    height={svgHeight - frameInset - quadScaledTransomHeight - mullionThickness - innerBorderWidth * 2 + 1} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Bottom second casement */}
+                  <rect 
+                    x={frameInset + sectionWidth + (mullionThickness/2) - 1} 
+                    y={frameInset + quadScaledTransomHeight + mullionThickness - 1} 
+                    width={sectionWidth - mullionThickness + 2} 
+                    height={svgHeight - frameInset - quadScaledTransomHeight - mullionThickness + 1} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Bottom second casement inner border */}
+                  <rect 
+                    x={frameInset + sectionWidth + (mullionThickness/2) + innerBorderWidth} 
+                    y={frameInset + quadScaledTransomHeight + mullionThickness + innerBorderWidth} 
+                    width={sectionWidth - mullionThickness - (innerBorderWidth * 2) + 2} 
+                    height={svgHeight - frameInset - quadScaledTransomHeight - mullionThickness - innerBorderWidth * 2 + 1} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Bottom third casement */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) + (mullionThickness/2) - 1} 
+                    y={frameInset + quadScaledTransomHeight + mullionThickness - 1} 
+                    width={sectionWidth - mullionThickness + 2} 
+                    height={svgHeight - frameInset - quadScaledTransomHeight - mullionThickness + 1} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Bottom third casement inner border */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) + (mullionThickness/2) + innerBorderWidth} 
+                    y={frameInset + quadScaledTransomHeight + mullionThickness + innerBorderWidth} 
+                    width={sectionWidth - mullionThickness - (innerBorderWidth * 2) + 2} 
+                    height={svgHeight - frameInset - quadScaledTransomHeight - mullionThickness - innerBorderWidth * 2 + 1} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Bottom right casement */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 3) + (mullionThickness/2) - 1} 
+                    y={frameInset + quadScaledTransomHeight + mullionThickness - 1} 
+                    width={sectionWidth - (mullionThickness/2) + 1} 
+                    height={svgHeight - frameInset - quadScaledTransomHeight - mullionThickness + 1} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Bottom right casement inner border */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 3) + (mullionThickness/2) + innerBorderWidth} 
+                    y={frameInset + quadScaledTransomHeight + mullionThickness + innerBorderWidth} 
+                    width={sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1} 
+                    height={svgHeight - frameInset - quadScaledTransomHeight - mullionThickness - innerBorderWidth * 2 + 1} 
+                    className="window-casement-interior"
+                  />
+                </>
+              );
+            })()}
+            
+            {/* Georgian bars if enabled */}
+            {renderGeorgianBars(
+              frameInset,
+              frameInset,
+              svgWidth - (frameInset * 2),
+              svgHeight - (frameInset * 2)
+            )}
+            
+            {/* Hinge indicators for the bottom casements */}
+            {(() => {
+              // Calculate the effective total width for dividing (minus frame insets on both sides)
+              const effectiveWidth = svgWidth - (frameInset * 2);
+              // Each section gets exactly one fourth of the effective width
+              const sectionWidth = effectiveWidth / 4;
+              
+              return (
+                <>
+                  {/* Bottom left section */}
+                  {(openableCasements === "left" || openableCasements === "both" || openableCasements === "outer") && (
+                    renderHingeIndicator(
+                      frameInset, 
+                      frameInset + quadScaledTransomHeight + mullionThickness,
+                      sectionWidth - (mullionThickness/2), 
+                      svgHeight - frameInset - quadScaledTransomHeight - mullionThickness, 
+                      'left'
+                    )
+                  )}
+                  
+                  {/* Bottom inner left section */}
+                  {(openableCasements === "center-left") && (
+                    renderHingeIndicator(
+                      frameInset + sectionWidth + (mullionThickness/2), 
+                      frameInset + quadScaledTransomHeight + mullionThickness,
+                      sectionWidth - mullionThickness, 
+                      svgHeight - frameInset - quadScaledTransomHeight - mullionThickness, 
+                      'left'
+                    )
+                  )}
+                  
+                  {/* Bottom inner right section */}
+                  {(openableCasements === "center-right") && (
+                    renderHingeIndicator(
+                      frameInset + (sectionWidth * 2) + (mullionThickness/2), 
+                      frameInset + quadScaledTransomHeight + mullionThickness,
+                      sectionWidth - mullionThickness, 
+                      svgHeight - frameInset - quadScaledTransomHeight - mullionThickness, 
+                      'right'
+                    )
+                  )}
+                  
+                  {/* Bottom right section */}
+                  {(openableCasements === "right" || openableCasements === "both" || openableCasements === "outer") && (
+                    renderHingeIndicator(
+                      frameInset + (sectionWidth * 3) + (mullionThickness/2), 
+                      frameInset + quadScaledTransomHeight + mullionThickness,
+                      sectionWidth - (mullionThickness/2), 
+                      svgHeight - frameInset - quadScaledTransomHeight - mullionThickness, 
+                      'right'
+                    )
+                  )}
+                </>
+              );
+            })()}
+          </>
+        );
+      
       case "triple-transom":
         return (
           <>
