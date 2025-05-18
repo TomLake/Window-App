@@ -20,158 +20,143 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     transomHeight = 400, // Default transom height 400mm
     topCasementsOpenable = "none" // Default no top casements open
   } = window;
-
-  // Find the window type configuration
-  const windowConfig = useMemo(() => windowTypes.find(w => w.id === type) || windowTypes[0], [type]);
-
-  // Constants for rendering - all values in mm
-  const FRAME_THICKNESS = 45; // Frame thickness
-  const MULLION_THICKNESS = 30; // Mullion/divider thickness
-  const INNER_BORDER_THICKNESS = 50; // Inner glass border thickness
-  const SCALE_FACTOR = 0.25; // Scale factor for SVG rendering
-  const MAX_SVG_WIDTH = 1000; // Max SVG width for display
   
-  // Calculate scale based on window dimensions
-  const scale = Math.min(
-    (MAX_SVG_WIDTH - 40) / width, // Horizontal constraint with some padding
-    MAX_SVG_WIDTH / height // Vertical constraint
-  ) * SCALE_FACTOR;
+  // Calculate SVG dimensions while maintaining a minimum size and aspect ratio
+  const maxSvgWidth = 300;
+  const maxSvgHeight = 240;
   
-  // Calculate SVG dimensions
-  const svgWidth = width * scale;
-  const svgHeight = height * scale;
+  // Calculate scale factor
+  const scaleFactor = useMemo(() => {
+    const widthRatio = maxSvgWidth / width;
+    const heightRatio = maxSvgHeight / height;
+    return Math.min(widthRatio, heightRatio, 0.2); // Max scale 0.2 to keep reasonable size
+  }, [width, height]);
   
-  // Calculate dimensions for inner elements
-  const innerWidth = svgWidth - (FRAME_THICKNESS * 2 * scale);
-  const innerHeight = svgHeight - (FRAME_THICKNESS * 2 * scale);
+  // Calculate final SVG dimensions
+  const svgWidth = Math.round(width * scaleFactor);
+  const svgHeight = Math.round(height * scaleFactor);
   
-  // Calculate border width for inner elements
-  const innerBorderWidth = INNER_BORDER_THICKNESS * scale;
-  const mullionWidth = MULLION_THICKNESS * scale;
+  // Add extra space for dimensions on the sides and label at the bottom
+  const extraWidthForDimensions = 50; // Space for height dimension on the right
+  const extraHeightForDimensions = 60; // Space for width dimension at the bottom
+  const extraHeightForLabel = 30; // Space for window name label at the bottom
   
-  // Format dimensions for display
-  const formatDimension = (value: number) => `${value} mm`;
+  // Find window type configuration
+  const windowConfig = windowTypes.find(w => w.id === type) || windowTypes[0];
   
-  // Render Georgian bars if enabled
+  // Determine if using obscure glass
+  const isObscureGlass = glassType === "Obscure" || glassType === "Tinted";
+  const glassColor = isObscureGlass ? "#e6f0fa" : "#dbeafe"; // Slightly different blue for obscure glass
+  
+  // Frame thickness (45mm scaled to SVG size)
+  const frameThickness = Math.max(3, Math.round(45 * scaleFactor)); // 45mm scaled to SVG size, minimum 3px
+  
+  // Mullion thickness (30mm scaled to SVG size) - the dividers between casements
+  const mullionThickness = Math.max(2, Math.round(30 * scaleFactor)); // 30mm scaled to SVG size, minimum 2px
+  
+  const frameInset = frameThickness + 2; // Inset from frame to glass
+  const casementWidth = 2; // Casement line width
+  
+  // Inner border for casements (50mm scaled to SVG size)
+  const innerBorderWidth = Math.max(2, Math.round(50 * scaleFactor)); // Scale 50mm to SVG size, minimum 2px
+  
+  // Function to render Georgian bars for a window pane
   const renderGeorgianBars = (x: number, y: number, width: number, height: number) => {
     if (!hasGeorgianBars) return null;
     
-    const barWidth = 5 * scale; // 5mm bar width after scaling
+    // Use the user-defined number of horizontal and vertical bars
+    // If value is 0, no bars will be rendered
+    const numHorizontalBars = typeof georgianBarsHorizontal === 'number' ? georgianBarsHorizontal : 1;
+    const numVerticalBars = typeof georgianBarsVertical === 'number' ? georgianBarsVertical : 1;
+    
+    const barColor = "#475569";
+    const barWidth = 1.5;
+    
+    // Create the bars
     const bars = [];
     
-    // Calculate horizontal bar spacing
-    const horizontalSpacing = height / (georgianBarsHorizontal + 1);
-    for (let i = 1; i <= georgianBarsHorizontal; i++) {
-      const barY = y + (horizontalSpacing * i) - (barWidth / 2);
-      bars.push(
-        <rect 
-          key={`h-bar-${i}`} 
-          x={x} 
-          y={barY} 
-          width={width} 
-          height={barWidth} 
-          fill="#000" 
-        />
-      );
+    // Horizontal bars
+    if (numHorizontalBars > 0) {
+      // Create horizontal bars based on specified count
+      const horizontalSpacing = height / (numHorizontalBars + 1);
+      for (let i = 1; i <= numHorizontalBars; i++) {
+        const yPos = y + horizontalSpacing * i;
+        bars.push(
+          <line 
+            key={`h-${i}`}
+            x1={x} 
+            y1={yPos} 
+            x2={x + width} 
+            y2={yPos} 
+            stroke={barColor} 
+            strokeWidth={barWidth} 
+          />
+        );
+      }
     }
     
-    // Calculate vertical bar spacing
-    const verticalSpacing = width / (georgianBarsVertical + 1);
-    for (let i = 1; i <= georgianBarsVertical; i++) {
-      const barX = x + (verticalSpacing * i) - (barWidth / 2);
-      bars.push(
-        <rect 
-          key={`v-bar-${i}`} 
-          x={barX} 
-          y={y} 
-          width={barWidth} 
-          height={height} 
-          fill="#000" 
-        />
-      );
+    // Vertical bars
+    if (numVerticalBars > 0) {
+      // Create vertical bars based on specified count
+      const verticalSpacing = width / (numVerticalBars + 1);
+      for (let i = 1; i <= numVerticalBars; i++) {
+        const xPos = x + verticalSpacing * i;
+        bars.push(
+          <line 
+            key={`v-${i}`}
+            x1={xPos} 
+            y1={y} 
+            x2={xPos} 
+            y2={y + height} 
+            stroke={barColor} 
+            strokeWidth={barWidth} 
+          />
+        );
+      }
     }
     
     return bars;
   };
   
-  // Render opening indicator lines
-  const renderOpeningIndicator = (x: number, y: number, width: number, height: number, position: string, isTop = false) => {
-    if (position === "none") return null;
+  // Function to render dashed lines to indicate the hinge side for opening casements
+  const renderHingeIndicator = (x: number, y: number, width: number, height: number, hingeSide: 'left' | 'right' | 'center') => {
+    // Determine the points for the dashed line
+    let startX, startY, middleX, middleY, endX, endY;
     
-    // Adjust the positions based on whether this is a top or bottom section
-    const positionAdjusted = isTop ? 
-      (topCasementsOpenable === "none" ? "none" : position) : 
-      (openableCasements === "none" ? "none" : position);
-    
-    if (positionAdjusted === "none") return null;
-    
-    // Determine the hinge and opening positions
-    const isLeft = positionAdjusted === "left" || positionAdjusted === "both" || positionAdjusted === "center-left";
-    const isRight = positionAdjusted === "right" || positionAdjusted === "both" || positionAdjusted === "center-right";
-    const isCenter = positionAdjusted === "center-left" || positionAdjusted === "center-right";
+    if (hingeSide === 'left') {
+      // If hinges are on the left, line starts at top right, goes to middle left, then to bottom right
+      startX = x + width; // Top right corner X
+      startY = y;         // Top right corner Y
+      middleX = x;        // Middle left X
+      middleY = y + (height / 2); // Middle left Y
+      endX = x + width;   // Bottom right corner X
+      endY = y + height;  // Bottom right corner Y
+    } else if (hingeSide === 'right') {
+      // If hinges are on the right, line starts at top left, goes to middle right, then to bottom left
+      startX = x;         // Top left corner X
+      startY = y;         // Top left corner Y
+      middleX = x + width; // Middle right X
+      middleY = y + (height / 2); // Middle right Y
+      endX = x;          // Bottom left corner X
+      endY = y + height; // Bottom left corner Y
+    } else if (hingeSide === 'center') {
+      // If center opening (like a door), draw a vertical line down the middle
+      startX = x + (width / 2); // Top middle X
+      startY = y;              // Top middle Y
+      middleX = x + (width / 2); // Middle X
+      middleY = y + (height / 2); // Middle Y
+      endX = x + (width / 2);   // Bottom middle X
+      endY = y + height;       // Bottom Y
+    }
     
     return (
-      <>
-        {/* Left side opening */}
-        {isLeft && !isCenter && (
-          <polyline 
-            points={`
-              ${x + 15 * scale},${y + 15 * scale} 
-              ${x + width / 2},${y + height / 2} 
-              ${x + 15 * scale},${y + height - 15 * scale}
-            `} 
-            stroke="#000" 
-            strokeWidth={1} 
-            strokeDasharray="5,5" 
-            fill="none" 
-          />
-        )}
-        
-        {/* Right side opening */}
-        {isRight && !isCenter && (
-          <polyline 
-            points={`
-              ${x + width - 15 * scale},${y + 15 * scale} 
-              ${x + width / 2},${y + height / 2} 
-              ${x + width - 15 * scale},${y + height - 15 * scale}
-            `} 
-            stroke="#000" 
-            strokeWidth={1} 
-            strokeDasharray="5,5" 
-            fill="none" 
-          />
-        )}
-        
-        {/* Center-left opening */}
-        {positionAdjusted === "center-left" && (
-          <polyline 
-            points={`
-              ${x + width / 2 - 30 * scale},${y + 15 * scale} 
-              ${x + width / 2 - 15 * scale},${y + height / 2} 
-              ${x + width / 2 - 30 * scale},${y + height - 15 * scale}
-            `} 
-            stroke="#000" 
-            strokeWidth={1} 
-            strokeDasharray="5,5" 
-            fill="none" 
-          />
-        )}
-        
-        {/* Center-right opening */}
-        {positionAdjusted === "center-right" && (
-          <polyline 
-            points={`
-              ${x + width / 2 + 30 * scale},${y + 15 * scale} 
-              ${x + width / 2 + 15 * scale},${y + height / 2} 
-              ${x + width / 2 + 30 * scale},${y + height - 15 * scale}
-            `} 
-            stroke="#000" 
-            strokeWidth={1} 
-            strokeDasharray="5,5" 
-            fill="none" 
-          />
-        )}
-      </>
+      <polyline
+        points={`${startX},${startY} ${middleX},${middleY} ${endX},${endY}`}
+        fill="none"
+        stroke="#334155"
+        strokeWidth="1"
+        strokeDasharray="3,3"
+      />
     );
   };
   
@@ -179,704 +164,668 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   
   // Render the appropriate window based on type
   const renderWindow = () => {
-    // Calculate scaled transom height once before using it
-    const scaledTransomHeight = transomHeight * scale;
-    
     switch (windowConfig.id) {
-      case "quad":
-      case "quad-transom": {
-        // Check if it's the transom version
-        const hasQuadTransom = windowConfig.id === "quad-transom";
-        const quadTransomHeight = hasQuadTransom ? scaledTransomHeight : 0;
-        
+      case "single":
         return (
           <>
-            {/* Frame */}
+            {/* Outer Frame */}
             <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
             
             {/* Glass */}
             <rect 
-              x={FRAME_THICKNESS * scale} 
-              y={FRAME_THICKNESS * scale} 
-              width={innerWidth} 
-              height={innerHeight} 
-              className="window-glass"
-              fill={glassType === "Obscure" ? "url(#pattern-obscure)" : "none"} 
+              x={frameInset} 
+              y={frameInset} 
+              width={svgWidth - (frameInset * 2)} 
+              height={svgHeight - (frameInset * 2)} 
+              fill="none" 
+              stroke="none" 
             />
             
-            {/* Mullions */}
-            {/* Horizontal mullion */}
-            <rect 
-              x={FRAME_THICKNESS * scale} 
-              y={(svgHeight / 2) - (mullionWidth / 2)} 
-              width={innerWidth} 
-              height={mullionWidth} 
-              className="window-mullion" 
-            />
-            
-            {/* Vertical mullion */}
-            <rect 
-              x={(svgWidth / 2) - (mullionWidth / 2)} 
-              y={FRAME_THICKNESS * scale} 
-              width={mullionWidth} 
-              height={innerHeight} 
-              className="window-mullion" 
-            />
-            
-            {/* Transom bar if needed */}
-            {hasQuadTransom && (
-              <rect 
-                x={FRAME_THICKNESS * scale} 
-                y={FRAME_THICKNESS * scale + quadTransomHeight}
-                width={innerWidth} 
-                height={mullionWidth} 
-                className="window-mullion" 
-              />
+            {/* Georgian bars if enabled */}
+            {renderGeorgianBars(
+              frameInset,
+              frameInset,
+              svgWidth - (frameInset * 2),
+              svgHeight - (frameInset * 2)
             )}
             
-            {/* Internal borders - top left */}
+            {/* Casement indicators */}
             <rect 
-              x={FRAME_THICKNESS * scale} 
-              y={FRAME_THICKNESS * scale} 
-              width={innerBorderWidth} 
-              height={hasQuadTransom ? quadTransomHeight : innerHeight / 2} 
-              className="inner-border" 
-            />
-            <rect 
-              x={FRAME_THICKNESS * scale} 
-              y={FRAME_THICKNESS * scale} 
-              width={(innerWidth / 2) - (mullionWidth / 2)} 
-              height={innerBorderWidth} 
-              className="inner-border" 
+              x={frameInset - 1} 
+              y={frameInset - 1} 
+              width={svgWidth - (frameInset * 2) + 2} 
+              height={svgHeight - (frameInset * 2) + 2} 
+              fill="none" 
+              className="window-casement" 
             />
             
-            {/* Internal borders - top right */}
+            {/* Inner border 50mm wide with light blue fill */}
             <rect 
-              x={(svgWidth / 2) + (mullionWidth / 2)} 
-              y={FRAME_THICKNESS * scale} 
-              width={innerBorderWidth} 
-              height={hasQuadTransom ? quadTransomHeight : innerHeight / 2} 
-              className="inner-border" 
-            />
-            <rect 
-              x={(svgWidth / 2) + (mullionWidth / 2)} 
-              y={FRAME_THICKNESS * scale} 
-              width={(innerWidth / 2) - (mullionWidth / 2)} 
-              height={innerBorderWidth} 
-              className="inner-border" 
+              x={frameInset + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={svgWidth - ((frameInset + innerBorderWidth) * 2)} 
+              height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+              className="window-casement-interior"
             />
             
-            {/* Internal borders - bottom left */}
-            <rect 
-              x={FRAME_THICKNESS * scale} 
-              y={hasQuadTransom 
-                ? FRAME_THICKNESS * scale + quadTransomHeight + mullionWidth 
-                : (svgHeight / 2) + (mullionWidth / 2)} 
-              width={innerBorderWidth} 
-              height={hasQuadTransom 
-                ? innerHeight - quadTransomHeight - mullionWidth 
-                : innerHeight / 2} 
-              className="inner-border" 
-            />
-            <rect 
-              x={FRAME_THICKNESS * scale} 
-              y={svgHeight - FRAME_THICKNESS * scale - innerBorderWidth} 
-              width={(innerWidth / 2) - (mullionWidth / 2)} 
-              height={innerBorderWidth} 
-              className="inner-border" 
-            />
-            
-            {/* Internal borders - bottom right */}
-            <rect 
-              x={(svgWidth / 2) + (mullionWidth / 2)} 
-              y={hasQuadTransom 
-                ? FRAME_THICKNESS * scale + quadTransomHeight + mullionWidth 
-                : (svgHeight / 2) + (mullionWidth / 2)} 
-              width={innerBorderWidth} 
-              height={hasQuadTransom 
-                ? innerHeight - quadTransomHeight - mullionWidth 
-                : innerHeight / 2} 
-              className="inner-border" 
-            />
-            <rect 
-              x={(svgWidth / 2) + (mullionWidth / 2)} 
-              y={svgHeight - FRAME_THICKNESS * scale - innerBorderWidth} 
-              width={(innerWidth / 2) - (mullionWidth / 2)} 
-              height={innerBorderWidth} 
-              className="inner-border" 
-            />
-            
-            {/* Render opening indicators */}
-            {/* Top left */}
-            {renderOpeningIndicator(
-              FRAME_THICKNESS * scale + innerBorderWidth, 
-              FRAME_THICKNESS * scale + innerBorderWidth, 
-              (innerWidth / 2) - innerBorderWidth - mullionWidth / 2, 
-              (hasQuadTransom ? quadTransomHeight : innerHeight / 2) - innerBorderWidth * 2, 
-              hasQuadTransom ? topCasementsOpenable : openableCasements,
-              hasQuadTransom
+            {/* Hinge indicators based on which casements can open */}
+            {(openableCasements === "left" || openableCasements === "both") && (
+              renderHingeIndicator(
+                frameInset, 
+                frameInset, 
+                svgWidth - (frameInset * 2), 
+                svgHeight - (frameInset * 2), 
+                'left'
+              )
             )}
             
-            {/* Top right */}
-            {renderOpeningIndicator(
-              (svgWidth / 2) + (mullionWidth / 2) + innerBorderWidth, 
-              FRAME_THICKNESS * scale + innerBorderWidth, 
-              (innerWidth / 2) - innerBorderWidth - mullionWidth / 2, 
-              (hasQuadTransom ? quadTransomHeight : innerHeight / 2) - innerBorderWidth * 2, 
-              hasQuadTransom ? topCasementsOpenable : openableCasements,
-              hasQuadTransom
-            )}
-            
-            {/* Bottom left */}
-            {renderOpeningIndicator(
-              FRAME_THICKNESS * scale + innerBorderWidth, 
-              (hasQuadTransom 
-                ? FRAME_THICKNESS * scale + quadTransomHeight + mullionWidth + innerBorderWidth 
-                : (svgHeight / 2) + (mullionWidth / 2) + innerBorderWidth), 
-              (innerWidth / 2) - innerBorderWidth - mullionWidth / 2, 
-              (hasQuadTransom 
-                ? innerHeight - quadTransomHeight - mullionWidth - innerBorderWidth * 2 
-                : (innerHeight / 2) - innerBorderWidth * 2), 
-              openableCasements
-            )}
-            
-            {/* Bottom right */}
-            {renderOpeningIndicator(
-              (svgWidth / 2) + (mullionWidth / 2) + innerBorderWidth, 
-              (hasQuadTransom 
-                ? FRAME_THICKNESS * scale + quadTransomHeight + mullionWidth + innerBorderWidth 
-                : (svgHeight / 2) + (mullionWidth / 2) + innerBorderWidth), 
-              (innerWidth / 2) - innerBorderWidth - mullionWidth / 2, 
-              (hasQuadTransom 
-                ? innerHeight - quadTransomHeight - mullionWidth - innerBorderWidth * 2 
-                : (innerHeight / 2) - innerBorderWidth * 2), 
-              openableCasements
-            )}
-            
-            {/* Georgian bars for each section */}
-            {hasGeorgianBars && (
-              <>
-                {/* Top left Georgian bars */}
-                {renderGeorgianBars(
-                  FRAME_THICKNESS * scale + innerBorderWidth, 
-                  FRAME_THICKNESS * scale + innerBorderWidth, 
-                  (innerWidth / 2) - innerBorderWidth - mullionWidth / 2, 
-                  (hasQuadTransom ? quadTransomHeight : innerHeight / 2) - innerBorderWidth * 2
-                )}
-                
-                {/* Top right Georgian bars */}
-                {renderGeorgianBars(
-                  (svgWidth / 2) + (mullionWidth / 2) + innerBorderWidth, 
-                  FRAME_THICKNESS * scale + innerBorderWidth, 
-                  (innerWidth / 2) - innerBorderWidth - mullionWidth / 2, 
-                  (hasQuadTransom ? quadTransomHeight : innerHeight / 2) - innerBorderWidth * 2
-                )}
-                
-                {/* Bottom left Georgian bars */}
-                {renderGeorgianBars(
-                  FRAME_THICKNESS * scale + innerBorderWidth, 
-                  (hasQuadTransom 
-                    ? FRAME_THICKNESS * scale + quadTransomHeight + mullionWidth + innerBorderWidth 
-                    : (svgHeight / 2) + (mullionWidth / 2) + innerBorderWidth), 
-                  (innerWidth / 2) - innerBorderWidth - mullionWidth / 2, 
-                  (hasQuadTransom 
-                    ? innerHeight - quadTransomHeight - mullionWidth - innerBorderWidth * 2 
-                    : (innerHeight / 2) - innerBorderWidth * 2)
-                )}
-                
-                {/* Bottom right Georgian bars */}
-                {renderGeorgianBars(
-                  (svgWidth / 2) + (mullionWidth / 2) + innerBorderWidth, 
-                  (hasQuadTransom 
-                    ? FRAME_THICKNESS * scale + quadTransomHeight + mullionWidth + innerBorderWidth 
-                    : (svgHeight / 2) + (mullionWidth / 2) + innerBorderWidth), 
-                  (innerWidth / 2) - innerBorderWidth - mullionWidth / 2, 
-                  (hasQuadTransom 
-                    ? innerHeight - quadTransomHeight - mullionWidth - innerBorderWidth * 2 
-                    : (innerHeight / 2) - innerBorderWidth * 2)
-                )}
-              </>
+            {(openableCasements === "right" || openableCasements === "both") && (
+              renderHingeIndicator(
+                frameInset, 
+                frameInset, 
+                svgWidth - (frameInset * 2), 
+                svgHeight - (frameInset * 2), 
+                'right'
+              )
             )}
           </>
         );
-      }
-    
-      case "triple":
-      case "triple-transom": {
-        const hasTripleTransom = windowConfig.id === "triple-transom";
-        const tripleTransomHeight = hasTripleTransom ? scaledTransomHeight : 0;
-        
-        // Calculate section width (accounting for mullions)
-        const sectionWidth = (innerWidth - (mullionWidth * 2)) / 3;
+      
+      case "single-transom":
+        // Calculate the scaled transom height, default to 400mm if not specified
+        const scaledTransomHeight = (transomHeight ?? 400) * scaleFactor;
         
         return (
           <>
-            {/* Frame */}
+            {/* Outer Frame */}
             <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
             
             {/* Glass */}
             <rect 
-              x={FRAME_THICKNESS * scale} 
-              y={FRAME_THICKNESS * scale} 
-              width={innerWidth} 
-              height={innerHeight} 
-              className="window-glass"
-              fill={glassType === "Obscure" ? "url(#pattern-obscure)" : "none"}  
+              x={frameInset} 
+              y={frameInset} 
+              width={svgWidth - (frameInset * 2)} 
+              height={svgHeight - (frameInset * 2)} 
+              fill="none" 
+              stroke="none" 
             />
             
-            {/* Mullions */}
-            {/* First vertical mullion */}
+            {/* Horizontal transom bar - position based on transom height parameter */}
             <rect 
-              x={FRAME_THICKNESS * scale + sectionWidth} 
-              y={FRAME_THICKNESS * scale} 
-              width={mullionWidth} 
-              height={innerHeight} 
+              x={frameInset} 
+              y={frameInset + scaledTransomHeight} 
+              width={svgWidth - (frameInset * 2)} 
+              height={mullionThickness} 
               className="window-mullion" 
             />
             
-            {/* Second vertical mullion */}
+            {/* Upper fixed casement - height based on transom height parameter */}
             <rect 
-              x={FRAME_THICKNESS * scale + sectionWidth * 2 + mullionWidth} 
-              y={FRAME_THICKNESS * scale} 
-              width={mullionWidth} 
-              height={innerHeight} 
-              className="window-mullion" 
+              x={frameInset - 1} 
+              y={frameInset - 1} 
+              width={svgWidth - (frameInset * 2) + 2} 
+              height={scaledTransomHeight + 1} 
+              fill="none" 
+              className="window-casement" 
             />
             
-            {/* Transom bar if needed */}
-            {hasTripleTransom && (
-              <rect 
-                x={FRAME_THICKNESS * scale} 
-                y={FRAME_THICKNESS * scale + tripleTransomHeight}
-                width={innerWidth} 
-                height={mullionWidth} 
-                className="window-mullion" 
-              />
+            {/* Upper casement inner border 50mm wide with light blue fill */}
+            <rect 
+              x={frameInset + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={svgWidth - ((frameInset + innerBorderWidth) * 2)} 
+              height={scaledTransomHeight - (innerBorderWidth * 2)} 
+              className="window-casement-interior"
+            />
+            
+            {/* Lower opening casement - position based on transom height parameter */}
+            <rect 
+              x={frameInset - 1} 
+              y={frameInset + scaledTransomHeight + mullionThickness - 1} 
+              width={svgWidth - (frameInset * 2) + 2} 
+              height={svgHeight - frameInset - scaledTransomHeight - mullionThickness} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Lower casement inner border 50mm wide with light blue fill */}
+            <rect 
+              x={frameInset + innerBorderWidth} 
+              y={frameInset + scaledTransomHeight + mullionThickness + innerBorderWidth} 
+              width={svgWidth - ((frameInset + innerBorderWidth) * 2)} 
+              height={svgHeight - frameInset - scaledTransomHeight - mullionThickness - innerBorderWidth * 2} 
+              className="window-casement-interior"
+            />
+            
+            {/* Georgian bars if enabled */}
+            {renderGeorgianBars(
+              frameInset,
+              frameInset,
+              svgWidth - (frameInset * 2),
+              svgHeight - (frameInset * 2)
             )}
             
-            {/* Internal borders - left section */}
-            <rect 
-              x={FRAME_THICKNESS * scale} 
-              y={FRAME_THICKNESS * scale} 
-              width={innerBorderWidth} 
-              height={hasTripleTransom ? tripleTransomHeight : innerHeight} 
-              className="inner-border" 
-            />
-            <rect 
-              x={FRAME_THICKNESS * scale} 
-              y={FRAME_THICKNESS * scale} 
-              width={sectionWidth} 
-              height={innerBorderWidth} 
-              className="inner-border" 
-            />
-            
-            {/* Internal borders - middle section */}
-            <rect 
-              x={FRAME_THICKNESS * scale + sectionWidth + mullionWidth} 
-              y={FRAME_THICKNESS * scale} 
-              width={sectionWidth} 
-              height={innerBorderWidth} 
-              className="inner-border" 
-            />
-            
-            {/* Internal borders - right section */}
-            <rect 
-              x={FRAME_THICKNESS * scale + sectionWidth * 2 + mullionWidth * 2} 
-              y={FRAME_THICKNESS * scale} 
-              width={innerBorderWidth} 
-              height={hasTripleTransom ? tripleTransomHeight : innerHeight} 
-              className="inner-border" 
-            />
-            <rect 
-              x={FRAME_THICKNESS * scale + sectionWidth * 2 + mullionWidth * 2} 
-              y={FRAME_THICKNESS * scale} 
-              width={sectionWidth} 
-              height={innerBorderWidth} 
-              className="inner-border" 
-            />
-            
-            {/* Bottom borders */}
-            <rect 
-              x={FRAME_THICKNESS * scale} 
-              y={svgHeight - FRAME_THICKNESS * scale - innerBorderWidth} 
-              width={sectionWidth} 
-              height={innerBorderWidth} 
-              className="inner-border" 
-            />
-            <rect 
-              x={FRAME_THICKNESS * scale + sectionWidth + mullionWidth} 
-              y={svgHeight - FRAME_THICKNESS * scale - innerBorderWidth} 
-              width={sectionWidth} 
-              height={innerBorderWidth} 
-              className="inner-border" 
-            />
-            <rect 
-              x={FRAME_THICKNESS * scale + sectionWidth * 2 + mullionWidth * 2} 
-              y={svgHeight - FRAME_THICKNESS * scale - innerBorderWidth} 
-              width={sectionWidth} 
-              height={innerBorderWidth} 
-              className="inner-border" 
-            />
-            
-            {/* Add bottom internal borders for transom window */}
-            {hasTripleTransom && (
+            {/* Hinge indicators for the top casement - with hinges at the top */}
+            {(topCasementsOpenable === "left" || topCasementsOpenable === "both") && (
               <>
-                <rect 
-                  x={FRAME_THICKNESS * scale} 
-                  y={FRAME_THICKNESS * scale + tripleTransomHeight + mullionWidth} 
-                  width={innerBorderWidth} 
-                  height={innerHeight - tripleTransomHeight - mullionWidth} 
-                  className="inner-border" 
-                />
-                <rect 
-                  x={FRAME_THICKNESS * scale + sectionWidth * 2 + mullionWidth * 2} 
-                  y={FRAME_THICKNESS * scale + tripleTransomHeight + mullionWidth} 
-                  width={innerBorderWidth} 
-                  height={innerHeight - tripleTransomHeight - mullionWidth} 
-                  className="inner-border" 
+                {/* Left top casement - hinged at top */}
+                <path 
+                  d={`M ${frameInset} ${frameInset + scaledTransomHeight - 5} 
+                      L ${frameInset + (svgWidth/4)} ${frameInset} 
+                      L ${svgWidth/2 - frameInset/2} ${frameInset + scaledTransomHeight - 5}`}
+                  stroke="black" 
+                  strokeDasharray="5,5" 
+                  strokeWidth="1"
+                  fill="none"
                 />
               </>
             )}
             
-            {/* Render opening indicators */}
-            {/* Left section */}
-            {renderOpeningIndicator(
-              FRAME_THICKNESS * scale + innerBorderWidth, 
-              FRAME_THICKNESS * scale + innerBorderWidth, 
-              sectionWidth - innerBorderWidth, 
-              (hasTripleTransom ? tripleTransomHeight : innerHeight) - innerBorderWidth * 2, 
-              hasTripleTransom ? topCasementsOpenable : openableCasements,
-              hasTripleTransom
-            )}
-            
-            {/* Middle section - special case for center opening */}
-            {renderOpeningIndicator(
-              FRAME_THICKNESS * scale + sectionWidth + mullionWidth, 
-              FRAME_THICKNESS * scale + innerBorderWidth, 
-              sectionWidth, 
-              (hasTripleTransom ? tripleTransomHeight : innerHeight) - innerBorderWidth * 2, 
-              // The middle section can only be opened in triple windows with center-left or center-right
-              ["triple", "triple-transom"].includes(windowConfig.id) && 
-              ["center-left", "center-right"].includes(hasTripleTransom ? topCasementsOpenable : openableCasements) 
-                ? (hasTripleTransom ? topCasementsOpenable : openableCasements)
-                : "none",
-              hasTripleTransom
-            )}
-            
-            {/* Right section */}
-            {renderOpeningIndicator(
-              FRAME_THICKNESS * scale + sectionWidth * 2 + mullionWidth * 2 + innerBorderWidth, 
-              FRAME_THICKNESS * scale + innerBorderWidth, 
-              sectionWidth - innerBorderWidth, 
-              (hasTripleTransom ? tripleTransomHeight : innerHeight) - innerBorderWidth * 2, 
-              hasTripleTransom ? topCasementsOpenable : openableCasements,
-              hasTripleTransom
-            )}
-            
-            {/* Add bottom section opening indicators for transom window */}
-            {hasTripleTransom && (
+            {(topCasementsOpenable === "right" || topCasementsOpenable === "both") && (
               <>
-                {/* Left bottom section */}
-                {renderOpeningIndicator(
-                  FRAME_THICKNESS * scale + innerBorderWidth, 
-                  FRAME_THICKNESS * scale + tripleTransomHeight + mullionWidth + innerBorderWidth, 
-                  sectionWidth - innerBorderWidth, 
-                  innerHeight - tripleTransomHeight - mullionWidth - innerBorderWidth * 2, 
-                  openableCasements
-                )}
-                
-                {/* Middle bottom section */}
-                {renderOpeningIndicator(
-                  FRAME_THICKNESS * scale + sectionWidth + mullionWidth, 
-                  FRAME_THICKNESS * scale + tripleTransomHeight + mullionWidth + innerBorderWidth, 
-                  sectionWidth, 
-                  innerHeight - tripleTransomHeight - mullionWidth - innerBorderWidth * 2, 
-                  // The middle section can only be opened in triple windows with center-left or center-right
-                  ["triple", "triple-transom"].includes(windowConfig.id) && 
-                  ["center-left", "center-right"].includes(openableCasements) 
-                    ? openableCasements
-                    : "none"
-                )}
-                
-                {/* Right bottom section */}
-                {renderOpeningIndicator(
-                  FRAME_THICKNESS * scale + sectionWidth * 2 + mullionWidth * 2 + innerBorderWidth, 
-                  FRAME_THICKNESS * scale + tripleTransomHeight + mullionWidth + innerBorderWidth, 
-                  sectionWidth - innerBorderWidth, 
-                  innerHeight - tripleTransomHeight - mullionWidth - innerBorderWidth * 2, 
-                  openableCasements
-                )}
+                {/* Right top casement - hinged at top */}
+                <path 
+                  d={`M ${svgWidth/2 + frameInset/2} ${frameInset + scaledTransomHeight - 5} 
+                      L ${frameInset + (svgWidth*3/4)} ${frameInset} 
+                      L ${svgWidth - frameInset} ${frameInset + scaledTransomHeight - 5}`}
+                  stroke="black" 
+                  strokeDasharray="5,5" 
+                  strokeWidth="1"
+                  fill="none"
+                />
               </>
             )}
             
-            {/* Georgian bars for each section */}
-            {hasGeorgianBars && (
+            {topCasementsOpenable === "center-left" && (
               <>
-                {/* Left section */}
-                {renderGeorgianBars(
-                  FRAME_THICKNESS * scale + innerBorderWidth, 
-                  FRAME_THICKNESS * scale + innerBorderWidth, 
-                  sectionWidth - innerBorderWidth, 
-                  (hasTripleTransom ? tripleTransomHeight : innerHeight) - innerBorderWidth * 2
-                )}
-                
-                {/* Middle section */}
-                {renderGeorgianBars(
-                  FRAME_THICKNESS * scale + sectionWidth + mullionWidth, 
-                  FRAME_THICKNESS * scale + innerBorderWidth, 
-                  sectionWidth, 
-                  (hasTripleTransom ? tripleTransomHeight : innerHeight) - innerBorderWidth * 2
-                )}
-                
-                {/* Right section */}
-                {renderGeorgianBars(
-                  FRAME_THICKNESS * scale + sectionWidth * 2 + mullionWidth * 2 + innerBorderWidth, 
-                  FRAME_THICKNESS * scale + innerBorderWidth, 
-                  sectionWidth - innerBorderWidth, 
-                  (hasTripleTransom ? tripleTransomHeight : innerHeight) - innerBorderWidth * 2
-                )}
-                
-                {/* Add bottom section Georgian bars for transom window */}
-                {hasTripleTransom && (
-                  <>
-                    {/* Left bottom section */}
-                    {renderGeorgianBars(
-                      FRAME_THICKNESS * scale + innerBorderWidth, 
-                      FRAME_THICKNESS * scale + tripleTransomHeight + mullionWidth + innerBorderWidth, 
-                      sectionWidth - innerBorderWidth, 
-                      innerHeight - tripleTransomHeight - mullionWidth - innerBorderWidth * 2
-                    )}
-                    
-                    {/* Middle bottom section */}
-                    {renderGeorgianBars(
-                      FRAME_THICKNESS * scale + sectionWidth + mullionWidth, 
-                      FRAME_THICKNESS * scale + tripleTransomHeight + mullionWidth + innerBorderWidth, 
-                      sectionWidth, 
-                      innerHeight - tripleTransomHeight - mullionWidth - innerBorderWidth * 2
-                    )}
-                    
-                    {/* Right bottom section */}
-                    {renderGeorgianBars(
-                      FRAME_THICKNESS * scale + sectionWidth * 2 + mullionWidth * 2 + innerBorderWidth, 
-                      FRAME_THICKNESS * scale + tripleTransomHeight + mullionWidth + innerBorderWidth, 
-                      sectionWidth - innerBorderWidth, 
-                      innerHeight - tripleTransomHeight - mullionWidth - innerBorderWidth * 2
-                    )}
-                  </>
-                )}
+                {/* Center-left top casement - hinged at top */}
+                <path 
+                  d={`M ${svgWidth/2 - svgWidth/6} ${frameInset + scaledTransomHeight - 5} 
+                      L ${svgWidth/2 - svgWidth/12} ${frameInset} 
+                      L ${svgWidth/2} ${frameInset + scaledTransomHeight - 5}`}
+                  stroke="black" 
+                  strokeDasharray="5,5" 
+                  strokeWidth="1"
+                  fill="none"
+                />
               </>
+            )}
+            
+            {topCasementsOpenable === "center-right" && (
+              <>
+                {/* Center-right top casement - hinged at top */}
+                <path 
+                  d={`M ${svgWidth/2} ${frameInset + scaledTransomHeight - 5} 
+                      L ${svgWidth/2 + svgWidth/12} ${frameInset} 
+                      L ${svgWidth/2 + svgWidth/6} ${frameInset + scaledTransomHeight - 5}`}
+                  stroke="black" 
+                  strokeDasharray="5,5" 
+                  strokeWidth="1"
+                  fill="none"
+                />
+              </>
+            )}
+            
+            {/* Hinge indicators for the lower casement */}
+            {(openableCasements === "left" || openableCasements === "both") && (
+              renderHingeIndicator(
+                frameInset, 
+                frameInset + scaledTransomHeight + mullionThickness, 
+                svgWidth - (frameInset * 2), 
+                svgHeight - frameInset - scaledTransomHeight - mullionThickness, 
+                'left'
+              )
+            )}
+            
+            {(openableCasements === "right" || openableCasements === "both") && (
+              renderHingeIndicator(
+                frameInset, 
+                frameInset + scaledTransomHeight + mullionThickness, 
+                svgWidth - (frameInset * 2), 
+                svgHeight - frameInset - scaledTransomHeight - mullionThickness, 
+                'right'
+              )
+            )}
+            
+            {openableCasements === "center" && (
+              renderHingeIndicator(
+                frameInset, 
+                frameInset + scaledTransomHeight + mullionThickness, 
+                svgWidth - (frameInset * 2), 
+                svgHeight - frameInset - scaledTransomHeight - mullionThickness, 
+                'center'
+              )
             )}
           </>
         );
-      }
       
       case "double":
-      case "double-transom": {
-        const hasDoubleTransom = windowConfig.id === "double-transom";
-        const doubleTransomHeight = hasDoubleTransom ? scaledTransomHeight : 0;
-        
-        // Calculate section width (accounting for mullion)
-        const sectionWidth = (innerWidth - mullionWidth) / 2;
-        
         return (
           <>
-            {/* Frame */}
+            {/* Main frame */}
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
+            
+
+            
+            {/* Single glass pane */}
+            <rect 
+              x={frameInset} 
+              y={frameInset} 
+              width={svgWidth - (frameInset * 2)} 
+              height={svgHeight - (frameInset * 2)} 
+              fill="none" 
+              stroke="none" 
+            />
+            
+            {/* Georgian bars for entire window */}
+            {renderGeorgianBars(
+              frameInset,
+              frameInset,
+              svgWidth - (frameInset * 2),
+              svgHeight - (frameInset * 2)
+            )}
+            
+            {/* Left casement */}
+            <rect 
+              x={frameInset - 1} 
+              y={frameInset - 1} 
+              width={(svgWidth / 2) - frameInset - (frameThickness / 2) + 2} 
+              height={svgHeight - (frameInset * 2) + 2} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Left casement inner border 50mm wide with light blue fill */}
+            <rect 
+              x={frameInset + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={(svgWidth / 2) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2} 
+              height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+              className="window-casement-interior"
+            />
+            
+            {/* Right casement */}
+            <rect 
+              x={(svgWidth / 2) + (frameThickness / 2) - 1} 
+              y={frameInset - 1} 
+              width={(svgWidth / 2) - frameInset - (frameThickness / 2) + 2} 
+              height={svgHeight - (frameInset * 2) + 2} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Right casement inner border 50mm wide with light blue fill */}
+            <rect 
+              x={(svgWidth / 2) + (frameThickness / 2) + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={(svgWidth / 2) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2} 
+              height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+              className="window-casement-interior"
+            />
+            
+            {/* Hinge indicators for left and right casements */}
+            {(openableCasements === "left" || openableCasements === "both") && (
+              renderHingeIndicator(
+                frameInset, 
+                frameInset, 
+                (svgWidth / 2) - frameInset - (frameThickness / 2), 
+                svgHeight - (frameInset * 2), 
+                'left'
+              )
+            )}
+            
+            {(openableCasements === "right" || openableCasements === "both") && (
+              renderHingeIndicator(
+                (svgWidth / 2) + (frameThickness / 2), 
+                frameInset, 
+                (svgWidth / 2) - frameInset - (frameThickness / 2), 
+                svgHeight - (frameInset * 2), 
+                'right'
+              )
+            )}
+            
+            {openableCasements === "center" && (
+              <>
+                {/* Center opening - center split line */}
+                <path 
+                  d={`M ${svgWidth/2} ${frameInset} 
+                      L ${svgWidth/2} ${svgHeight - frameInset}`}
+                  stroke="black" 
+                  strokeDasharray="5,5" 
+                  strokeWidth="1"
+                  fill="none"
+                />
+              </>
+            )}
+          </>
+        );
+        
+      case "double-transom":
+        return (
+          <>
+            {/* Main frame */}
             <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
             
             {/* Glass */}
             <rect 
-              x={FRAME_THICKNESS * scale} 
-              y={FRAME_THICKNESS * scale} 
-              width={innerWidth} 
-              height={innerHeight} 
-              className="window-glass"
-              fill={glassType === "Obscure" ? "url(#pattern-obscure)" : "none"}  
+              x={frameInset} 
+              y={frameInset} 
+              width={svgWidth - (frameInset * 2)} 
+              height={svgHeight - (frameInset * 2)} 
+              fill="none" 
+              stroke="none" 
             />
             
-            {/* Mullions */}
-            {/* Vertical mullion */}
+            {/* Vertical mullion in the middle */}
             <rect 
-              x={(svgWidth / 2) - (mullionWidth / 2)} 
-              y={FRAME_THICKNESS * scale} 
-              width={mullionWidth} 
-              height={innerHeight} 
+              x={(svgWidth / 2) - (mullionThickness / 2)} 
+              y={frameInset} 
+              width={mullionThickness} 
+              height={svgHeight - (frameInset * 2)} 
               className="window-mullion" 
             />
             
-            {/* Transom bar if needed */}
-            {hasDoubleTransom && (
-              <rect 
-                x={FRAME_THICKNESS * scale} 
-                y={FRAME_THICKNESS * scale + doubleTransomHeight}
-                width={innerWidth} 
-                height={mullionWidth} 
-                className="window-mullion" 
-              />
+            {/* Horizontal transom bar - fixed at top 1/3 of the window */}
+            <rect 
+              x={frameInset} 
+              y={frameInset + (svgHeight / 3)} 
+              width={svgWidth - (frameInset * 2)} 
+              height={mullionThickness} 
+              className="window-mullion" 
+            />
+            
+            {/* Upper left fixed casement */}
+            <rect 
+              x={frameInset - 1} 
+              y={frameInset - 1} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) + 1} 
+              height={(svgHeight / 3) + 1} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Upper left casement inner border with light blue fill */}
+            <rect 
+              x={frameInset + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) - (innerBorderWidth * 2)} 
+              height={(svgHeight / 3) - (innerBorderWidth * 2)} 
+              className="window-casement-interior"
+            />
+            
+            {/* Upper right fixed casement */}
+            <rect 
+              x={(svgWidth / 2) + (mullionThickness / 2)} 
+              y={frameInset - 1} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) + 1} 
+              height={(svgHeight / 3) + 1} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Upper right casement inner border with light blue fill */}
+            <rect 
+              x={(svgWidth / 2) + (mullionThickness / 2) + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) - (innerBorderWidth * 2)} 
+              height={(svgHeight / 3) - (innerBorderWidth * 2)} 
+              className="window-casement-interior"
+            />
+            
+            {/* Lower left opening casement */}
+            <rect 
+              x={frameInset - 1} 
+              y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) + 1} 
+              height={svgHeight - frameInset - (svgHeight / 3) - mullionThickness} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Lower left casement inner border with light blue fill */}
+            <rect 
+              x={frameInset + innerBorderWidth} 
+              y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) - (innerBorderWidth * 2)} 
+              height={svgHeight - frameInset - (svgHeight / 3) - mullionThickness - (innerBorderWidth * 2)} 
+              className="window-casement-interior"
+            />
+            
+            {/* Lower right opening casement */}
+            <rect 
+              x={(svgWidth / 2) + (mullionThickness / 2)} 
+              y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) + 1} 
+              height={svgHeight - frameInset - (svgHeight / 3) - mullionThickness} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Lower right casement inner border with light blue fill */}
+            <rect 
+              x={(svgWidth / 2) + (mullionThickness / 2) + innerBorderWidth} 
+              y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) - (innerBorderWidth * 2)} 
+              height={svgHeight - frameInset - (svgHeight / 3) - mullionThickness - (innerBorderWidth * 2)} 
+              className="window-casement-interior"
+            />
+            
+            {/* Georgian bars if enabled */}
+            {renderGeorgianBars(
+              frameInset,
+              frameInset,
+              svgWidth - (frameInset * 2),
+              svgHeight - (frameInset * 2)
             )}
             
-            {/* Internal borders - left section */}
-            <rect 
-              x={FRAME_THICKNESS * scale} 
-              y={FRAME_THICKNESS * scale} 
-              width={innerBorderWidth} 
-              height={hasDoubleTransom ? doubleTransomHeight : innerHeight} 
-              className="inner-border" 
-            />
-            <rect 
-              x={FRAME_THICKNESS * scale} 
-              y={FRAME_THICKNESS * scale} 
-              width={sectionWidth} 
-              height={innerBorderWidth} 
-              className="inner-border" 
-            />
-            
-            {/* Internal borders - right section */}
-            <rect 
-              x={(svgWidth / 2) + (mullionWidth / 2)} 
-              y={FRAME_THICKNESS * scale} 
-              width={innerBorderWidth} 
-              height={hasDoubleTransom ? doubleTransomHeight : innerHeight} 
-              className="inner-border" 
-            />
-            <rect 
-              x={(svgWidth / 2) + (mullionWidth / 2)} 
-              y={FRAME_THICKNESS * scale} 
-              width={sectionWidth} 
-              height={innerBorderWidth} 
-              className="inner-border" 
-            />
-            
-            {/* Bottom borders */}
-            <rect 
-              x={FRAME_THICKNESS * scale} 
-              y={svgHeight - FRAME_THICKNESS * scale - innerBorderWidth} 
-              width={sectionWidth} 
-              height={innerBorderWidth} 
-              className="inner-border" 
-            />
-            <rect 
-              x={(svgWidth / 2) + (mullionWidth / 2)} 
-              y={svgHeight - FRAME_THICKNESS * scale - innerBorderWidth} 
-              width={sectionWidth} 
-              height={innerBorderWidth} 
-              className="inner-border" 
-            />
-            
-            {/* Add bottom internal borders for transom window */}
-            {hasDoubleTransom && (
-              <>
-                <rect 
-                  x={FRAME_THICKNESS * scale} 
-                  y={FRAME_THICKNESS * scale + doubleTransomHeight + mullionWidth} 
-                  width={innerBorderWidth} 
-                  height={innerHeight - doubleTransomHeight - mullionWidth} 
-                  className="inner-border" 
-                />
-                <rect 
-                  x={(svgWidth / 2) + (mullionWidth / 2)} 
-                  y={FRAME_THICKNESS * scale + doubleTransomHeight + mullionWidth} 
-                  width={innerBorderWidth} 
-                  height={innerHeight - doubleTransomHeight - mullionWidth} 
-                  className="inner-border" 
-                />
-              </>
+            {/* Hinge indicators for the lower casements */}
+            {(openableCasements === "left" || openableCasements === "both") && (
+              renderHingeIndicator(
+                frameInset, 
+                frameInset + (svgHeight / 3) + mullionThickness, 
+                (svgWidth / 2) - frameInset - (mullionThickness / 2), 
+                (svgHeight * 2/3) - frameInset - mullionThickness, 
+                'left'
+              )
             )}
             
-            {/* Render opening indicators */}
-            {/* Left section */}
-            {renderOpeningIndicator(
-              FRAME_THICKNESS * scale + innerBorderWidth, 
-              FRAME_THICKNESS * scale + innerBorderWidth, 
-              sectionWidth - innerBorderWidth, 
-              (hasDoubleTransom ? doubleTransomHeight : innerHeight) - innerBorderWidth * 2, 
-              hasDoubleTransom ? topCasementsOpenable : openableCasements,
-              hasDoubleTransom
-            )}
-            
-            {/* Right section */}
-            {renderOpeningIndicator(
-              (svgWidth / 2) + (mullionWidth / 2) + innerBorderWidth, 
-              FRAME_THICKNESS * scale + innerBorderWidth, 
-              sectionWidth - innerBorderWidth, 
-              (hasDoubleTransom ? doubleTransomHeight : innerHeight) - innerBorderWidth * 2, 
-              hasDoubleTransom ? topCasementsOpenable : openableCasements,
-              hasDoubleTransom
-            )}
-            
-            {/* Add bottom section opening indicators for transom window */}
-            {hasDoubleTransom && (
-              <>
-                {/* Left bottom section */}
-                {renderOpeningIndicator(
-                  FRAME_THICKNESS * scale + innerBorderWidth, 
-                  FRAME_THICKNESS * scale + doubleTransomHeight + mullionWidth + innerBorderWidth, 
-                  sectionWidth - innerBorderWidth, 
-                  innerHeight - doubleTransomHeight - mullionWidth - innerBorderWidth * 2, 
-                  openableCasements
-                )}
-                
-                {/* Right bottom section */}
-                {renderOpeningIndicator(
-                  (svgWidth / 2) + (mullionWidth / 2) + innerBorderWidth, 
-                  FRAME_THICKNESS * scale + doubleTransomHeight + mullionWidth + innerBorderWidth, 
-                  sectionWidth - innerBorderWidth, 
-                  innerHeight - doubleTransomHeight - mullionWidth - innerBorderWidth * 2, 
-                  openableCasements
-                )}
-              </>
-            )}
-            
-            {/* Georgian bars for each section */}
-            {hasGeorgianBars && (
-              <>
-                {/* Left section */}
-                {renderGeorgianBars(
-                  FRAME_THICKNESS * scale + innerBorderWidth, 
-                  FRAME_THICKNESS * scale + innerBorderWidth, 
-                  sectionWidth - innerBorderWidth, 
-                  (hasDoubleTransom ? doubleTransomHeight : innerHeight) - innerBorderWidth * 2
-                )}
-                
-                {/* Right section */}
-                {renderGeorgianBars(
-                  (svgWidth / 2) + (mullionWidth / 2) + innerBorderWidth, 
-                  FRAME_THICKNESS * scale + innerBorderWidth, 
-                  sectionWidth - innerBorderWidth, 
-                  (hasDoubleTransom ? doubleTransomHeight : innerHeight) - innerBorderWidth * 2
-                )}
-                
-                {/* Add bottom section Georgian bars for transom window */}
-                {hasDoubleTransom && (
-                  <>
-                    {/* Left bottom section */}
-                    {renderGeorgianBars(
-                      FRAME_THICKNESS * scale + innerBorderWidth, 
-                      FRAME_THICKNESS * scale + doubleTransomHeight + mullionWidth + innerBorderWidth, 
-                      sectionWidth - innerBorderWidth, 
-                      innerHeight - doubleTransomHeight - mullionWidth - innerBorderWidth * 2
-                    )}
-                    
-                    {/* Right bottom section */}
-                    {renderGeorgianBars(
-                      (svgWidth / 2) + (mullionWidth / 2) + innerBorderWidth, 
-                      FRAME_THICKNESS * scale + doubleTransomHeight + mullionWidth + innerBorderWidth, 
-                      sectionWidth - innerBorderWidth, 
-                      innerHeight - doubleTransomHeight - mullionWidth - innerBorderWidth * 2
-                    )}
-                  </>
-                )}
-              </>
+            {(openableCasements === "right" || openableCasements === "both") && (
+              renderHingeIndicator(
+                (svgWidth / 2) + (mullionThickness / 2), 
+                frameInset + (svgHeight / 3) + mullionThickness, 
+                (svgWidth / 2) - frameInset - (mullionThickness / 2), 
+                (svgHeight * 2/3) - frameInset - mullionThickness, 
+                'right'
+              )
             )}
           </>
         );
-      }
       
-      case "single":
-      case "single-transom":
-      default: {
-        const hasSingleTransom = windowConfig.id === "single-transom";
-        const singleTransomHeight = hasSingleTransom ? scaledTransomHeight : 0;
+      case "triple":
+        return (
+          <>
+            {/* Frame */}
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
+            
+
+            
+            {/* Single glass pane */}
+            <rect 
+              x={frameInset} 
+              y={frameInset} 
+              width={svgWidth - (frameInset * 2)} 
+              height={svgHeight - (frameInset * 2)} 
+              fill="none" 
+              stroke="none" 
+            />
+            
+            {/* Georgian bars for entire window */}
+            {renderGeorgianBars(
+              frameInset,
+              frameInset,
+              svgWidth - (frameInset * 2),
+              svgHeight - (frameInset * 2)
+            )}
+            
+            {/* Casements for each section - Equal division of width for all three sections */}
+            {/* Calculate section width with equal divisions */}
+            {(() => {
+              // Calculate the effective total width for dividing (minus frame insets on both sides)
+              const effectiveWidth = svgWidth - (frameInset * 2);
+              // Each section gets exactly one third of the effective width
+              const sectionWidth = effectiveWidth / 3;
+              
+              return (
+                <>
+                  {/* Left casement */}
+                  <rect 
+                    x={frameInset - 1} 
+                    y={frameInset - 1} 
+                    width={sectionWidth - (mullionThickness/2) + 1} 
+                    height={svgHeight - (frameInset * 2) + 2} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Left casement inner border 50mm wide with light blue fill */}
+                  <rect 
+                    x={frameInset + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1} 
+                    height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Middle casement */}
+                  <rect 
+                    x={frameInset + sectionWidth + (mullionThickness/2)} 
+                    y={frameInset - 1} 
+                    width={sectionWidth - mullionThickness + 2} 
+                    height={svgHeight - (frameInset * 2) + 2} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Middle casement inner border 50mm wide with light blue fill */}
+                  <rect 
+                    x={frameInset + sectionWidth + (mullionThickness/2) + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - mullionThickness - (innerBorderWidth * 2) + 2} 
+                    height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Right casement */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) + (mullionThickness/2)} 
+                    y={frameInset - 1} 
+                    width={sectionWidth - (mullionThickness/2) + 1} 
+                    height={svgHeight - (frameInset * 2) + 2} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Right casement inner border 50mm wide with light blue fill */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) + (mullionThickness/2) + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1} 
+                    height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+                    className="window-casement-interior"
+                  />
+                </>
+              );
+            })()}
+            
+            {/* Mullions (vertical dividers between sections) */}
+            {(() => {
+              // Calculate the effective total width for dividing (minus frame insets on both sides)
+              const effectiveWidth = svgWidth - (frameInset * 2);
+              // Each section gets exactly one third of the effective width
+              const sectionWidth = effectiveWidth / 3;
+              
+              return (
+                <>
+                  {/* First mullion (between left and middle) */}
+                  <rect 
+                    x={frameInset + sectionWidth - (mullionThickness / 2)} 
+                    y={frameInset} 
+                    width={mullionThickness} 
+                    height={svgHeight - (frameInset * 2)} 
+                    className="window-mullion" 
+                  />
+                  
+                  {/* Second mullion (between middle and right) */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) - (mullionThickness / 2)} 
+                    y={frameInset} 
+                    width={mullionThickness} 
+                    height={svgHeight - (frameInset * 2)} 
+                    className="window-mullion" 
+                  />
+                </>
+              );
+            })()}
+            
+            {/* Hinge indicators for left and right sections */}
+            {(() => {
+              // Calculate the effective total width for dividing (minus frame insets on both sides)
+              const effectiveWidth = svgWidth - (frameInset * 2);
+              // Each section gets exactly one third of the effective width
+              const sectionWidth = effectiveWidth / 3;
+              
+              return (
+                <>
+                  {/* Left section opening */}
+                  {(openableCasements === "left" || openableCasements === "both") && (
+                    renderHingeIndicator(
+                      frameInset, 
+                      frameInset, 
+                      sectionWidth, 
+                      svgHeight - (frameInset * 2), 
+                      'left'
+                    )
+                  )}
+                  
+                  {/* Right section opening */}
+                  {(openableCasements === "right" || openableCasements === "both") && (
+                    renderHingeIndicator(
+                      frameInset + (sectionWidth * 2), 
+                      frameInset, 
+                      sectionWidth, 
+                      svgHeight - (frameInset * 2), 
+                      'right'
+                    )
+                  )}
+                  
+                  {/* Center casement opening - hinged on the left */}
+                  {openableCasements === "center-left" && (
+                    renderHingeIndicator(
+                      frameInset + sectionWidth, 
+                      frameInset, 
+                      sectionWidth, 
+                      svgHeight - (frameInset * 2), 
+                      'left'
+                    )
+                  )}
+                  
+                  {/* Center casement opening - hinged on the right */}
+                  {openableCasements === "center-right" && (
+                    renderHingeIndicator(
+                      frameInset + sectionWidth, 
+                      frameInset, 
+                      sectionWidth, 
+                      svgHeight - (frameInset * 2), 
+                      'right'
+                    )
+                  )}
+                </>
+              );
+            })()}
+          </>
+        );
         
+      case "triple-transom":
         return (
           <>
             {/* Frame */}
@@ -884,169 +833,457 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             
             {/* Glass */}
             <rect 
-              x={FRAME_THICKNESS * scale} 
-              y={FRAME_THICKNESS * scale} 
-              width={innerWidth} 
-              height={innerHeight} 
-              className="window-glass"
-              fill={glassType === "Obscure" ? "url(#pattern-obscure)" : "none"}  
+              x={frameInset} 
+              y={frameInset} 
+              width={svgWidth - (frameInset * 2)} 
+              height={svgHeight - (frameInset * 2)} 
+              fill="none" 
+              stroke="none" 
             />
             
-            {/* Transom bar if needed */}
-            {hasSingleTransom && (
-              <rect 
-                x={FRAME_THICKNESS * scale} 
-                y={FRAME_THICKNESS * scale + singleTransomHeight}
-                width={innerWidth} 
-                height={mullionWidth} 
-                className="window-mullion" 
-              />
+            {/* Vertical mullions */}
+            {(() => {
+              // Calculate the effective total width for dividing (minus frame insets on both sides)
+              const effectiveWidth = svgWidth - (frameInset * 2);
+              // Each section gets exactly one third of the effective width
+              const sectionWidth = effectiveWidth / 3;
+              
+              return (
+                <>
+                  {/* First mullion (between left and middle) */}
+                  <rect 
+                    x={frameInset + sectionWidth - (mullionThickness / 2)} 
+                    y={frameInset} 
+                    width={mullionThickness} 
+                    height={svgHeight - (frameInset * 2)} 
+                    className="window-mullion" 
+                  />
+                  
+                  {/* Second mullion (between middle and right) */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) - (mullionThickness / 2)} 
+                    y={frameInset} 
+                    width={mullionThickness} 
+                    height={svgHeight - (frameInset * 2)} 
+                    className="window-mullion" 
+                  />
+                </>
+              );
+            })()}
+            
+            {/* Horizontal transom bar - fixed at top 1/3 of the window */}
+            <rect 
+              x={frameInset} 
+              y={frameInset + (svgHeight / 3)} 
+              width={svgWidth - (frameInset * 2)} 
+              height={mullionThickness} 
+              className="window-mullion" 
+            />
+            
+            {/* Upper casements, all with equal width */}
+            {(() => {
+              // Calculate the effective total width for dividing (minus frame insets on both sides)
+              const effectiveWidth = svgWidth - (frameInset * 2);
+              // Each section gets exactly one third of the effective width
+              const sectionWidth = effectiveWidth / 3;
+              
+              return (
+                <>
+                  {/* Upper left fixed casement */}
+                  <rect 
+                    x={frameInset - 1} 
+                    y={frameInset - 1} 
+                    width={sectionWidth - (mullionThickness/2) + 1} 
+                    height={(svgHeight / 3) + 1} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Upper left casement inner border with light blue fill */}
+                  <rect 
+                    x={frameInset + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1} 
+                    height={(svgHeight / 3) - (innerBorderWidth * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Upper middle fixed casement */}
+                  <rect 
+                    x={frameInset + sectionWidth + (mullionThickness/2)} 
+                    y={frameInset - 1} 
+                    width={sectionWidth - mullionThickness} 
+                    height={(svgHeight / 3) + 1} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Upper middle casement inner border with light blue fill */}
+                  <rect 
+                    x={frameInset + sectionWidth + (mullionThickness/2) + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - mullionThickness - (innerBorderWidth * 2)} 
+                    height={(svgHeight / 3) - (innerBorderWidth * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Upper right fixed casement */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) + (mullionThickness/2)} 
+                    y={frameInset - 1} 
+                    width={sectionWidth - (mullionThickness/2) + 1} 
+                    height={(svgHeight / 3) + 1} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Upper right casement inner border with light blue fill */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) + (mullionThickness/2) + innerBorderWidth} 
+                    y={frameInset + innerBorderWidth} 
+                    width={sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1} 
+                    height={(svgHeight / 3) - (innerBorderWidth * 2)} 
+                    className="window-casement-interior"
+                  />
+                </>
+              );
+            })()}
+            
+            {/* Lower casements with equal widths */}
+            {(() => {
+              // Calculate the effective total width for dividing (minus frame insets on both sides)
+              const effectiveWidth = svgWidth - (frameInset * 2);
+              // Each section gets exactly one third of the effective width
+              const sectionWidth = effectiveWidth / 3;
+              const lowerHeight = (svgHeight * 2/3) - frameInset - mullionThickness + 1;
+              
+              return (
+                <>
+                  {/* Lower left opening casement */}
+                  <rect 
+                    x={frameInset - 1} 
+                    y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
+                    width={sectionWidth - (mullionThickness/2) + 1} 
+                    height={lowerHeight} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Lower left casement inner border with light blue fill */}
+                  <rect 
+                    x={frameInset + innerBorderWidth} 
+                    y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
+                    width={sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1} 
+                    height={lowerHeight - (innerBorderWidth * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Lower middle casement */}
+                  <rect 
+                    x={frameInset + sectionWidth + (mullionThickness/2)} 
+                    y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
+                    width={sectionWidth - mullionThickness} 
+                    height={lowerHeight} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Lower middle casement inner border with light blue fill */}
+                  <rect 
+                    x={frameInset + sectionWidth + (mullionThickness/2) + innerBorderWidth} 
+                    y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
+                    width={sectionWidth - mullionThickness - (innerBorderWidth * 2)} 
+                    height={lowerHeight - (innerBorderWidth * 2)} 
+                    className="window-casement-interior"
+                  />
+                  
+                  {/* Lower right opening casement */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) + (mullionThickness/2)} 
+                    y={frameInset + (svgHeight / 3) + mullionThickness - 1} 
+                    width={sectionWidth - (mullionThickness/2) + 1} 
+                    height={lowerHeight} 
+                    fill="none" 
+                    className="window-casement" 
+                  />
+                  
+                  {/* Lower right casement inner border with light blue fill */}
+                  <rect 
+                    x={frameInset + (sectionWidth * 2) + (mullionThickness/2) + innerBorderWidth} 
+                    y={frameInset + (svgHeight / 3) + mullionThickness + innerBorderWidth} 
+                    width={sectionWidth - (mullionThickness/2) - (innerBorderWidth * 2) + 1} 
+                    height={lowerHeight - (innerBorderWidth * 2)} 
+                    className="window-casement-interior"
+                  />
+                </>
+              );
+            })()}
+            
+            {/* Georgian bars if enabled */}
+            {renderGeorgianBars(
+              frameInset,
+              frameInset,
+              svgWidth - (frameInset * 2),
+              svgHeight - (frameInset * 2)
             )}
             
-            {/* Internal borders */}
-            <rect 
-              x={FRAME_THICKNESS * scale} 
-              y={FRAME_THICKNESS * scale} 
-              width={innerBorderWidth} 
-              height={hasSingleTransom ? singleTransomHeight : innerHeight} 
-              className="inner-border" 
-            />
-            <rect 
-              x={FRAME_THICKNESS * scale} 
-              y={FRAME_THICKNESS * scale} 
-              width={innerWidth} 
-              height={innerBorderWidth} 
-              className="inner-border" 
-            />
-            <rect 
-              x={svgWidth - FRAME_THICKNESS * scale - innerBorderWidth} 
-              y={FRAME_THICKNESS * scale} 
-              width={innerBorderWidth} 
-              height={hasSingleTransom ? singleTransomHeight : innerHeight} 
-              className="inner-border" 
-            />
-            <rect 
-              x={FRAME_THICKNESS * scale} 
-              y={svgHeight - FRAME_THICKNESS * scale - innerBorderWidth} 
-              width={innerWidth} 
-              height={innerBorderWidth} 
-              className="inner-border" 
-            />
-            
-            {/* Add bottom internal borders for transom window */}
-            {hasSingleTransom && (
-              <>
-                <rect 
-                  x={FRAME_THICKNESS * scale} 
-                  y={FRAME_THICKNESS * scale + singleTransomHeight + mullionWidth} 
-                  width={innerBorderWidth} 
-                  height={innerHeight - singleTransomHeight - mullionWidth} 
-                  className="inner-border" 
-                />
-                <rect 
-                  x={svgWidth - FRAME_THICKNESS * scale - innerBorderWidth} 
-                  y={FRAME_THICKNESS * scale + singleTransomHeight + mullionWidth} 
-                  width={innerBorderWidth} 
-                  height={innerHeight - singleTransomHeight - mullionWidth} 
-                  className="inner-border" 
-                />
-              </>
+            {/* Hinge indicators for the lower left and right casements */}
+            {(openableCasements === "left" || openableCasements === "both") && (
+              renderHingeIndicator(
+                frameInset, 
+                frameInset + (svgHeight / 3) + mullionThickness, 
+                (svgWidth / 3) - frameInset - (frameThickness / 2), 
+                (svgHeight * 2/3) - frameInset - mullionThickness, 
+                'left'
+              )
             )}
             
-            {/* Render opening indicators */}
-            {renderOpeningIndicator(
-              FRAME_THICKNESS * scale + innerBorderWidth, 
-              FRAME_THICKNESS * scale + innerBorderWidth, 
-              innerWidth - innerBorderWidth * 2, 
-              (hasSingleTransom ? singleTransomHeight : innerHeight) - innerBorderWidth * 2, 
-              hasSingleTransom ? topCasementsOpenable : openableCasements,
-              hasSingleTransom
+            {(openableCasements === "right" || openableCasements === "both") && (
+              renderHingeIndicator(
+                ((svgWidth / 3) * 2) + (mullionThickness / 2), 
+                frameInset + (svgHeight / 3) + mullionThickness, 
+                (svgWidth / 3) - frameInset - (frameThickness / 2), 
+                (svgHeight * 2/3) - frameInset - mullionThickness, 
+                'right'
+              )
             )}
             
-            {/* Add bottom section opening indicators for transom window */}
-            {hasSingleTransom && 
-              renderOpeningIndicator(
-                FRAME_THICKNESS * scale + innerBorderWidth, 
-                FRAME_THICKNESS * scale + singleTransomHeight + mullionWidth + innerBorderWidth, 
-                innerWidth - innerBorderWidth * 2, 
-                innerHeight - singleTransomHeight - mullionWidth - innerBorderWidth * 2, 
-                openableCasements
+            {/* Center casement opening - hinged on the left */}
+            {openableCasements === "center-left" && (
+              renderHingeIndicator(
+                (svgWidth / 3) + (mullionThickness / 2), 
+                frameInset + (svgHeight / 3) + mullionThickness, 
+                (svgWidth / 3) - mullionThickness, 
+                (svgHeight * 2/3) - frameInset - mullionThickness, 
+                'left'
               )
-            }
+            )}
             
-            {/* Georgian bars */}
-            {hasGeorgianBars && 
-              renderGeorgianBars(
-                FRAME_THICKNESS * scale + innerBorderWidth, 
-                FRAME_THICKNESS * scale + innerBorderWidth, 
-                innerWidth - innerBorderWidth * 2, 
-                (hasSingleTransom ? singleTransomHeight : innerHeight) - innerBorderWidth * 2
+            {/* Center casement opening - hinged on the right */}
+            {openableCasements === "center-right" && (
+              renderHingeIndicator(
+                (svgWidth / 3) + (mullionThickness / 2), 
+                frameInset + (svgHeight / 3) + mullionThickness, 
+                (svgWidth / 3) - mullionThickness, 
+                (svgHeight * 2/3) - frameInset - mullionThickness, 
+                'right'
               )
-            }
-            
-            {/* Add bottom section Georgian bars for transom window */}
-            {hasSingleTransom && hasGeorgianBars && 
-              renderGeorgianBars(
-                FRAME_THICKNESS * scale + innerBorderWidth, 
-                FRAME_THICKNESS * scale + singleTransomHeight + mullionWidth + innerBorderWidth, 
-                innerWidth - innerBorderWidth * 2, 
-                innerHeight - singleTransomHeight - mullionWidth - innerBorderWidth * 2
-              )
-            }
+            )}
           </>
         );
-      }
+        
+      case "slider":
+        return (
+          <>
+            {/* Frame */}
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
+            
+            {/* Single glass pane */}
+            <rect 
+              x={frameInset} 
+              y={frameInset} 
+              width={svgWidth - (frameInset * 2)} 
+              height={svgHeight - (frameInset * 2)} 
+              fill="none" 
+              stroke="none" 
+            />
+            
+            {/* Georgian bars for entire window */}
+            {renderGeorgianBars(
+              frameInset,
+              frameInset,
+              svgWidth - (frameInset * 2),
+              svgHeight - (frameInset * 2)
+            )}
+            
+            {/* Mullion in the middle */}
+            <rect 
+              x={(svgWidth / 2) - (mullionThickness / 2)} 
+              y={frameInset} 
+              width={mullionThickness} 
+              height={svgHeight - (frameInset * 2)} 
+              className="window-mullion" 
+            />
+            
+            {/* Left slider (fixed) */}
+            <rect 
+              x={frameInset - 1} 
+              y={frameInset - 1} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) + 1} 
+              height={svgHeight - (frameInset * 2) + 2}
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Left casement inner border 50mm wide with light blue fill */}
+            <rect 
+              x={frameInset + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) - innerBorderWidth} 
+              height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+              className="window-casement-interior"
+            />
+            
+            {/* Right slider (sliding part) */}
+            <rect 
+              x={(svgWidth / 2) + (mullionThickness / 2)} 
+              y={frameInset - 1}  
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) + 1} 
+              height={svgHeight - (frameInset * 2) + 2} 
+              fill="none" 
+              className="window-casement" 
+            />
+            
+            {/* Right casement inner border 50mm wide with light blue fill */}
+            <rect 
+              x={(svgWidth / 2) + (mullionThickness / 2) + innerBorderWidth} 
+              y={frameInset + innerBorderWidth} 
+              width={(svgWidth / 2) - frameInset - (mullionThickness / 2) - innerBorderWidth} 
+              height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
+              className="window-casement-interior"
+            />
+            
+            {/* Arrow indicating slider direction */}
+            <line 
+              x1={(svgWidth / 2) + (frameInset * 1.5)} 
+              y1={svgHeight / 2} 
+              x2={svgWidth - (frameInset * 1.5)} 
+              y2={svgHeight / 2} 
+              stroke="#334155" 
+              strokeWidth="1.5" 
+            />
+            
+            {/* Arrow heads */}
+            <polyline 
+              points={`${(svgWidth / 2) + (frameInset * 1.5)},${(svgHeight / 2) - 5} ${(svgWidth / 2) + (frameInset * 1.5)},${svgHeight / 2} ${(svgWidth / 2) + (frameInset * 1.5)},${(svgHeight / 2) + 5}`} 
+              stroke="#334155" 
+              strokeWidth="1.5" 
+              fill="none" 
+            />
+            
+            <polyline 
+              points={`${svgWidth - (frameInset * 1.5)},${(svgHeight / 2) - 5} ${svgWidth - (frameInset * 1.5)},${svgHeight / 2} ${svgWidth - (frameInset * 1.5)},${(svgHeight / 2) + 5}`} 
+              stroke="#334155" 
+              strokeWidth="1.5" 
+              fill="none" 
+            />
+          </>
+        );
+        
+      default:
+        return null;
     }
   };
 
   return (
     <div className="window-drawing">
       <svg 
-        width={svgWidth} 
-        height={svgHeight + 30} // Extra height for window name
-        viewBox={`0 0 ${svgWidth} ${svgHeight + 30}`} 
-        xmlns="http://www.w3.org/2000/svg"
+        width={svgWidth + extraWidthForDimensions} 
+        height={svgHeight + extraHeightForDimensions + extraHeightForLabel} 
+        viewBox={`0 0 ${svgWidth + extraWidthForDimensions} ${svgHeight + extraHeightForDimensions + extraHeightForLabel}`}
+        className="window-drawing-svg"
       >
-        <defs>
-          {/* Pattern for obscure glass */}
-          <pattern id="pattern-obscure" patternUnits="userSpaceOnUse" width="10" height="10">
-            <path d="M-2,2 l4,-4 M0,10 l10,-10 M8,12 l4,-4" stroke="#ccc" strokeWidth="1" />
-          </pattern>
-        </defs>
-        
-        {/* Window Group */}
-        <g>
+        {/* Main window drawing, positioned with space for dimensions */}
+        <g transform={`translate(0, 10)`}>
           {renderWindow()}
         </g>
         
-        {/* Window dimensions */}
+        {/* Dimension line for width */}
+        <line 
+          x1="0" 
+          y1={svgHeight + 20} 
+          x2={svgWidth} 
+          y2={svgHeight + 20} 
+          stroke="black" 
+          strokeWidth="1" 
+        />
+        
+        {/* Dimension arrows */}
+        <line 
+          x1="0" 
+          y1={svgHeight + 15} 
+          x2="0" 
+          y2={svgHeight + 25} 
+          stroke="black" 
+          strokeWidth="1" 
+        />
+        <line 
+          x1={svgWidth} 
+          y1={svgHeight + 15} 
+          x2={svgWidth} 
+          y2={svgHeight + 25} 
+          stroke="black" 
+          strokeWidth="1" 
+        />
+        
+        {/* Width text */}
         <text 
           x={svgWidth / 2} 
-          y={15} 
+          y={svgHeight + 35} 
           textAnchor="middle" 
           className="dimension-text"
         >
-          {formatDimension(width)}
+          {width}mm
         </text>
         
+        {/* Dimension line for height on the right side */}
+        <line 
+          x1={svgWidth + 20} 
+          y1="10" 
+          x2={svgWidth + 20} 
+          y2={svgHeight + 10} 
+          stroke="black" 
+          strokeWidth="1" 
+        />
+        
+        {/* Dimension arrows for height */}
+        <line 
+          x1={svgWidth + 15} 
+          y1="10" 
+          x2={svgWidth + 25} 
+          y2="10" 
+          stroke="black" 
+          strokeWidth="1" 
+        />
+        <line 
+          x1={svgWidth + 15} 
+          y1={svgHeight + 10} 
+          x2={svgWidth + 25} 
+          y2={svgHeight + 10} 
+          stroke="black" 
+          strokeWidth="1" 
+        />
+        
+        {/* Height text vertical on the right */}
         <text 
-          x={svgWidth - 15} 
-          y={svgHeight / 2} 
+          x={svgWidth + 35} 
+          y={(svgHeight / 2) + 10} 
           textAnchor="middle" 
-          transform={`rotate(90, ${svgWidth - 15}, ${svgHeight / 2})`}
           className="dimension-text"
         >
-          {formatDimension(height)}
+          {height}mm
         </text>
         
-        {/* Window name */}
+        {/* Window label at bottom */}
         <text 
           x={svgWidth / 2} 
-          y={svgHeight + 20} 
+          y={svgHeight + extraHeightForDimensions + 10} 
           textAnchor="middle" 
-          className="window-name"
+          className="dimension-text" 
+          fontWeight="bold"
         >
           {name}
+        </text>
+        
+        {/* Window type label under name */}
+        <text 
+          x={svgWidth / 2} 
+          y={svgHeight + extraHeightForDimensions + 22} 
+          textAnchor="middle" 
+          className="dimension-text"
+          fontSize="8"
+        >
+          {windowConfig.name}
         </text>
       </svg>
     </div>
