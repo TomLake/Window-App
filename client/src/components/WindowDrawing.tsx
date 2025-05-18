@@ -62,8 +62,8 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   // Inner border for casements (50mm scaled to SVG size)
   const innerBorderWidth = Math.max(2, Math.round(50 * scaleFactor)); // Scale 50mm to SVG size, minimum 2px
   
-  // Function to render Georgian bars for a window pane
-  const renderGeorgianBars = (x: number, y: number, width: number, height: number) => {
+  // Function to render Georgian bars for an individual casement
+  const renderGeorgianBars = (x: number, y: number, width: number, height: number, casementId: string = '') => {
     if (!hasGeorgianBars) return null;
     
     // Use the user-defined number of horizontal and vertical bars
@@ -78,25 +78,22 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     // Create the bars
     const bars = [];
     
-    // Calculate the effective casement area (excluding the frame)
-    // This ensures the Georgian bars are positioned within the casement
-    const casementInnerWidth = width;
-    const casementInnerHeight = height;
-    
     // Horizontal bars
     if (numHorizontalBars > 0) {
       // Create horizontal bars based on specified count
-      const horizontalSpacing = casementInnerHeight / (numHorizontalBars + 1);
+      const horizontalSpacing = height / (numHorizontalBars + 1);
       for (let i = 1; i <= numHorizontalBars; i++) {
         const yPos = y + horizontalSpacing * i;
         bars.push(
           <rect 
-            key={`h-${i}`}
+            key={`h-${casementId}-${i}`}
             x={x} 
             y={yPos - georgianBarWidth/2} 
-            width={casementInnerWidth} 
+            width={width} 
             height={georgianBarWidth} 
             fill={barColor} 
+            stroke="#333333"
+            strokeWidth="0.5"
           />
         );
       }
@@ -105,17 +102,19 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
     // Vertical bars
     if (numVerticalBars > 0) {
       // Create vertical bars based on specified count
-      const verticalSpacing = casementInnerWidth / (numVerticalBars + 1);
+      const verticalSpacing = width / (numVerticalBars + 1);
       for (let i = 1; i <= numVerticalBars; i++) {
         const xPos = x + verticalSpacing * i;
         bars.push(
           <rect 
-            key={`v-${i}`}
+            key={`v-${casementId}-${i}`}
             x={xPos - georgianBarWidth/2} 
             y={y} 
             width={georgianBarWidth} 
-            height={casementInnerHeight} 
+            height={height} 
             fill={barColor} 
+            stroke="#333333"
+            strokeWidth="0.5"
           />
         );
       }
