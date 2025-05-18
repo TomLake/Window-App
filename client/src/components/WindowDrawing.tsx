@@ -1870,7 +1870,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   };
 
   return (
-    <div className="window-drawing">
+    <div className={`window-drawing ${windowClassName}`}>
       <svg 
         width={svgWidth + extraWidthForDimensions} 
         height={svgHeight + extraHeightForDimensions + extraHeightForLabel} 
