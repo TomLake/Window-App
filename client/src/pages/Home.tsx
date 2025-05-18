@@ -17,15 +17,19 @@ export default function Home() {
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
 
   // Fetch windows from the server, filtered by project if one is selected
-  const { data: windows = [] } = useQuery({
+  const { data: windowsData } = useQuery({
     queryKey: ['/api/windows', currentProject?.id],
     queryFn: async () => {
       const url = currentProject 
         ? `/api/windows?projectId=${currentProject.id}` 
         : '/api/windows';
-      return await apiRequest('GET', url);
+      const response = await apiRequest('GET', url);
+      return response.json();
     },
   });
+  
+  // Ensure windows is always an array
+  const windows = Array.isArray(windowsData) ? windowsData : [];
 
   // Create window mutation
   const createWindow = useMutation({
@@ -36,7 +40,8 @@ export default function Home() {
         projectId: currentProject?.id || 1, // Default to project ID 1 if none is selected
       };
       
-      return apiRequest('POST', '/api/windows', windowToCreate);
+      const response = await apiRequest('POST', '/api/windows', windowToCreate);
+      return response.json();
     },
     onSuccess: () => {
       toast({
@@ -50,7 +55,8 @@ export default function Home() {
   // Update window mutation
   const updateWindow = useMutation({
     mutationFn: async (windowData: Window) => {
-      return apiRequest('PUT', `/api/windows/${windowData.id}`, windowData);
+      const response = await apiRequest('PUT', `/api/windows/${windowData.id}`, windowData);
+      return response.json();
     },
     onSuccess: () => {
       toast({
@@ -114,12 +120,13 @@ export default function Home() {
           setProjectName(name);
           if (currentProject) {
             // Update the project name if we're in a project
-            const updatedProject = { ...currentProject, name };
-            apiRequest(`/api/projects/${currentProject.id}`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(updatedProject),
-            }).then(() => {
+            const updatedProject = { 
+              ...currentProject, 
+              name, 
+              updatedAt: new Date().toISOString()
+            };
+            apiRequest('PUT', `/api/projects/${currentProject.id}`, updatedProject)
+            .then(() => {
               queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
             });
           }

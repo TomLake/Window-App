@@ -70,7 +70,14 @@ export function ProjectManager({ currentProject, projectWindows, onProjectChange
   // Create new project mutation
   const createProject = useMutation({
     mutationFn: async (values: NewProjectValues) => {
-      return apiRequest('POST', '/api/projects', values);
+      const newProject = {
+        ...values,
+        userId: 1, // Default user ID
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      const response = await apiRequest('POST', '/api/projects', newProject);
+      return response.json();
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
@@ -84,8 +91,7 @@ export function ProjectManager({ currentProject, projectWindows, onProjectChange
       setIsCreateDialogOpen(false);
       
       // Set the new project as current
-      const project = data.json ? data.json() : data;
-      onProjectChanged(project as Project, []);
+      onProjectChanged(data, []);
     },
     onError: (error) => {
       toast({
@@ -105,18 +111,12 @@ export function ProjectManager({ currentProject, projectWindows, onProjectChange
         
         if (window.id) {
           // Update existing window
-          return apiRequest(`/api/windows/${window.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(windowToSave),
-          });
+          const response = await apiRequest('PUT', `/api/windows/${window.id}`, windowToSave);
+          return response.json();
         } else {
           // Create new window
-          return apiRequest('/api/windows', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(windowToSave),
-          });
+          const response = await apiRequest('POST', '/api/windows', windowToSave);
+          return response.json();
         }
       });
       
@@ -153,10 +153,11 @@ export function ProjectManager({ currentProject, projectWindows, onProjectChange
       }
       
       // Get windows for the project
-      const windows = await apiRequest(`/api/windows?projectId=${projectId}`);
+      const response = await apiRequest('GET', `/api/windows?projectId=${projectId}`);
+      const projectWindows = await response.json();
       
       // Update current project and windows
-      onProjectChanged(project, windows as Window[]);
+      onProjectChanged(project, projectWindows);
       
       toast({
         title: "Project loaded",
