@@ -164,6 +164,9 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
   
   // Render the appropriate window based on type
   const renderWindow = () => {
+    // Calculate scaled transom height once, outside the switch statement
+    const scaledTransomHeight = window.transomHeight * scale;
+    
     switch (windowConfig.id) {
       case "quad":
       case "quad-transom":
