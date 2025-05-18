@@ -478,6 +478,15 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement-interior"
             />
             
+            {/* Georgian bars for upper casement */}
+            {renderGeorgianBars(
+              frameInset + innerBorderWidth,
+              frameInset + innerBorderWidth,
+              svgWidth - ((frameInset + innerBorderWidth) * 2),
+              scaledTransomHeight - (innerBorderWidth * 2),
+              'upper'
+            )}
+            
             {/* Lower opening casement - position based on transom height parameter */}
             <rect 
               x={frameInset - 1} 
@@ -644,6 +653,15 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               className="window-casement-interior"
             />
             
+            {/* Georgian bars for left casement only */}
+            {renderGeorgianBars(
+              frameInset + innerBorderWidth,
+              frameInset + innerBorderWidth,
+              (svgWidth / 2) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2,
+              svgHeight - ((frameInset + innerBorderWidth) * 2),
+              'left'
+            )}
+            
             {/* Right casement */}
             <rect 
               x={(svgWidth / 2) + (frameThickness / 2) - 1} 
@@ -662,6 +680,15 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
               className="window-casement-interior"
             />
+            
+            {/* Georgian bars for right casement only */}
+            {renderGeorgianBars(
+              (svgWidth / 2) + (frameThickness / 2) + innerBorderWidth,
+              frameInset + innerBorderWidth,
+              (svgWidth / 2) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2,
+              svgHeight - ((frameInset + innerBorderWidth) * 2),
+              'right'
+            )}
             
             {/* Hinge indicators for left and right casements */}
             {(openableCasements === "left" || openableCasements === "both") && (
