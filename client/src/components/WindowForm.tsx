@@ -40,6 +40,8 @@ const windowFormSchema = z.object({
   // Optional transom parameters for transom window types
   transomHeight: z.coerce.number().min(200, "Transom height must be at least 200mm").max(1000, "Transom height must be at most 1000mm").default(400).optional(),
   topCasementsOpenable: z.string().default("none"),
+  // Box sash window parameters
+  sashOpenable: z.string().default("both"),
   positionX: z.number().default(0),
   positionY: z.number().default(0),
 });
@@ -67,6 +69,7 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
     georgianBarsVertical: 1,
     transomHeight: 400,
     topCasementsOpenable: "none",
+    sashOpenable: "both",
     positionX: 0,
     positionY: 0,
   };
@@ -95,6 +98,7 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
         georgianBarsVertical: selectedWindow.georgianBarsVertical ?? 1,
         transomHeight: selectedWindow.transomHeight ?? 400,
         topCasementsOpenable: selectedWindow.topCasementsOpenable || "none",
+        sashOpenable: selectedWindow.sashOpenable || "both",
         positionX: selectedWindow.positionX ?? 0,
         positionY: selectedWindow.positionY ?? 0
       };
@@ -368,6 +372,39 @@ export default function WindowForm({ selectedWindow, onSave, onReset }: WindowFo
         )}
         
 {/* Transom parameters - only visible for transom window types */}
+        {/* Box Sash window specific parameters */}
+        {form.watch("type") === "box-sash" && (
+          <FormField
+            control={form.control}
+            name="sashOpenable"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Sash Opening</FormLabel>
+                <Select 
+                  onValueChange={field.onChange} 
+                  defaultValue={field.value || 'both'}
+                  value={field.value || 'both'}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select which sashes can open" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="top">Top Sash Only</SelectItem>
+                    <SelectItem value="bottom">Bottom Sash Only</SelectItem>
+                    <SelectItem value="both">Both Sashes</SelectItem>
+                    <SelectItem value="none">None (Fixed)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormDescription>
+                  Specify which sashes can slide open
+                </FormDescription>
+              </FormItem>
+            )}
+          />
+        )}
+        
         {(form.watch("type") === "single-transom" || 
           form.watch("type") === "double-transom" || 
           form.watch("type") === "triple-transom") && (
