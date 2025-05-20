@@ -85,6 +85,17 @@ export const windowTypes = [
   },
   
   {
+    id: "box-sash",
+    name: "Box Sash Window",
+    description: "Traditional box sash window with sliding upper and lower sashes",
+    minWidth: 600,
+    maxWidth: 1500,
+    minHeight: 1000,
+    maxHeight: 2500,
+    category: "window",
+  },
+  
+  {
     id: "patio",
     name: "Patio Doors",
     description: "Large glass doors for patio access",
