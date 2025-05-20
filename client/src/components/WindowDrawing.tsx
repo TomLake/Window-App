@@ -1299,6 +1299,143 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
           </>
         );
         
+      case "box-sash":
+        const sashHeight = (svgHeight - (frameInset * 2)) / 2;
+        const sashOpenable = window.sashOpenable || "both";
+        const sashMeetingRailHeight = 10; // Height of the meeting rail where the two sashes meet
+        
+        // Determine which sashes are openable for the dashed indicator lines
+        const topSashOpenable = sashOpenable === "top" || sashOpenable === "both";
+        const bottomSashOpenable = sashOpenable === "bottom" || sashOpenable === "both";
+        
+        return (
+          <>
+            {/* Frame */}
+            <rect x="0" y="0" width={svgWidth} height={svgHeight} className="window-frame" />
+            
+            {/* Glass Background */}
+            <rect 
+              x={frameInset} 
+              y={frameInset} 
+              width={svgWidth - (frameInset * 2)} 
+              height={svgHeight - (frameInset * 2)} 
+              fill="none" 
+              stroke="none" 
+            />
+            
+            {/* Top Sash (slides down) */}
+            <rect 
+              x={frameInset} 
+              y={frameInset} 
+              width={svgWidth - (frameInset * 2)} 
+              height={sashHeight} 
+              fill={glassColor} 
+              stroke="#000000" 
+              strokeWidth="2" 
+            />
+            
+            {/* Top Sash Border */}
+            <rect 
+              x={frameInset + 50} 
+              y={frameInset + 50} 
+              width={svgWidth - (frameInset * 2) - 100} 
+              height={sashHeight - 50 - sashMeetingRailHeight/2} 
+              fill="none" 
+              stroke="#000000" 
+              strokeWidth="1" 
+              className="window-inner-section"
+            />
+            
+            {/* Bottom Sash (slides up) */}
+            <rect 
+              x={frameInset} 
+              y={frameInset + sashHeight} 
+              width={svgWidth - (frameInset * 2)} 
+              height={sashHeight} 
+              fill={glassColor} 
+              stroke="#000000" 
+              strokeWidth="2" 
+            />
+            
+            {/* Bottom Sash Border */}
+            <rect 
+              x={frameInset + 50} 
+              y={frameInset + sashHeight + sashMeetingRailHeight/2} 
+              width={svgWidth - (frameInset * 2) - 100} 
+              height={sashHeight - 50 - sashMeetingRailHeight/2} 
+              fill="none" 
+              stroke="#000000" 
+              strokeWidth="1" 
+              className="window-inner-section"
+            />
+            
+            {/* Meeting Rail (where the sashes meet) */}
+            <rect 
+              x={frameInset} 
+              y={frameInset + sashHeight - sashMeetingRailHeight/2} 
+              width={svgWidth - (frameInset * 2)} 
+              height={sashMeetingRailHeight} 
+              fill="white" 
+              stroke="#000000" 
+              strokeWidth="1" 
+            />
+            
+            {/* Georgian Bars for top sash */}
+            {hasGeorgianBars && renderGeorgianBars(
+              frameInset + 50,
+              frameInset + 50,
+              svgWidth - (frameInset * 2) - 100,
+              sashHeight - 50 - sashMeetingRailHeight/2,
+              'box-sash-top'
+            )}
+            
+            {/* Georgian Bars for bottom sash */}
+            {hasGeorgianBars && renderGeorgianBars(
+              frameInset + 50,
+              frameInset + sashHeight + sashMeetingRailHeight/2,
+              svgWidth - (frameInset * 2) - 100,
+              sashHeight - 50 - sashMeetingRailHeight/2,
+              'box-sash-bottom'
+            )}
+            
+            {/* Opening indicator for top sash (dashed line) */}
+            {topSashOpenable && (
+              <path
+                d={`M ${frameInset + 70} ${frameInset + 70} 
+                    L ${svgWidth - frameInset - 70} ${frameInset + sashHeight - 30}`}
+                stroke="#000000"
+                strokeWidth="1"
+                strokeDasharray="5,5"
+                fill="none"
+              />
+            )}
+            
+            {/* Opening indicator for bottom sash (dashed line) */}
+            {bottomSashOpenable && (
+              <path
+                d={`M ${frameInset + 70} ${frameInset + sashHeight + sashHeight - 30} 
+                    L ${svgWidth - frameInset - 70} ${frameInset + sashHeight + 30}`}
+                stroke="#000000"
+                strokeWidth="1"
+                strokeDasharray="5,5"
+                fill="none"
+              />
+            )}
+            
+            {/* Sash Lift Handles */}
+            <rect
+              x={svgWidth/2 - 20}
+              y={frameInset + sashHeight + sashMeetingRailHeight/2 + 15}
+              width={40}
+              height={5}
+              fill="#888888"
+              stroke="#000000"
+              strokeWidth="1"
+              rx="2"
+            />
+          </>
+        );
+        
       case "quad-transom":
         // Calculate the scaled transom height, default to 400mm if not specified
         const quadScaledTransomHeight = (transomHeight ?? 400) * scaleFactor;
