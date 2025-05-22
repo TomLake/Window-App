@@ -410,13 +410,7 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               stroke="none" 
             />
             
-{/* Georgian bars for right casement only */}
-{renderGeorgianBars(
-              (svgWidth / 2) + (frameThickness / 2) + innerBorderWidth,
-              frameInset + innerBorderWidth,
-              (svgWidth / 2) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2,
-              svgHeight - ((frameInset + innerBorderWidth) * 2)
-            )}
+
             
             
             {/* Casement indicators */}
@@ -437,6 +431,14 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               height={svgHeight - ((frameInset + innerBorderWidth) * 2)} 
               className="window-casement-interior"
             />
+
+            {/* Georgian bars for right casement only */}
+{renderGeorgianBars(
+              (svgWidth / 2) + (frameThickness / 2) + innerBorderWidth,
+              frameInset + innerBorderWidth,
+              (svgWidth / 2) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2,
+              svgHeight - ((frameInset + innerBorderWidth) * 2)
+            )}
             
             {/* Hinge indicators based on which casements can open */}
             {(openableCasements === "left" || openableCasements === "both") && (
