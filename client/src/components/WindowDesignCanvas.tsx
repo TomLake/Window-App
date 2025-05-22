@@ -189,16 +189,7 @@ const WindowDesignCanvas = forwardRef<HTMLDivElement, WindowDesignCanvasProps>(
                 />
               </div>
               
-              <div className="flex space-x-2">
-                <button className="px-3 py-1 text-sm border border-gray-300 rounded-md flex items-center space-x-1 hover:bg-gray-50">
-                  <span className="material-icons text-sm">zoom_in</span>
-                  <span>Zoom</span>
-                </button>
-                <button className="px-3 py-1 text-sm border border-gray-300 rounded-md flex items-center space-x-1 hover:bg-gray-50">
-                  <span className="material-icons text-sm">grid_on</span>
-                  <span>Grid</span>
-                </button>
-              </div>
+            
             </div>
           </div>
           
