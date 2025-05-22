@@ -433,10 +433,10 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
             />
 
             {/* Georgian bars for right casement only */}
-{renderGeorgianBars(
-              (svgWidth / 2) + (frameThickness / 2) + innerBorderWidth,
+          {renderGeorgianBars(
               frameInset + innerBorderWidth,
-              (svgWidth / 2) - frameInset - (frameThickness / 2) - (innerBorderWidth * 2) + 2,
+              frameInset + innerBorderWidth,
+              svgWidth - ((frameInset + innerBorderWidth) * 2),
               svgHeight - ((frameInset + innerBorderWidth) * 2)
             )}
             
@@ -490,6 +490,8 @@ export default function WindowDrawing({ window }: WindowDrawingProps) {
               height={mullionThickness} 
               className="window-mullion" 
             />
+
+            
             
             {/* Upper fixed casement - height based on transom height parameter */}
             <rect 
